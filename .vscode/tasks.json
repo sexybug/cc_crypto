@@ -7,7 +7,7 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}\\test.c",
+                "${workspaceFolder}\\cc_test.c",
                 "${file}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
@@ -31,7 +31,7 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}\\test.c",
+                "${workspaceFolder}\\cc_test.c",
                 "${workspaceFolder}\\cc_bn.c",
                 "${workspaceFolder}\\cc_bn_mul.c",
                 "${workspaceFolder}\\cc_naf.c",
@@ -58,7 +58,7 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}\\test.c",
+                "${workspaceFolder}\\cc_test.c",
                 "${workspaceFolder}\\cc_bn.c",
                 "${workspaceFolder}\\cc_naf.c",
                 "${file}",

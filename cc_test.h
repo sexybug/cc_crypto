@@ -1,8 +1,9 @@
-#ifndef _TEST_H_
-#define _TEST_H_
+#ifndef CC_TEST_H
+#define CC_TEST_H
 
 #include "cc_bn.h"
 #include <stdint.h>
+
 
 /**
  * @brief 打印内存数据
@@ -19,6 +20,12 @@ void dump_mem(const void *ptr, int len);
  * @param out 输出
  */
 void HexString2Hex(const char *str, int len, uint8_t *out);
+
+//return byte length of out
+size_t hex_to_u8(const char *str, uint8_t *out);
+
+// return hex string length
+size_t u8_to_hex(const uint8_t *src, size_t src_len, char *hex);
 
 /**
  * Prints the binary representation of the given byte array.
@@ -102,4 +109,8 @@ void print_u64(const char *title, const uint64_t *ptr, size_t len);
 
 void print_bn(const char *title, const cc_bn_digit_t *bn, size_t len);
 
-#endif // _TEST_H_
+cc_bn_digit_t hex_to_bn_word(const char *str, size_t char_size);
+
+void hex_to_bn(const char *str, cc_bn_digit_t *bn, size_t bn_word_len);
+
+#endif // CC_TEST_H

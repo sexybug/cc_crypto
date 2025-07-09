@@ -2,7 +2,7 @@
 #include <string.h>
 #include <assert.h>
 #include "cc_bn.h"
-#include "test.h"
+#include "cc_test.h"
 
 // 辅助函数：比较两个大数是否相等
 int bn_equal(const cc_bn_digit_t *a, const cc_bn_digit_t *b, size_t len)

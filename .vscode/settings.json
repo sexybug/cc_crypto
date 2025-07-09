@@ -10,7 +10,8 @@
         "cc_bn_mul.h": "c",
         "cc_basis_convert.h": "c",
         "stdio.h": "c",
-        "test.h": "c"
+        "cc_test.h": "c",
+        "string.h": "c"
     },
     "Codegeex.RepoIndex": true
 }

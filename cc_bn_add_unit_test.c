@@ -2,7 +2,7 @@
 #include <string.h>
 #include <assert.h>
 #include "cc_bn.h"
-#include "test.h"
+#include "cc_test.h"
 
 // 单元测试函数
 void test_cc_bn_add() {

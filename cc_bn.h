@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+// note: cc_bn_digit_t must be uint32_t
 typedef uint32_t cc_bn_digit_t;
 
 #define CC_BN_DIGIT_BYTES sizeof(cc_bn_digit_t)

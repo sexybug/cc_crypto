@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "test.h"
+#include "cc_test.h"
 
 // 判断字符是否为十六进制字符
 int is_hex_char(char c)

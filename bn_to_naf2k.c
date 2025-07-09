@@ -2,7 +2,7 @@
 #include "cc_bn.h"
 #include <stdio.h>
 #include <string.h>
-#include "test.h"
+#include "cc_test.h"
 
 void print_naf2k(int *naf2k, int len)
 {

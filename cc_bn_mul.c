@@ -1,6 +1,6 @@
 #include "cc_bn_mul.h"
 
-// note: cc_bn_digit_t must be uint32_t
+
 // note: bn_out must be at least bn_word_len+1
 void cc_bn_mul_uint(const cc_bn_digit_t *bn_in, size_t bn_word_len, cc_bn_digit_t d, cc_bn_digit_t *bn_out)
 {

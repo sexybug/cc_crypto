@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "cc_bn.h"
 #include "cc_naf.h"
-#include "test.h"
+#include "cc_test.h"
 
 void print_naf(int *naf, size_t naf_len)
 {

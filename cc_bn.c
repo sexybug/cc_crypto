@@ -1,8 +1,20 @@
 #include "cc_bn.h"
 
+static cc_bn_digit_t cc_u8_to_bn_word(const uint8_t *src, size_t byte_len)
+{
+    size_t i;
+    cc_bn_digit_t word = 0;
+    for (i = 0; (i < byte_len) && (i < CC_BN_DIGIT_BYTES); i++)
+    {
+        word = (word << 8) | src[i];
+    }
+    return word;
+}
+
 void cc_u8_to_bn(const uint8_t *src, size_t byte_len, size_t bn_word_len, cc_bn_digit_t *bn)
 {
     int i, j;
+    int bn_index = bn_word_len - 1;
 
     // 检查是否有足够空间存储数据
     if (byte_len > bn_word_len * CC_BN_DIGIT_BYTES)
@@ -15,31 +27,23 @@ void cc_u8_to_bn(const uint8_t *src, size_t byte_len, size_t bn_word_len, cc_bn_
 
     for (i = 0; i < zero_pad_len / CC_BN_DIGIT_BYTES; i++)
     {
-        bn[bn_word_len - 1 - i] = 0;
+        bn[bn_index] = 0;
+        bn_index -= 1;
+    }
+    // 最高的word需要从src中读取多少字节
+    int left_u8_len = byte_len % CC_BN_DIGIT_BYTES;
+    if (left_u8_len != 0)
+    {
+        bn[bn_index] = cc_u8_to_bn_word(src, left_u8_len);
+        bn_index -= 1;
     }
 
-    int src_index = 0;
-    if (zero_pad_len % CC_BN_DIGIT_BYTES != 0)
+    int src_index = left_u8_len;
+    while (bn_index >= 0)
     {
-        src_index = CC_BN_DIGIT_BYTES - zero_pad_len % CC_BN_DIGIT_BYTES;
-
-        cc_bn_digit_t tmp = 0;
-        for (i = 0; i < src_index; i++)
-        {
-            tmp = (tmp << 8) | src[i];
-        }
-        bn[bn_word_len - 1 - zero_pad_len / CC_BN_DIGIT_BYTES] = tmp;
-    }
-
-    for (i = (zero_pad_len + 3) / CC_BN_DIGIT_BYTES; i < bn_word_len; i++)
-    {
-        cc_bn_digit_t tmp = 0;
-        for (j = 0; j < CC_BN_DIGIT_BYTES; j++)
-        {
-            tmp = (tmp << 8) | src[src_index];
-            src_index++;
-        }
-        bn[bn_word_len - 1 - i] = tmp;
+        bn[bn_index] = cc_u8_to_bn_word(src + src_index, CC_BN_DIGIT_BYTES);
+        bn_index -= 1;
+        src_index += CC_BN_DIGIT_BYTES;
     }
 }
 
@@ -54,8 +58,8 @@ void cc_bn_to_u8(const cc_bn_digit_t *bn, size_t bn_word_len, uint8_t *dst)
     }
 }
 
-//bn will be filled with the minimum number of words needed to fit the byte array
-// return the number of words used in bn
+// bn will be filled with the minimum number of words needed to fit the byte array
+//  return the number of words used in bn
 size_t cc_u8_to_bn_fit(const uint8_t *src, size_t byte_len, cc_bn_digit_t *bn)
 {
     size_t bn_word_len = (byte_len + CC_BN_DIGIT_BYTES - 1) / CC_BN_DIGIT_BYTES;
@@ -63,8 +67,8 @@ size_t cc_u8_to_bn_fit(const uint8_t *src, size_t byte_len, cc_bn_digit_t *bn)
     return bn_word_len;
 }
 
-//dst will be filled with the minimum number of bytes needed to fit the bn
-// return the number of bytes used in dst
+// dst will be filled with the minimum number of bytes needed to fit the bn
+//  return the number of bytes used in dst
 size_t cc_bn_to_u8_fit(const cc_bn_digit_t *bn, size_t bn_word_len, uint8_t *dst)
 {
     int i, j;

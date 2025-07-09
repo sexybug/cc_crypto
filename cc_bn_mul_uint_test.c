@@ -1,7 +1,7 @@
 
 #include "cc_bn.h"
 #include "cc_bn_mul.h"
-#include "test.h"
+#include "cc_test.h"
 
 #include <assert.h>
 #include <string.h>
