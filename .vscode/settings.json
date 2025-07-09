@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "cc_bn.h": "c",
+        "stdint.h": "c",
+        "stdbool.h": "c",
+        "stddef.h": "c",
+        "naf.h": "c",
+        "cc_naf.h": "c",
+        "assert.h": "c",
+        "cc_bn_mul.h": "c",
+        "cc_basis_convert.h": "c",
+        "stdio.h": "c",
+        "test.h": "c"
+    },
+    "Codegeex.RepoIndex": true
+}
