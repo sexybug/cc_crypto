@@ -13,7 +13,7 @@ void test_normal_case_exact_fit() {
     uint8_t src[] = {0x12, 0x34, 0x56, 0x78, 0xAB, 0xCD, 0xEF, 0x01};
     size_t byte_len = 8;
     size_t bn_word_len = 2;
-    cc_bn_digit_t bn[2];
+    cc_bn_t bn[2];
     
     cc_u8_to_bn(src, byte_len, bn_word_len, bn);
     
@@ -29,7 +29,7 @@ void test_zero_padding() {
     uint8_t src[] = {0x12, 0x34};
     size_t byte_len = 2;
     size_t bn_word_len = 2;
-    cc_bn_digit_t bn[2];
+    cc_bn_t bn[2];
     
     cc_u8_to_bn(src, byte_len, bn_word_len, bn);
     
@@ -45,7 +45,7 @@ void test_non_aligned_bytes() {
     uint8_t src[] = {0x12, 0x34, 0x56};
     size_t byte_len = 3;
     size_t bn_word_len = 1;
-    cc_bn_digit_t bn[1];
+    cc_bn_t bn[1];
     
     cc_u8_to_bn(src, byte_len, bn_word_len, bn);
     
@@ -60,7 +60,7 @@ void test_single_byte() {
     uint8_t src[] = {0xFF};
     size_t byte_len = 1;
     size_t bn_word_len = 1;
-    cc_bn_digit_t bn[1];
+    cc_bn_t bn[1];
     
     cc_u8_to_bn(src, byte_len, bn_word_len, bn);
     
@@ -75,7 +75,7 @@ void test_zero_bytes() {
     uint8_t *src = NULL;
     size_t byte_len = 0;
     size_t bn_word_len = 2;
-    cc_bn_digit_t bn[2] = {0xFFFFFFFF, 0xFFFFFFFF}; // 预填充非零值
+    cc_bn_t bn[2] = {0xFFFFFFFF, 0xFFFFFFFF}; // 预填充非零值
     
     cc_u8_to_bn(src, byte_len, bn_word_len, bn);
     
@@ -91,7 +91,7 @@ void test_byte_len_exceeds_capacity() {
     uint8_t src[] = {0x12, 0x34, 0x56, 0x78, 0xAB, 0xCD, 0xEF, 0x01, 0x23};
     size_t byte_len = 9; // 超过2个word的容量(8字节)
     size_t bn_word_len = 2;
-    cc_bn_digit_t bn[2] = {0xFFFFFFFF, 0xFFFFFFFF}; // 预填充值
+    cc_bn_t bn[2] = {0xFFFFFFFF, 0xFFFFFFFF}; // 预填充值
     
     cc_u8_to_bn(src, byte_len, bn_word_len, bn);
     
@@ -108,7 +108,7 @@ void test_byte_len_equals_capacity() {
     uint8_t src[] = {0x12, 0x34, 0x56, 0x78, 0xAB, 0xCD, 0xEF, 0x01};
     size_t byte_len = 8; // 等于2个word的容量
     size_t bn_word_len = 2;
-    cc_bn_digit_t bn[2];
+    cc_bn_t bn[2];
     
     cc_u8_to_bn(src, byte_len, bn_word_len, bn);
     
@@ -124,7 +124,7 @@ void test_large_array() {
     uint8_t src[12] = {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC};
     size_t byte_len = 12;
     size_t bn_word_len = 3;
-    cc_bn_digit_t bn[3];
+    cc_bn_t bn[3];
     
     cc_u8_to_bn(src, byte_len, bn_word_len, bn);
     
@@ -141,7 +141,7 @@ void test_single_word_bn() {
     uint8_t src[] = {0xAB, 0xCD};
     size_t byte_len = 2;
     size_t bn_word_len = 1;
-    cc_bn_digit_t bn[1];
+    cc_bn_t bn[1];
     
     cc_u8_to_bn(src, byte_len, bn_word_len, bn);
     
@@ -156,7 +156,7 @@ void test_all_zero_bytes() {
     uint8_t src[] = {0x00, 0x00, 0x00, 0x00};
     size_t byte_len = 4;
     size_t bn_word_len = 2;
-    cc_bn_digit_t bn[2];
+    cc_bn_t bn[2];
     
     cc_u8_to_bn(src, byte_len, bn_word_len, bn);
     

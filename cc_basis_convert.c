@@ -5,7 +5,7 @@
 
 #define BN_WORD_LEN 12
 
-typedef cc_bn_digit_t cc_bn_t[BN_WORD_LEN];
+typedef cc_bn_t cc_bn_t[BN_WORD_LEN];
 
 // ECC359正规基转多项式基映射表
 uint32_t BM_359[359 * BN_WORD_LEN] = {
@@ -7483,7 +7483,7 @@ uint32_t BM_281[281 * BN_WORD_LEN] = {
     0x00000000,
 };
 
-void cc_basis_convert(const cc_bn_digit_t *src, size_t bn_word_len, const cc_bn_digit_t *maps, cc_bn_digit_t *dst)
+void cc_basis_convert(const cc_bn_t *src, size_t bn_word_len, const cc_bn_t *maps, cc_bn_t *dst)
 {
     size_t i;
     cc_bn_set_zero(dst, bn_word_len);
@@ -7500,11 +7500,11 @@ void cc_basis_convert(const cc_bn_digit_t *src, size_t bn_word_len, const cc_bn_
 
 int main(void)
 {
-    cc_bn_digit_t bn1[12] = {0x01234567, 0x89abcdef, 0x01234567, 0x89abcdef,
+    cc_bn_t bn1[12] = {0x01234567, 0x89abcdef, 0x01234567, 0x89abcdef,
                              0x01234567, 0x89abcdef, 0x01234567, 0x89abcdef,
                              0x01234567, 0x89abcdef, 0x01234567, 0x0000000f};
-    cc_bn_digit_t bn2[12];
-    cc_bn_digit_t bn3[12];
+    cc_bn_t bn2[12];
+    cc_bn_t bn3[12];
     cc_basis_convert(bn1, 12, BM_359, bn2);
     cc_basis_convert(bn2, 12, MB_359, bn3);
 

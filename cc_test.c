@@ -177,7 +177,7 @@ void print_u64(const char *title, const uint64_t *ptr, size_t len)
     printf("};\n\n");
 }
 
-void print_bn(const char *title, const cc_bn_digit_t *bn, size_t len)
+void print_bn(const char *title, const cc_bn_t *bn, size_t len)
 {
     int i;
     printf("%s (%d bytes) = {", title, len * CC_BN_DIGIT_BYTES);
@@ -189,17 +189,17 @@ void print_bn(const char *title, const cc_bn_digit_t *bn, size_t len)
     printf("}\n");
 }
 
-cc_bn_digit_t hex_to_bn_word(const char *str, size_t char_size)
+cc_bn_t hex_to_bn_word(const char *str, size_t char_size)
 {
     size_t i;
-    cc_bn_digit_t bn = 0;
+    cc_bn_t bn = 0;
     for (i = 0; (i < char_size) && (i < CC_BN_DIGIT_BYTES * 2); i++)
     {
         bn = (bn << 4) | hex_char_to_u8(str[i]);
     }
     return bn;
 }
-void hex_to_bn(const char *str, cc_bn_digit_t *bn, size_t bn_word_len)
+void hex_to_bn(const char *str, cc_bn_t *bn, size_t bn_word_len)
 {
     int i;
     int str_len = strlen(str);
@@ -236,12 +236,12 @@ void hex_to_bn(const char *str, cc_bn_digit_t *bn, size_t bn_word_len)
 }
 
 // return hex string length
-size_t bn_to_hex(const cc_bn_digit_t *bn, size_t bn_word_len, char *hex)
+size_t bn_to_hex(const cc_bn_t *bn, size_t bn_word_len, char *hex)
 {
     size_t i,j;
     size_t hex_len = bn_word_len * CC_BN_DIGIT_BYTES * 2;
 
-    cc_bn_digit_t tmp;
+    cc_bn_t tmp;
     for (i = 0; i < bn_word_len; i++)
     {
         tmp = bn[bn_word_len - 1 - i]; // 从高位开始处理

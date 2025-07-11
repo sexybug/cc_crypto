@@ -1,19 +1,19 @@
 #include "cc_naf.h"
 
 // return naf_ki = k % w
-static inline int8_t cc_naf_mod(cc_bn_digit_t k, size_t w)
+static inline int8_t cc_naf_mod(cc_bn_t k, size_t w)
 {
-    int8_t ki = k & (((cc_bn_digit_t)1 << w) - 1);
-    if (ki > ((cc_bn_digit_t)1 << (w - 1)))
+    int8_t ki = k & (((cc_bn_t)1 << w) - 1);
+    if (ki > ((cc_bn_t)1 << (w - 1)))
     {
-        ki = (ki - ((cc_bn_digit_t)1 << w));
+        ki = (ki - ((cc_bn_t)1 << w));
     }
     return ki;
 }
 
 // return naf length
 // note: K is changed
-size_t naf(cc_bn_digit_t *K, size_t K_word_len, size_t w, int8_t *naf)
+size_t naf(cc_bn_t *K, size_t K_word_len, size_t w, int8_t *naf)
 {
     size_t i = 0;
 

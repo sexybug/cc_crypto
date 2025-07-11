@@ -10,7 +10,7 @@ void test_bn_to_hex() {
     
     // 测试用例1：单个字为0
     {
-        cc_bn_digit_t bn1[] = {0x0};
+        cc_bn_t bn1[] = {0x0};
         char hex1[16];
         size_t len1 = bn_to_hex(bn1, 1, hex1);
         assert(len1 == 8);
@@ -20,7 +20,7 @@ void test_bn_to_hex() {
     
     // 测试用例2：单个字最大值
     {
-        cc_bn_digit_t bn2[] = {0xFFFFFFFF};
+        cc_bn_t bn2[] = {0xFFFFFFFF};
         char hex2[16];
         size_t len2 = bn_to_hex(bn2, 1, hex2);
         assert(len2 == 8);
@@ -30,7 +30,7 @@ void test_bn_to_hex() {
     
     // 测试用例3：单个字特定值
     {
-        cc_bn_digit_t bn3[] = {0x12345678};
+        cc_bn_t bn3[] = {0x12345678};
         char hex3[16];
         size_t len3 = bn_to_hex(bn3, 1, hex3);
         assert(len3 == 8);
@@ -40,7 +40,7 @@ void test_bn_to_hex() {
     
     // 测试用例4：多个字（两个字）
     {
-        cc_bn_digit_t bn4[] = {0x11111111, 0x22222222};
+        cc_bn_t bn4[] = {0x11111111, 0x22222222};
         char hex4[32];
         size_t len4 = bn_to_hex(bn4, 2, hex4);
         assert(len4 == 16);
@@ -50,7 +50,7 @@ void test_bn_to_hex() {
     
     // 测试用例5：多个字包含0
     {
-        cc_bn_digit_t bn5[] = {0x0, 0xAAAAAAAA};
+        cc_bn_t bn5[] = {0x0, 0xAAAAAAAA};
         char hex5[32];
         size_t len5 = bn_to_hex(bn5, 2, hex5);
         assert(len5 == 16);
@@ -60,7 +60,7 @@ void test_bn_to_hex() {
     
     // 测试用例6：三个字
     {
-        cc_bn_digit_t bn6[] = {0x00000001, 0x00000002, 0x00000003};
+        cc_bn_t bn6[] = {0x00000001, 0x00000002, 0x00000003};
         char hex6[32];
         size_t len6 = bn_to_hex(bn6, 3, hex6);
         assert(len6 == 24);
@@ -70,7 +70,7 @@ void test_bn_to_hex() {
     
     // 测试用例7：边界值测试
     {
-        cc_bn_digit_t bn7[] = {0x80000000};
+        cc_bn_t bn7[] = {0x80000000};
         char hex7[16];
         size_t len7 = bn_to_hex(bn7, 1, hex7);
         assert(len7 == 8);
@@ -80,7 +80,7 @@ void test_bn_to_hex() {
     
     // 测试用例8：所有位都是1和0的交替模式
     {
-        cc_bn_digit_t bn8[] = {0x55555555};
+        cc_bn_t bn8[] = {0x55555555};
         char hex8[16];
         size_t len8 = bn_to_hex(bn8, 1, hex8);
         assert(len8 == 8);
@@ -90,7 +90,7 @@ void test_bn_to_hex() {
     
     // 测试用例9：四个字的复杂组合
     {
-        cc_bn_digit_t bn9[] = {0x76543210, 0x89ABCDEF, 0xCAFEBABE, 0x12345678};
+        cc_bn_t bn9[] = {0x76543210, 0x89ABCDEF, 0xCAFEBABE, 0x12345678};
         char hex9[64];
         size_t len9 = bn_to_hex(bn9, 4, hex9);
         assert(len9 == 32);
@@ -109,7 +109,7 @@ void test_bn_to_hex() {
     
     // 测试用例11：包含小写字母的十六进制值
     {
-        cc_bn_digit_t bn11[] = {0xABCDEF01};
+        cc_bn_t bn11[] = {0xABCDEF01};
         char hex11[16];
         size_t len11 = bn_to_hex(bn11, 1, hex11);
         assert(len11 == 8);
@@ -119,7 +119,7 @@ void test_bn_to_hex() {
     
     // 测试用例12：测试最小非零值
     {
-        cc_bn_digit_t bn12[] = {0x00000001};
+        cc_bn_t bn12[] = {0x00000001};
         char hex12[16];
         size_t len12 = bn_to_hex(bn12, 1, hex12);
         assert(len12 == 8);

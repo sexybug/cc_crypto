@@ -11,7 +11,8 @@
         "cc_basis_convert.h": "c",
         "stdio.h": "c",
         "cc_test.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "cc_bn_config.h": "c"
     },
     "Codegeex.RepoIndex": true
 }

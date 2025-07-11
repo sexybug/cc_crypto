@@ -7,7 +7,7 @@
 
 // 测试用例
 void test_hex_to_bn() {
-    cc_bn_digit_t bn[4];
+    cc_bn_t bn[4];
     
     // 测试1: 正常转换 - 8位十六进制字符串
     memset(bn, 0xFF, sizeof(bn));
@@ -74,7 +74,7 @@ void test_hex_to_bn() {
     printf("测试7通过: 小写字母处理\n");
     
     // 测试8: 较小的bn_word_len
-    cc_bn_digit_t small_bn[1];
+    cc_bn_t small_bn[1];
     memset(small_bn, 0xFF, sizeof(small_bn));
     hex_to_bn("1234", small_bn, 1);
     assert(small_bn[0] == 0x1234);
