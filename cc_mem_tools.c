@@ -1,6 +1,7 @@
 
 #include "cc_mem_tools.h"
 
+// Swap bytes in a 32-bit unsigned integer
 void cc_swap_u32_array(uint32_t *array, size_t word_size)
 {
     size_t i;
@@ -57,4 +58,26 @@ int cc_memcmp_u32(const uint32_t *src1, const uint32_t *src2, size_t word_size)
         }
     }
     return 0;
+}
+
+void cc_reverse_u8_array(uint8_t *array, size_t len)
+{
+    size_t i;
+    for (i = 0; i < len / 2; i++)
+    {
+        uint8_t temp = array[i];
+        array[i] = array[len - i - 1];
+        array[len - i - 1] = temp;
+    }
+}
+
+void cc_reverse_u32_array(uint32_t *array, size_t word_size)
+{
+    size_t i;
+    for (i = 0; i < word_size / 2; i++)
+    {
+        uint32_t temp = array[i];
+        array[i] = array[word_size - i - 1];
+        array[word_size - i - 1] = temp;
+    }
 }
