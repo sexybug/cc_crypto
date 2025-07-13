@@ -20,7 +20,7 @@ void test_basic_addition_no_carry() {
     cc_bn_t output[3];
     cc_bn_t expected[] = {0x10000005, 0x20000000, 0x30000000};
     
-    cc_bn_t carry = cc_bn_add_uint(input, 3, 0x5, output);
+    cc_bn_t carry = cc_bn_add_word(input, 3, 0x5, output);
     
     assert(carry == 0);
     assert(bn_equal(output, expected, 3));
@@ -34,7 +34,7 @@ void test_single_word_carry() {
     cc_bn_t output[3];
     cc_bn_t expected[] = {0x00000000, 0x10000001, 0x20000000};
     
-    cc_bn_t carry = cc_bn_add_uint(input, 3, 0x1, output);
+    cc_bn_t carry = cc_bn_add_word(input, 3, 0x1, output);
     
     assert(carry == 0);
     assert(bn_equal(output, expected, 3));
@@ -48,7 +48,7 @@ void test_multiple_word_carry() {
     cc_bn_t output[3];
     cc_bn_t expected[] = {0x00000000, 0x00000000, 0x10000001};
     
-    cc_bn_t carry = cc_bn_add_uint(input, 3, 0x1, output);
+    cc_bn_t carry = cc_bn_add_word(input, 3, 0x1, output);
     
     assert(carry == 0);
     assert(bn_equal(output, expected, 3));
@@ -62,7 +62,7 @@ void test_final_carry() {
     cc_bn_t output[2];
     cc_bn_t expected[] = {0x00000000, 0x00000000};
     
-    cc_bn_t carry = cc_bn_add_uint(input, 2, 0x1, output);
+    cc_bn_t carry = cc_bn_add_word(input, 2, 0x1, output);
     
     assert(carry == 1);
     assert(bn_equal(output, expected, 2));
@@ -76,7 +76,7 @@ void test_add_zero() {
     cc_bn_t output[2];
     cc_bn_t expected[] = {0x12345678, 0x87654321};
     
-    cc_bn_t carry = cc_bn_add_uint(input, 2, 0x0, output);
+    cc_bn_t carry = cc_bn_add_word(input, 2, 0x0, output);
     
     assert(carry == 0);
     assert(bn_equal(output, expected, 2));
@@ -90,7 +90,7 @@ void test_single_word_length() {
     cc_bn_t output[1];
     cc_bn_t expected[] = {0x80000001};
     
-    cc_bn_t carry = cc_bn_add_uint(input, 1, 0x1, output);
+    cc_bn_t carry = cc_bn_add_word(input, 1, 0x1, output);
     
     assert(carry == 0);
     assert(bn_equal(output, expected, 1));
@@ -104,7 +104,7 @@ void test_single_word_carry_out() {
     cc_bn_t output[1];
     cc_bn_t expected[] = {0x00000000};
     
-    cc_bn_t carry = cc_bn_add_uint(input, 1, 0x1, output);
+    cc_bn_t carry = cc_bn_add_word(input, 1, 0x1, output);
     
     assert(carry == 1);
     assert(bn_equal(output, expected, 1));
@@ -118,7 +118,7 @@ void test_add_max_digit() {
     cc_bn_t output[2];
     cc_bn_t expected[] = {0x0, 0x1};
     
-    cc_bn_t carry = cc_bn_add_uint(input, 2, 0xFFFFFFFF, output);
+    cc_bn_t carry = cc_bn_add_word(input, 2, 0xFFFFFFFF, output);
     
     assert(carry == 0);
     assert(bn_equal(output, expected, 2));
@@ -131,7 +131,7 @@ void test_zero_length() {
     cc_bn_t *input = NULL;
     cc_bn_t *output = NULL;
     
-    cc_bn_t carry = cc_bn_add_uint(input, 0, 0x5, output);
+    cc_bn_t carry = cc_bn_add_word(input, 0, 0x5, output);
     
     assert(carry == 0x5);
     printf("通过\n\n");
@@ -143,7 +143,7 @@ void test_in_place_operation() {
     cc_bn_t data[] = {0x10000000, 0x20000000, 0x30000000};
     cc_bn_t expected[] = {0x1000000A, 0x20000000, 0x30000000};
     
-    cc_bn_t carry = cc_bn_add_uint(data, 3, 0xA, data);
+    cc_bn_t carry = cc_bn_add_word(data, 3, 0xA, data);
     
     assert(carry == 0);
     assert(bn_equal(data, expected, 3));
@@ -157,7 +157,7 @@ void test_boundary_values() {
     cc_bn_t output[2];
     cc_bn_t expected[] = {0x80000000, 0x7FFFFFFF};
     
-    cc_bn_t carry = cc_bn_add_uint(input, 2, 0x1, output);
+    cc_bn_t carry = cc_bn_add_word(input, 2, 0x1, output);
     
     assert(carry == 0);
     assert(bn_equal(output, expected, 2));
@@ -171,7 +171,7 @@ void test_carry_propagation() {
     cc_bn_t output[4];
     cc_bn_t expected[] = {0x00000001, 0x00000000, 0x00000000, 0x12345679};
     
-    cc_bn_t carry = cc_bn_add_uint(input, 4, 0x2, output);
+    cc_bn_t carry = cc_bn_add_word(input, 4, 0x2, output);
     
     assert(carry == 0);
     assert(bn_equal(output, expected, 4));

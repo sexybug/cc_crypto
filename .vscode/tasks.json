@@ -34,6 +34,10 @@
                 "${workspaceFolder}\\cc_test.c",
                 "${workspaceFolder}\\cc_bn.c",
                 "${workspaceFolder}\\cc_bn_mul.c",
+                "${workspaceFolder}\\cc_bn_mod.c",
+                "${workspaceFolder}\\cc_bn_exp.c",
+                "${workspaceFolder}\\cc_bn_prime.c",
+                "${workspaceFolder}\\cc_crypto_rng.c",
                 "${workspaceFolder}\\cc_naf.c",
                 "${file}",
                 "-o",
@@ -60,7 +64,6 @@
                 "-g",
                 "${workspaceFolder}\\cc_test.c",
                 "${workspaceFolder}\\cc_bn.c",
-                "${workspaceFolder}\\cc_naf.c",
                 "${file}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"

@@ -117,6 +117,40 @@ void cc_bn_set_one(cc_bn_t *bn, size_t bn_word_len)
     }
 }
 
+// bn = {word, 0, 0, ...}
+void cc_bn_from_word(cc_bn_t *bn, size_t bn_word_len, cc_bn_t word)
+{
+    size_t i;
+    bn[0] = word;
+    for (i = 1; i < bn_word_len; i++)
+    {
+        bn[i] = 0;
+    }
+}
+
+void cc_bn_from_words(cc_bn_t *bn, size_t bn_word_len, const cc_bn_t *words, size_t words_len)
+{
+    size_t i;
+    if (bn_word_len > words_len)
+    {
+        for (i = 0; i < words_len; i++)
+        {
+            bn[i] = words[i];
+        }
+        for (; i < bn_word_len; i++)
+        {
+            bn[i] = 0;
+        }
+    }
+    else
+    {
+        for (i = 0; i < bn_word_len; i++)
+        {
+            bn[i] = words[i];
+        }
+    }
+}
+
 bool cc_bn_is_zero(const cc_bn_t *bn, size_t bn_word_len)
 {
     size_t i;
@@ -146,6 +180,28 @@ bool cc_bn_is_one(const cc_bn_t *bn, size_t bn_word_len)
         }
     }
     return true;
+}
+
+// compare A and {B, 0, 0, ...}, return 1 if A > {B, 0, 0, ...}
+int cc_bn_cmp_word(const cc_bn_t *A, size_t bn_word_len, cc_bn_t B)
+{
+    int i;
+    for (i = bn_word_len - 1; i >= 1; i -= 1)
+    {
+        if (A[i] != 0)
+        {
+            return 1;
+        }
+    }
+    if (A[0] > B)
+    {
+        return 1;
+    }
+    else if (A[0] < B)
+    {
+        return -1;
+    }
+    return 0;
 }
 
 int cc_bn_cmp_words(const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len)
@@ -206,6 +262,14 @@ cc_bn_t cc_bn_get_bit(const cc_bn_t *bn, size_t bit_index)
     int bit_index_in_digit = bit_index % CC_BN_DIGIT_BITS;
     return (bn[digit_index] >> bit_index_in_digit) & 0x01;
 }
+
+void cc_bn_set_bit(cc_bn_t *bn, size_t bit_index, cc_bn_t bit)
+{
+    int digit_index = bit_index / CC_BN_DIGIT_BITS;
+    int bit_index_in_digit = bit_index % CC_BN_DIGIT_BITS;
+    bn[digit_index] = (bn[digit_index] & ~(1 << bit_index_in_digit)) | (bit << bit_index_in_digit);
+}
+
 size_t cc_bn_bit_len(const cc_bn_t *bn, size_t bn_word_len)
 {
     int i, j;
@@ -262,6 +326,7 @@ size_t cc_bn_word_len(const cc_bn_t *bn, size_t bn_word_len)
 }
 
 // rigth move 1 bit, bn_out = bn_in / 2
+// bn_out can be alias for bn_in
 void cc_bn_rshift_1(const cc_bn_t *bn_in, size_t bn_word_len, cc_bn_t *bn_out)
 {
     size_t i;
@@ -272,17 +337,22 @@ void cc_bn_rshift_1(const cc_bn_t *bn_in, size_t bn_word_len, cc_bn_t *bn_out)
     bn_out[bn_word_len - 1] = bn_in[bn_word_len - 1] >> 1;
 }
 
-// left move 1 bit, bn_out = bn_in * 2
-void cc_bn_lshift_1(const cc_bn_t *bn_in, size_t bn_word_len, cc_bn_t *bn_out)
+// left move 1 bit, bn_out = bn_in * 2, return higest bit moved out
+// bn_out can be alias for bn_in
+cc_bn_t cc_bn_lshift_1(const cc_bn_t *bn_in, size_t bn_word_len, cc_bn_t *bn_out)
 {
     int i;
+    cc_bn_t carry = bn_in[bn_word_len - 1] >> (CC_BN_DIGIT_BITS - 1);
     for (i = bn_word_len - 1; i > 0; i -= 1)
     {
         bn_out[i] = (bn_in[i] << 1) | (bn_in[i - 1] >> (CC_BN_DIGIT_BITS - 1));
     }
     bn_out[0] = bn_in[0] << 1;
+
+    return carry;
 }
 
+// bn_out can be alias for bn_in
 void cc_bn_lshift(const cc_bn_t *bn_in, size_t bn_word_len, size_t shift_bit_len, cc_bn_t *bn_out)
 {
     int i;
@@ -323,6 +393,7 @@ void cc_bn_lshift(const cc_bn_t *bn_in, size_t bn_word_len, size_t shift_bit_len
     }
 }
 
+// bn_out can be alias for bn_in
 void cc_bn_rshift(const cc_bn_t *bn_in, size_t bn_word_len, size_t shift_bit_len, cc_bn_t *bn_out)
 {
     int i;
@@ -363,7 +434,8 @@ void cc_bn_rshift(const cc_bn_t *bn_in, size_t bn_word_len, size_t shift_bit_len
     }
 }
 
-cc_bn_t cc_bn_add_uint(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
+// R = A + d
+cc_bn_t cc_bn_add_word(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
 {
     size_t i;
     cc_bn_t carry = d;
@@ -374,6 +446,8 @@ cc_bn_t cc_bn_add_uint(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t 
     }
     return carry; // return carry
 }
+
+// R = A + B
 cc_bn_t cc_bn_add_words(const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len, cc_bn_t *R)
 {
     size_t i;
@@ -389,7 +463,8 @@ cc_bn_t cc_bn_add_words(const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len, 
     return carry; // return carry
 }
 
-// A_word_len >= B_word_len
+// R = A + B
+//  A_word_len >= B_word_len
 cc_bn_t cc_bn_add_small(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len, cc_bn_t *R)
 {
     size_t i;
@@ -410,6 +485,7 @@ cc_bn_t cc_bn_add_small(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, s
     return carry; // return carry
 }
 
+// R = A + B
 cc_bn_t cc_bn_add(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len, cc_bn_t *R)
 {
     if (A_word_len < B_word_len)
@@ -422,20 +498,22 @@ cc_bn_t cc_bn_add(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t 
     }
 }
 
-cc_bn_t cc_bn_sub_uint(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
+// R = A - d
+cc_bn_t cc_bn_sub_word(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
 {
     size_t i;
-    cc_bn_t s, t;
     for (i = 0; i < bn_word_len; i++)
     {
-        s = A[i];
-        t = s - d;
+        cc_bn_t s = A[i];
+        cc_bn_t t = s - d;
         d = (t > s);
         R[i] = t;
     }
     return d; // return borrow
 }
 
+// R = A - B
+// R can be alias for A or B
 cc_bn_t cc_bn_sub_words(const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len, cc_bn_t *R)
 {
     size_t i;
@@ -450,6 +528,7 @@ cc_bn_t cc_bn_sub_words(const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len, 
     return borrow; // return borrow
 }
 
+// R = A - B
 // A_word_len >= B_word_len
 cc_bn_t cc_bn_sub_small(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len, cc_bn_t *R)
 {
@@ -464,8 +543,9 @@ cc_bn_t cc_bn_sub_small(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, s
     }
     for (i = B_word_len; i < A_word_len; i++)
     {
+        cc_bn_t z = (A[i] < borrow);
         R[i] = A[i] - borrow;
-        borrow = (R[i] > A[i]);
+        borrow = z;
     }
     return borrow; // return borrow
 }

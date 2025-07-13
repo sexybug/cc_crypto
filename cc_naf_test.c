@@ -7,7 +7,7 @@
 #include "cc_naf.h"
 #include "cc_test.h"
 
-void print_naf(int *naf, size_t naf_len)
+void print_naf(int8_t *naf, size_t naf_len)
 {
     printf("NAF: \n");
     for (size_t i = naf_len - 1; i < naf_len; i--)
@@ -24,7 +24,7 @@ int main()
 {
     cc_bn_t K2[2] = {0x42E576F7, 0x00};
 
-    int naf2[64];
+    int8_t naf2[64];
     size_t naf2_len = naf(K2, 2, 2, naf2);
     printf("naf2_len = %d\n", naf2_len);
     print_naf(naf2, naf2_len);
@@ -38,7 +38,7 @@ naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = -1, naf[2] = 0, naf[1] 
     */
 
     cc_bn_t K3[2] = {0x42E576F7, 0x00};
-    int naf3[64];
+    int8_t naf3[64];
     size_t naf3_len = naf(K3, 2, 3, naf3);
     printf("naf3_len = %d\n", naf3_len);
     print_naf(naf3, naf3_len);
@@ -52,7 +52,7 @@ naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = -1, naf[2] = 0, naf[1] 
     */
 
     cc_bn_t K4[2] = {0x42E576F7, 0x00};
-    int naf4[64];
+    int8_t naf4[64];
     size_t naf4_len = naf(K4, 2, 4, naf4);
     printf("naf4_len = %d\n", naf4_len);
     print_naf(naf4, naf4_len);
@@ -66,7 +66,7 @@ naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = -1, naf[3] = 0, naf[2] = 0, naf[1] 
     */
 
     cc_bn_t K5[2] = {0x42E576F7, 0x00};
-    int naf5[64];
+    int8_t naf5[64];
     size_t naf5_len = naf(K5, 2, 5, naf5);
     printf("naf5_len = %d\n", naf5_len);
     print_naf(naf5, naf5_len);
@@ -80,7 +80,7 @@ naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = 0, naf[2] = 0, naf[1] =
     */
 
     cc_bn_t K6[2] = {0x42E576F7, 0x00};
-    int naf6[64];
+    int8_t naf6[64];
     size_t naf6_len = naf(K6, 2, 6, naf6);
     printf("naf6_len = %d\n", naf6_len);
     print_naf(naf6, naf6_len);

@@ -12,7 +12,13 @@
         "stdio.h": "c",
         "cc_test.h": "c",
         "string.h": "c",
-        "cc_bn_config.h": "c"
+        "cc_bn_config.h": "c",
+        "cc_bn_err.h": "c",
+        "stdlib.h": "c",
+        "time.h": "c",
+        "cc_crypto_rng.h": "c",
+        "cc_bn_exp.h": "c",
+        "cc_bn_mod.h": "c"
     },
     "Codegeex.RepoIndex": true
 }

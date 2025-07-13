@@ -7501,8 +7501,8 @@ void cc_basis_convert(const cc_bn_t *src, size_t bn_word_len, const cc_bn_t *map
 int main(void)
 {
     cc_bn_t bn1[12] = {0x01234567, 0x89abcdef, 0x01234567, 0x89abcdef,
-                             0x01234567, 0x89abcdef, 0x01234567, 0x89abcdef,
-                             0x01234567, 0x89abcdef, 0x01234567, 0x0000000f};
+                       0x01234567, 0x89abcdef, 0x01234567, 0x89abcdef,
+                       0x01234567, 0x89abcdef, 0x01234567, 0x0000000f};
     cc_bn_t bn2[12];
     cc_bn_t bn3[12];
     cc_basis_convert(bn1, 12, BM_359, bn2);

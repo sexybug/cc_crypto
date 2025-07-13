@@ -2,14 +2,14 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdio.h>
-#include "cc_bn.h"
+#include "cc_bn_mul.h"
 
 int main(void)
 {
     {
         cc_bn_t N[2] = {0x87654321, 0x87654321};
         size_t N_len = 2;
-        cc_bn_t R2[3];
+        cc_bn_t R2[2];
         cc_bn_t expected[2] = {0x38be92c5, 0x38be92c4};
 
         cc_bn_mont_R2(N, N_len, R2);
@@ -19,8 +19,18 @@ int main(void)
     {
         cc_bn_t N[2] = {0x87654321, 0x12345678};
         size_t N_len = 2;
-        cc_bn_t R2[3];
+        cc_bn_t R2[2];
         cc_bn_t expected[2] = {0xffbc0000, 0x443ffff};
+
+        cc_bn_mont_R2(N, N_len, R2);
+        assert(memcmp(R2, expected, sizeof(expected)) == 0);
+    }
+
+    {
+        cc_bn_t N[2] = {0xFFFFFFFF, 0xFFFFFFFF};
+        size_t N_len = 2;
+        cc_bn_t R2[2];
+        cc_bn_t expected[2] = {1, 0};
 
         cc_bn_mont_R2(N, N_len, R2);
         assert(memcmp(R2, expected, sizeof(expected)) == 0);

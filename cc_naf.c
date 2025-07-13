@@ -3,6 +3,8 @@
 // return naf_ki = k % w
 static inline int8_t cc_naf_mod(cc_bn_t k, size_t w)
 {
+    // ki = k % (2^w)
+    // if ki > 2^(w-1) then ki = ki - 2^w
     int8_t ki = k & (((cc_bn_t)1 << w) - 1);
     if (ki > ((cc_bn_t)1 << (w - 1)))
     {
@@ -26,11 +28,11 @@ size_t naf(cc_bn_t *K, size_t K_word_len, size_t w, int8_t *naf)
             naf[i] = ki;
             if (ki > 0)
             {
-                cc_bn_sub_uint(K, K_word_len, ki, K);
+                cc_bn_sub_word(K, K_word_len, ki, K);
             }
             else
             {
-                cc_bn_add_uint(K, K_word_len, -ki, K);
+                cc_bn_add_word(K, K_word_len, -ki, K);
             }
         }
         else
