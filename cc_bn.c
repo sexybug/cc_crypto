@@ -435,6 +435,7 @@ void cc_bn_rshift(const cc_bn_t *bn_in, size_t bn_word_len, size_t shift_bit_len
 }
 
 // R = A + d
+// R can be alias for A
 cc_bn_t cc_bn_add_word(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
 {
     size_t i;

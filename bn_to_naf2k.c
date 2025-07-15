@@ -17,18 +17,7 @@ void print_naf2k(int *naf2k, int len)
     }
     printf("\n");
 }
-void print_binary(const uint8_t *data, int len)
-{
-    for (int i = 0; i < len; i++)
-    {
-        for (int j = 7; j >= 0; j--)
-        {
-            printf("%d", (data[i] >> j) & 1);
-        }
-        printf(" ");
-    }
-    printf("\n");
-}
+
 void compute_naf2k(int *naf2k, const uint32_t K[8])
 {
     int bit1, bit2, bit0;
@@ -167,10 +156,6 @@ void compute_naf2k(int *naf2k, const uint32_t K[8])
     print_naf2k(naf2k, 257);
 }
 
-
-
-
-
 int main(int argc, char *argv[])
 {
     // char key_str[] = "3945208F7B2144B13F36E38AC6D39F95889393692860B51A42FB81EF4DF7C5B8";
@@ -189,9 +174,8 @@ int main(int argc, char *argv[])
     int naf2k[257] = {0};
     compute_naf2k(naf2k, K);
 
-    for(int i=256; i >= 0; i--)
+    for (int i = 256; i >= 0; i--)
     {
-        printf("%d,",naf2k[i]);
+        printf("%d,", naf2k[i]);
     }
 }
-

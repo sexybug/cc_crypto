@@ -5,6 +5,11 @@
 #include "cc_bn.h"
 #include "cc_bn_err.h"
 
+// R = A^E mod N
+// R can be alias for A or E or N
+void cc_bn_mod_exp(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *E, size_t E_word_len,
+                   const cc_bn_t *N, size_t N_word_len, cc_bn_t *R);
+
 // R = mont_exp(A, E) = A^E mod N, A is montgomery form
 // R can not be alias for A or B
 void cc_bn_mont_exp(const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len, cc_bn_t Ni, cc_bn_t *R);

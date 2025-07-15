@@ -342,19 +342,18 @@ cc_bn_status_t cc_bn_rand_range(cc_bn_t *N, size_t bn_word_len, cc_crypto_rng_f 
     do
     {
         // generate R >= 1
-        do
+        count -= 1;
+        if (count < 0)
         {
-            count -= 1;
-            if (count < 0)
-            {
-                return CC_BN_ERR_GEN_RAND;
-            }
-            rng(R, bn_real_word_len * CC_BN_DIGIT_BYTES);
+            return CC_BN_ERR_GEN_RAND;
+        }
+        rng(R, bn_real_word_len * CC_BN_DIGIT_BYTES);
 
-            // random bit length <= N bit length
-            R[bn_real_word_len - 1] &= (uint64_t)((1ULL << (bits % CC_BN_DIGIT_BITS)) - 1);
+        // make R >= 1
+        cc_bn_add_word(R, bn_real_word_len, 1, R);
 
-        } while (cc_bn_is_zero(R, bn_word_len));
+        // random bit length <= N bit length
+        R[bn_real_word_len - 1] &= (uint64_t)((1ULL << (bits % CC_BN_DIGIT_BITS)) - 1);
 
         // make R in [1, N]
         int bit_index = bits - 2;
@@ -377,21 +376,21 @@ cc_bn_status_t cc_bn_rand_range(cc_bn_t *N, size_t bn_word_len, cc_crypto_rng_f 
 // R = A^E mod N, R can not be aliased with A, E, N
 void cc_bn_mr_exp(const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *R2, cc_bn_t Ni, cc_bn_t *R)
 {
-    cc_bn_t t[CC_BN_MAX_WORDS];
-    cc_bn_mont_mul(A, R2, N, bn_word_len, Ni, t);
-    cc_bn_mont_exp(t, E, N, bn_word_len, Ni, R);
-    cc_bn_mont_mul_word(R, 1, N, bn_word_len, Ni, t);
-    cc_bn_copy(R, t, bn_word_len);
+    cc_bn_t T[CC_BN_MAX_WORDS];
+    cc_bn_mont_mul(A, R2, N, bn_word_len, Ni, T);
+    cc_bn_mont_exp(T, E, N, bn_word_len, Ni, R);
+    cc_bn_mont_mul_word(R, 1, N, bn_word_len, Ni, T);
+    cc_bn_copy(R, T, bn_word_len);
 }
 
 // R = A^2 mod N, R can not be aliased with A, N
 void cc_bn_mr_square(const cc_bn_t *A, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *R2, cc_bn_t Ni, cc_bn_t *R)
 {
-    cc_bn_t t[CC_BN_MAX_WORDS];
-    cc_bn_mont_mul(A, R2, N, bn_word_len, Ni, t);
-    cc_bn_mont_mul(t, t, N, bn_word_len, Ni, R);
-    cc_bn_mont_mul_word(R, 1, N, bn_word_len, Ni, t);
-    cc_bn_copy(R, t, bn_word_len);
+    cc_bn_t T[CC_BN_MAX_WORDS];
+    cc_bn_mont_mul(A, R2, N, bn_word_len, Ni, T);
+    cc_bn_mont_mul(T, T, N, bn_word_len, Ni, R);
+    cc_bn_mont_mul_word(R, 1, N, bn_word_len, Ni, T);
+    cc_bn_copy(R, T, bn_word_len);
 }
 
 // refer to FIPS 186-5 B.3.1

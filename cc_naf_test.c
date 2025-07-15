@@ -93,5 +93,13 @@ naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = 0, naf[2] = 0, naf[1] =
     naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = 0, naf[2] = 0, naf[1] = 0, naf[0] = -9,
     */
 
+    {
+        cc_bn_t K6[2] = {0x000000AF, 0x00};
+        int8_t naf6[64];
+        size_t naf6_len = naf(K6, 2, 4, naf6);
+        printf("naf6_len = %d\n", naf6_len);
+        print_naf(naf6, naf6_len);
+    }
+
     return 0;
 }
