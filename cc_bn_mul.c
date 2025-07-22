@@ -1,4 +1,5 @@
 #include "cc_bn_mul.h"
+#include <assert.h>
 
 // note: bn_out must be at least bn_word_len+1
 void cc_bn_mul_word(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
@@ -15,7 +16,7 @@ void cc_bn_mul_word(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
 }
 
 // R = R + A * d
-// R_word_len = bn_word_len + 1, R[bn_word_len] may need to be zero
+// R_word_len = bn_word_len + 1, input R[bn_word_len] may need to be zero
 void cc_bn_mul_word_add(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
 {
     if (bn_word_len == 0)
@@ -67,7 +68,7 @@ void cc_bn_mul(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_w
 void cc_bn_mont_R2(const cc_bn_t *N, size_t N_word_len, cc_bn_t *R2)
 {
     size_t i;
-    size_t N_bit_len = cc_bn_bit_len(N, N_word_len);
+    size_t N_bit_len = ((cc_bn_bit_len(N, N_word_len) + 31) / 32) * 32;
 
     // t=1
     cc_bn_set_one(R2, N_word_len);
@@ -184,7 +185,7 @@ void cc_bn_mont_mul(const cc_bn_t *A, const cc_bn_t *B, const cc_bn_t *N, size_t
     size_t i, j;
     for (i = 0; i < bn_word_len; i++)
     {
-        // q = (d0 + a0 *bi) * Ni
+        // q = (d0 + a0 *bi) * Ni mod k
         cc_bn_t q = (R[0] + a0 * B[i]) * Ni;
 
         // d = d + A * B[i]
@@ -197,6 +198,8 @@ void cc_bn_mont_mul(const cc_bn_t *A, const cc_bn_t *B, const cc_bn_t *N, size_t
         Rn = Rn + carry;
         cc_bn_t c2 = Rn < carry;
         carry = c1 | c2;
+
+        assert(R[0] == 0);
 
         // d = d * r^(-1)
         for (j = 0; j < bn_word_len - 1; j++)
