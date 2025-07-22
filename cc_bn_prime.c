@@ -342,18 +342,19 @@ cc_bn_status_t cc_bn_rand_range(cc_bn_t *N, size_t bn_word_len, cc_crypto_rng_f 
     do
     {
         // generate R >= 1
-        count -= 1;
-        if (count < 0)
+        do
         {
-            return CC_BN_ERR_GEN_RAND;
-        }
-        rng(R, bn_real_word_len * CC_BN_DIGIT_BYTES);
+            count -= 1;
+            if (count < 0)
+            {
+                return CC_BN_ERR_GEN_RAND;
+            }
+            rng(R, bn_real_word_len * CC_BN_DIGIT_BYTES);
 
-        // make R >= 1
-        cc_bn_add_word(R, bn_real_word_len, 1, R);
+            // random bit length <= N bit length
+            R[bn_real_word_len - 1] &= (uint64_t)((1ULL << (bits % CC_BN_DIGIT_BITS)) - 1);
 
-        // random bit length <= N bit length
-        R[bn_real_word_len - 1] &= (uint64_t)((1ULL << (bits % CC_BN_DIGIT_BITS)) - 1);
+        } while (cc_bn_is_zero(R, bn_word_len));
 
         // make R in [1, N]
         int bit_index = bits - 2;
