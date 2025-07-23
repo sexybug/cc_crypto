@@ -10,7 +10,7 @@
 int main(void)
 {
     {
-        cc_bn_t N[] = {0x9};
+        cc_bn_t N[] = {0xF};
         size_t N_len = sizeof(N) / sizeof(N[0]);
 
         size_t bits = cc_bn_bit_len(N, N_len);

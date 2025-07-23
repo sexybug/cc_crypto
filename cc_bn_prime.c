@@ -309,11 +309,11 @@ static cc_bn_status_t cc_bn_prime_trial_division(const cc_bn_t *X, size_t bn_wor
 int calc_miller_rabin_iterations(int bits)
 {
     // openssl rounds
-    if (bits > 2048)
-        return 128;
-    return 64;
+    // if (bits > 2048)
+    //     return 128;
+    // return 64;
 
-    /* mbedtls rounds
+    // mbedtls rounds
     return ((bits >= 1450)   ? 4
             : (bits >= 1150) ? 5
             : (bits >= 1000) ? 6
@@ -323,7 +323,6 @@ int calc_miller_rabin_iterations(int bits)
             : (bits >= 250)  ? 28
             : (bits >= 150)  ? 40
                              : 51);
-    */
 }
 
 // generate random R in [1, N-1]
@@ -352,7 +351,10 @@ cc_bn_status_t cc_bn_rand_range(cc_bn_t *N, size_t bn_word_len, cc_crypto_rng_f 
             rng(R, bn_real_word_len * CC_BN_DIGIT_BYTES);
 
             // random bit length <= N bit length
-            R[bn_real_word_len - 1] &= (uint64_t)((1ULL << (bits % CC_BN_DIGIT_BITS)) - 1);
+            if((bits % CC_BN_DIGIT_BITS) != 0)
+            {
+                R[bn_real_word_len - 1] &= (uint64_t)((1ULL << (bits % CC_BN_DIGIT_BITS)) - 1);
+            }
 
         } while (cc_bn_is_zero(R, bn_word_len));
 
@@ -403,7 +405,6 @@ cc_bn_status_t cc_bn_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int iter
     cc_bn_t M[CC_BN_MAX_WORDS];
     cc_bn_t B[CC_BN_MAX_WORDS];
     cc_bn_t Z[CC_BN_MAX_WORDS];
-    cc_bn_t Z2[CC_BN_MAX_WORDS]; // Z^2 mod W
     cc_bn_t R2[CC_BN_MAX_WORDS];
 
     // if w is even, it is composite
@@ -441,6 +442,7 @@ cc_bn_status_t cc_bn_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int iter
             {
                 return rand_status;
             }
+            // if B = 1, re-generate B
         } while (cc_bn_cmp_word(B, bn_word_len, 1) <= 0);
 
         /* (Step 4.3) z = b^m mod w */
@@ -455,15 +457,15 @@ cc_bn_status_t cc_bn_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int iter
         for (j = 1; j < a; j++)
         {
             /* (Step 4.5.1) z = z^2 mod w */
-            cc_bn_mr_square(Z, W, bn_word_len, R2, Ni, Z2);
+            cc_bn_mr_square(Z, W, bn_word_len, R2, Ni, Z);
 
             /* (Step 4.5.2) if z = w-1 then go to Step 4.7 */
-            if (cc_bn_cmp_words(Z2, W1, bn_word_len) == 0)
+            if (cc_bn_cmp_words(Z, W1, bn_word_len) == 0)
             {
                 continue;
             }
             /* (Step 4.5.3) if z = 1 then go to Step 4.6 */
-            if (cc_bn_cmp_word(Z2, bn_word_len, 1) == 0)
+            if (cc_bn_cmp_word(Z, bn_word_len, 1) == 0)
             {
                 return CC_BN_IS_COMPOSITE;
             }
