@@ -6,6 +6,11 @@
 #include "cc_bn_err.h"
 #include "cc_crypto_rng.h"
 
+/*
+ * Small divisors test, to quickly eliminate non-primes.
+ */
+cc_bn_status_t cc_bn_prime_trial_division(const cc_bn_t *X, size_t bn_word_len);
+
 int calc_miller_rabin_iterations(int bits);
 
 // generate random R in [1, N-1]
