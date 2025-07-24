@@ -162,6 +162,19 @@ void test_cc_bn_mul_uint()
         printf("测试用例10通过：溢出边界测试\n");
     }
 
+    // 测试用例11：输出等于输入测试
+    {
+        cc_bn_t bn_in[3] = {0x80000000, 0x80000000};
+        cc_bn_t bn_out[3] = {0};
+        cc_bn_t d = 0x80000000;
+
+        cc_bn_mul_word(bn_out, bn_in, 2, d);
+        cc_bn_mul_word(bn_in, bn_in, 2, d);
+
+        assert(memcmp(bn_in,bn_out, sizeof(bn_out))==0);
+        printf("测试用例11通过：输出等于输入测试\n");
+    }
+
     printf("所有测试用例通过！\n");
 }
 

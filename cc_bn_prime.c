@@ -25,23 +25,25 @@ int calc_miller_rabin_iterations(int bits)
                              : 51);
 }
 
-// R = A^E mod N, R can not be aliased with A, E, N
-void cc_bn_mr_exp(const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *R2, cc_bn_t Ni, cc_bn_t *R)
+// R = A^E mod N
+// R can alias A, R cannot alias N
+void cc_bn_mr_exp(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *R2, cc_bn_t Ni)
 {
     cc_bn_t T[CC_BN_MAX_WORDS];
-    cc_bn_mont_mul(A, R2, N, bn_word_len, Ni, T);
-    cc_bn_mont_exp(T, E, N, bn_word_len, Ni, R);
-    cc_bn_mont_mul_word(R, 1, N, bn_word_len, Ni, T);
+    cc_bn_mont_mul(T, A, R2, N, bn_word_len, Ni);
+    cc_bn_mont_exp(R, T, E, N, bn_word_len, Ni);
+    cc_bn_mont_mul_word(T, R, 1, N, bn_word_len, Ni);
     cc_bn_copy(R, T, bn_word_len);
 }
 
-// R = A^2 mod N, R can not be aliased with A, N
-void cc_bn_mr_square(const cc_bn_t *A, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *R2, cc_bn_t Ni, cc_bn_t *R)
+// R = A^2 mod N
+// R can alias A, R cannot alias N
+void cc_bn_mr_square(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *R2, cc_bn_t Ni)
 {
     cc_bn_t T[CC_BN_MAX_WORDS];
-    cc_bn_mont_mul(A, R2, N, bn_word_len, Ni, T);
-    cc_bn_mont_mul(T, T, N, bn_word_len, Ni, R);
-    cc_bn_mont_mul_word(R, 1, N, bn_word_len, Ni, T);
+    cc_bn_mont_mul(T, A, R2, N, bn_word_len, Ni);
+    cc_bn_mont_mul(R, T, T, N, bn_word_len, Ni);
+    cc_bn_mont_mul_word(T, R, 1, N, bn_word_len, Ni);
     cc_bn_copy(R, T, bn_word_len);
 }
 
@@ -54,7 +56,7 @@ cc_bn_status_t cc_bn_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int iter
     cc_bn_t M[CC_BN_MAX_WORDS];
     cc_bn_t B[CC_BN_MAX_WORDS];
     cc_bn_t Z[CC_BN_MAX_WORDS];
-    cc_bn_t R2[CC_BN_MAX_WORDS];
+    cc_bn_t RR[CC_BN_MAX_WORDS];
 
     // if w is even, it is composite
     if ((W[0] & 1) == 0)
@@ -75,8 +77,8 @@ cc_bn_status_t cc_bn_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int iter
     /* (Step 2) m = (w-1) / 2^a */
     cc_bn_rshift(M, W1, bn_word_len, a);
 
-    // calc mont R2
-    cc_bn_mont_R2(W, bn_word_len, R2);
+    // calc mont RR
+    cc_bn_mont_RR(RR, W, bn_word_len);
 
     cc_bn_t Ni = cc_bn_mont_Ni(W);
 
@@ -95,7 +97,7 @@ cc_bn_status_t cc_bn_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int iter
         } while (cc_bn_cmp_word(B, bn_word_len, 1) <= 0);
 
         /* (Step 4.3) z = b^m mod w */
-        cc_bn_mr_exp(B, M, W, bn_word_len, R2, Ni, Z);
+        cc_bn_mr_exp(Z, B, M, W, bn_word_len, RR, Ni);
 
         /* (Step 4.4) if z = 1 or z = w-1 then go to Step 4.7 */
         if (cc_bn_cmp_word(Z, bn_word_len, 1) == 0 || cc_bn_cmp_words(Z, W1, bn_word_len) == 0)
@@ -112,7 +114,7 @@ cc_bn_status_t cc_bn_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int iter
         for (j = 1; j < a; j++)
         {
             /* (Step 4.5.1) z = z^2 mod w */
-            cc_bn_mr_square(Z, W, bn_word_len, R2, Ni, Z);
+            cc_bn_mr_square(Z, Z, W, bn_word_len, RR, Ni);
 
             /* (Step 4.5.2) if z = w-1 then go to Step 4.7 */
             if (cc_bn_cmp_words(Z, W1, bn_word_len) == 0)

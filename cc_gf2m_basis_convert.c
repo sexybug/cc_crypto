@@ -1299,7 +1299,8 @@ uint32_t BM_281[281 * BN_WORD_LEN] = {
 		0xf1c65a1b,0xe8a31a0e,0xcf7b0859,0xb78c9a38,0xac5a8b87,0xfd93f90e,0xbf83d1b8,0x749e5b70,0x00d95473,0x00000000,0x00000000,0x00000000,
 };
 
-static void cc_bn_xor(const cc_bn_t *src1, const cc_bn_t *src2, size_t bn_word_len, cc_bn_t *dst)
+// dst can alias src1 src2
+static void cc_bn_xor(cc_bn_t *dst, const cc_bn_t *src1, const cc_bn_t *src2, size_t bn_word_len)
 {
     size_t i;
     for (i = 0; i < bn_word_len; i++)
@@ -1308,7 +1309,8 @@ static void cc_bn_xor(const cc_bn_t *src1, const cc_bn_t *src2, size_t bn_word_l
     }
 }
 
-void cc_basis_convert(const cc_bn_t *src, size_t bn_word_len, const cc_bn_t *maps, cc_bn_t *dst)
+// dst cannot alias src
+void cc_basis_convert(cc_bn_t *dst, const cc_bn_t *src, size_t bn_word_len, const cc_bn_t *maps)
 {
     size_t i;
     cc_bn_set_zero(dst, bn_word_len);
@@ -1318,7 +1320,7 @@ void cc_basis_convert(const cc_bn_t *src, size_t bn_word_len, const cc_bn_t *map
     {
         if (cc_bn_get_bit(src, i) == 1)
         {
-            cc_bn_xor(dst, maps + i * BN_WORD_LEN, bn_word_len, dst);
+            cc_bn_xor(dst, dst, maps + i * BN_WORD_LEN, bn_word_len);
         }
     }
 }
@@ -1330,8 +1332,8 @@ int main(void)
                        0x01234567, 0x89abcdef, 0x01234567, 0x0000000f};
     cc_bn_t bn2[12];
     cc_bn_t bn3[12];
-    cc_basis_convert(bn1, 12, BM_359, bn2);
-    cc_basis_convert(bn2, 12, MB_359, bn3);
+    cc_basis_convert(bn2, bn1, 12, BM_359);
+    cc_basis_convert(bn3, bn2, 12, MB_359);
 
     return 0;
 }

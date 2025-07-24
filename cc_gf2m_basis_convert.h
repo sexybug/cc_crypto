@@ -3,6 +3,7 @@
 
 #include "cc_bn.h"
 
-void cc_basis_convert(const cc_bn_t *src, size_t bn_word_len, const cc_bn_t *maps, cc_bn_t *dst);
+// dst cannot alias src
+void cc_basis_convert(cc_bn_t *dst, const cc_bn_t *src, size_t bn_word_len, const cc_bn_t *maps);
 
 #endif // CC_GF2M_BASIS_CONVERT_H
