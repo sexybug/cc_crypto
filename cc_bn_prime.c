@@ -26,7 +26,7 @@ int calc_miller_rabin_iterations(int bits)
 }
 
 // generate random R in [1, N-1]
-cc_bn_status_t cc_bn_rand_range(cc_bn_t *N, size_t bn_word_len, cc_crypto_rng_f rng, cc_bn_t *R)
+cc_bn_status_t cc_bn_rand_range(const cc_bn_t *N, size_t bn_word_len, cc_crypto_rng_f rng, cc_bn_t *R)
 {
     int count = 1000; // at most try 1000 times
     size_t bits = cc_bn_bit_len(N, bn_word_len);

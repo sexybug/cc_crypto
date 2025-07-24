@@ -78,7 +78,7 @@ cc_bn_status_t cc_bn_div(cc_bn_t *A, size_t A_word_len, cc_bn_t *N, size_t N_wor
 }
 
 // compare {carry, A} with B
-int cc_bn_cmp_carry(cc_bn_t carry, const cc_bn_t *A, cc_bn_t *B, size_t bn_word_len)
+int cc_bn_cmp_carry(cc_bn_t carry, const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len)
 {
     if (carry == 0)
     {

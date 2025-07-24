@@ -7,7 +7,6 @@
 
 int main(void)
 {
-    cc_bn_t one[3] = {1, 0, 0};
     {
         cc_bn_t A[2] = {0xFFFFFFF8, 0x0808FFFF};
         cc_bn_t N[2] = {0x7C16BAD7, 0xCDD1ADCB};

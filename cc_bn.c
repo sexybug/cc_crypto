@@ -13,7 +13,7 @@ static cc_bn_t cc_u8_to_bn_word(const uint8_t *src, size_t byte_len)
 
 void cc_u8_to_bn(const uint8_t *src, size_t byte_len, size_t bn_word_len, cc_bn_t *bn)
 {
-    int i, j;
+    int i;
     int bn_index = bn_word_len - 1;
 
     // 检查是否有足够空间存储数据

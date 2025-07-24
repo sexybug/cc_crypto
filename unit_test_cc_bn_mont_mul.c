@@ -7,8 +7,6 @@
 
 int main(void)
 {
-    cc_bn_t one[3] = {1, 0, 0};
-
     {
         cc_bn_t A[2] = {7};
         cc_bn_t B[2] = {1};
