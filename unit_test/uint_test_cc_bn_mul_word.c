@@ -74,10 +74,10 @@ void test_cc_bn_mul_uint()
 
     // 测试用例5：乘以最大值
     {
-        cc_bn_t bn_in[] = {CC_BN_DIGIT_MAX};
+        cc_bn_t bn_in[] = {CC_BN_WORD_MAX};
         cc_bn_t bn_out[2] = {0};
-        cc_bn_t d = CC_BN_DIGIT_MAX;
-        cc_bn_t expected[] = {1, CC_BN_DIGIT_MAX - 1};
+        cc_bn_t d = CC_BN_WORD_MAX;
+        cc_bn_t expected[] = {1, CC_BN_WORD_MAX - 1};
 
         cc_bn_mul_word(bn_in, 1, d, bn_out);
         assert(compare_bn(bn_out, expected, 2));
@@ -86,10 +86,10 @@ void test_cc_bn_mul_uint()
 
     // 测试用例6：多位数乘法，连续进位
     {
-        cc_bn_t bn_in[] = {CC_BN_DIGIT_MAX, CC_BN_DIGIT_MAX, CC_BN_DIGIT_MAX};
+        cc_bn_t bn_in[] = {CC_BN_WORD_MAX, CC_BN_WORD_MAX, CC_BN_WORD_MAX};
         cc_bn_t bn_out[4] = {0};
         cc_bn_t d = 2;
-        cc_bn_t expected[] = {CC_BN_DIGIT_MAX - 1, CC_BN_DIGIT_MAX, CC_BN_DIGIT_MAX, 1};
+        cc_bn_t expected[] = {CC_BN_WORD_MAX - 1, CC_BN_WORD_MAX, CC_BN_WORD_MAX, 1};
 
         cc_bn_mul_word(bn_in, 3, d, bn_out);
         assert(compare_bn(bn_out, expected, 4));
@@ -111,8 +111,8 @@ void test_cc_bn_mul_uint()
     {
         cc_bn_t bn_in[] = {1};
         cc_bn_t bn_out[2] = {0};
-        cc_bn_t d = CC_BN_DIGIT_MAX;
-        cc_bn_t expected[] = {CC_BN_DIGIT_MAX, 0};
+        cc_bn_t d = CC_BN_WORD_MAX;
+        cc_bn_t expected[] = {CC_BN_WORD_MAX, 0};
 
         cc_bn_mul_word(bn_in, 1, d, bn_out);
         assert(compare_bn(bn_out, expected, 2));
@@ -136,7 +136,7 @@ void test_cc_bn_mul_uint()
 
         // 验证：手动计算第一个元素
         cc_bn_dword_t expected_first = (cc_bn_dword_t)1 * d;
-        assert(bn_out[0] == (expected_first & CC_BN_DIGIT_MAX));
+        assert(bn_out[0] == (expected_first & CC_BN_WORD_MAX));
         printf("测试用例9通过：大数组测试\n");
     }
 

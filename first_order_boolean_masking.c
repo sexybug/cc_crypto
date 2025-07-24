@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-//一阶布尔掩码
+// 一阶布尔掩码
 void sbox_mask(const uint8_t sbox_in[256], uint8_t mask_in, uint8_t mask_out, uint8_t sbox_out[256])
 {
     uint8_t sbox_tmp[256];

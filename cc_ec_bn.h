@@ -5,6 +5,6 @@
 #include "cc_bn.h"
 
 #define CC_EC_BN_MAX_BIT_LEN 521
-#define CC_EC_BN_MAX_WORD_LEN ((CC_EC_BN_MAX_BIT_LEN + CC_BN_DIGIT_BITS - 1) / CC_BN_DIGIT_BITS)
+#define CC_EC_BN_MAX_WORD_LEN ((CC_EC_BN_MAX_BIT_LEN + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS)
 
 #endif // CC_EC_BN_H

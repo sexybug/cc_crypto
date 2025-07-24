@@ -19,10 +19,10 @@ cc_bn_t cc_bn_mod_word(const cc_bn_t *A, size_t A_word_len, cc_bn_t d)
     cc_bn_dword_t remainder = A[A_word_len - 1] % d;
     for (i = A_word_len - 1; i > 0; i -= 1)
     {
-        remainder = (remainder << CC_BN_DIGIT_BITS) | (cc_bn_dword_t)A[i - 1];
+        remainder = (remainder << CC_BN_WORD_BITS) | (cc_bn_dword_t)A[i - 1];
         remainder = remainder % (cc_bn_dword_t)d;
     }
-    return remainder & CC_BN_DIGIT_MASK;
+    return remainder;
 }
 
 // Q = A / N, R = A % N
@@ -163,7 +163,7 @@ void cc_bn_mod_half(const cc_bn_t *A, const cc_bn_t *N, size_t bn_word_len, cc_b
     size_t i;
     for (i = 0; i < bn_word_len - 1; i += 1)
     {
-        R[i] = (R[i + 1] << (CC_BN_DIGIT_BITS - 1)) | (R[i] >> 1);
+        R[i] = (R[i + 1] << (CC_BN_WORD_BITS - 1)) | (R[i] >> 1);
     }
-    R[bn_word_len - 1] = (carry << (CC_BN_DIGIT_BITS - 1)) | (R[bn_word_len - 1] >> 1);
+    R[bn_word_len - 1] = (carry << (CC_BN_WORD_BITS - 1)) | (R[bn_word_len - 1] >> 1);
 }

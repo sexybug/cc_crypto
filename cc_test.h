@@ -4,7 +4,6 @@
 #include "cc_bn.h"
 #include <stdint.h>
 
-
 /**
  * @brief 打印内存数据
  *
@@ -21,7 +20,7 @@ void dump_mem(const void *ptr, int len);
  */
 void HexString2Hex(const char *str, int len, uint8_t *out);
 
-//return byte length of out
+// return byte length of out
 size_t hex_to_u8(const char *str, uint8_t *out);
 
 // return hex string length

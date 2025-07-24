@@ -98,7 +98,7 @@ void test_cc_bn_rshift()
         printf("通过: 单字右移31位\n\n");
     }
 
-    // 测试用例6: 边界条件 - 移位31位（CC_BN_DIGIT_BITS - 1）
+    // 测试用例6: 边界条件 - 移位31位（CC_BN_WORD_BITS - 1）
     {
         printf("测试用例6: 移位31位\n");
         cc_bn_t input[] = {0xFFFFFFFF, 0x80000000};

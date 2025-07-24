@@ -30,7 +30,7 @@ cc_bn_status_t cc_bn_rand_range(const cc_bn_t *N, size_t bn_word_len, cc_crypto_
 {
     int count = 1000; // at most try 1000 times
     size_t bits = cc_bn_bit_len(N, bn_word_len);
-    size_t bn_real_word_len = (bits + CC_BN_DIGIT_BITS - 1) / CC_BN_DIGIT_BITS;
+    size_t bn_real_word_len = (bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
 
     size_t i;
     for (i = bn_real_word_len; i < bn_word_len; i++)
@@ -48,12 +48,12 @@ cc_bn_status_t cc_bn_rand_range(const cc_bn_t *N, size_t bn_word_len, cc_crypto_
             {
                 return CC_BN_ERR_GEN_RAND;
             }
-            rng(R, bn_real_word_len * CC_BN_DIGIT_BYTES);
+            rng(R, bn_real_word_len * CC_BN_WORD_BYTES);
 
             // random bit length <= N bit length
-            if ((bits % CC_BN_DIGIT_BITS) != 0)
+            if ((bits % CC_BN_WORD_BITS) != 0)
             {
-                R[bn_real_word_len - 1] &= (((cc_bn_dword_t)1 << (bits % CC_BN_DIGIT_BITS)) - 1);
+                R[bn_real_word_len - 1] &= (((cc_bn_dword_t)1 << (bits % CC_BN_WORD_BITS)) - 1);
             }
 
         } while (cc_bn_is_zero(R, bn_word_len));

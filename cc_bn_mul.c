@@ -9,8 +9,8 @@ void cc_bn_mul_word(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
     for (i = 0; i < bn_word_len; i++)
     {
         cc_bn_dword_t t = (cc_bn_dword_t)A[i] * (cc_bn_dword_t)d + (cc_bn_dword_t)carry;
-        carry = t >> CC_BN_DIGIT_BITS;
-        R[i] = t & CC_BN_DIGIT_MAX;
+        carry = t >> CC_BN_WORD_BITS;
+        R[i] = t & CC_BN_WORD_MAX;
     }
     R[i] = carry; // store carry in the last digit
 }
@@ -30,8 +30,8 @@ void cc_bn_mul_word_add(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d,
     for (i = 0; i < bn_word_len; i++)
     {
         cc_bn_dword_t t = (cc_bn_dword_t)A[i] * (cc_bn_dword_t)d + (cc_bn_dword_t)carry + (cc_bn_dword_t)R[i];
-        carry = t >> CC_BN_DIGIT_BITS;
-        R[i] = t & CC_BN_DIGIT_MAX;
+        carry = t >> CC_BN_WORD_BITS;
+        R[i] = t & CC_BN_WORD_MAX;
     }
     R[i] += carry; // store carry in the last digit
 }
@@ -69,7 +69,7 @@ void cc_bn_mul(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_w
 void cc_bn_mont_R2(const cc_bn_t *N, size_t N_word_len, cc_bn_t *R2)
 {
     size_t i;
-    size_t N_bit_len = ((cc_bn_bit_len(N, N_word_len) + (CC_BN_DIGIT_BITS - 1)) / CC_BN_DIGIT_BITS) * CC_BN_DIGIT_BITS;
+    size_t N_bit_len = ((cc_bn_bit_len(N, N_word_len) + (CC_BN_WORD_BITS - 1)) / CC_BN_WORD_BITS) * CC_BN_WORD_BITS;
 
     // t=1
     cc_bn_set_one(R2, N_word_len);
@@ -93,7 +93,7 @@ cc_bn_t cc_bn_mont_Ni(const cc_bn_t *N)
     x += ((N[0] + 2) & 4) << 1;
 
     unsigned int i;
-    for (i = CC_BN_DIGIT_BITS; i >= 8; i /= 2)
+    for (i = CC_BN_WORD_BITS; i >= 8; i /= 2)
     {
         x *= (2 - (N[0] * x));
     }
@@ -110,8 +110,8 @@ cc_bn_t cc_bn_mul_word_add_ret(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, 
     for (i = 0; i < bn_word_len; i++)
     {
         cc_bn_dword_t t = (cc_bn_dword_t)A[i] * (cc_bn_dword_t)d + (cc_bn_dword_t)carry + (cc_bn_dword_t)R[i];
-        carry = t >> CC_BN_DIGIT_BITS;
-        R[i] = t & CC_BN_DIGIT_MAX;
+        carry = t >> CC_BN_WORD_BITS;
+        R[i] = t & CC_BN_WORD_MAX;
     }
     return carry;
 }

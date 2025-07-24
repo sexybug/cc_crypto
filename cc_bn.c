@@ -4,7 +4,7 @@ static cc_bn_t cc_u8_to_bn_word(const uint8_t *src, size_t byte_len)
 {
     size_t i;
     cc_bn_t word = 0;
-    for (i = 0; (i < byte_len) && (i < CC_BN_DIGIT_BYTES); i++)
+    for (i = 0; (i < byte_len) && (i < CC_BN_WORD_BYTES); i++)
     {
         word = (word << 8) | src[i];
     }
@@ -17,21 +17,21 @@ void cc_u8_to_bn(const uint8_t *src, size_t byte_len, size_t bn_word_len, cc_bn_
     int bn_index = bn_word_len - 1;
 
     // 检查是否有足够空间存储数据
-    if (byte_len > bn_word_len * CC_BN_DIGIT_BYTES)
+    if (byte_len > bn_word_len * CC_BN_WORD_BYTES)
     {
         return;
     }
 
     // 前方需要补多少字节的0
-    int zero_pad_len = bn_word_len * CC_BN_DIGIT_BYTES - byte_len;
+    int zero_pad_len = bn_word_len * CC_BN_WORD_BYTES - byte_len;
 
-    for (i = 0; i < zero_pad_len / CC_BN_DIGIT_BYTES; i++)
+    for (i = 0; i < zero_pad_len / CC_BN_WORD_BYTES; i++)
     {
         bn[bn_index] = 0;
         bn_index -= 1;
     }
     // 最高的word需要从src中读取多少字节
-    int left_u8_len = byte_len % CC_BN_DIGIT_BYTES;
+    int left_u8_len = byte_len % CC_BN_WORD_BYTES;
     if (left_u8_len != 0)
     {
         bn[bn_index] = cc_u8_to_bn_word(src, left_u8_len);
@@ -41,20 +41,20 @@ void cc_u8_to_bn(const uint8_t *src, size_t byte_len, size_t bn_word_len, cc_bn_
     int src_index = left_u8_len;
     while (bn_index >= 0)
     {
-        bn[bn_index] = cc_u8_to_bn_word(src + src_index, CC_BN_DIGIT_BYTES);
+        bn[bn_index] = cc_u8_to_bn_word(src + src_index, CC_BN_WORD_BYTES);
         bn_index -= 1;
-        src_index += CC_BN_DIGIT_BYTES;
+        src_index += CC_BN_WORD_BYTES;
     }
 }
 
 void cc_bn_to_u8(const cc_bn_t *bn, size_t bn_word_len, uint8_t *dst)
 {
     int i;
-    int byte_len = bn_word_len * CC_BN_DIGIT_BYTES;
+    int byte_len = bn_word_len * CC_BN_WORD_BYTES;
 
     for (i = 0; i < byte_len; i++)
     {
-        dst[i] = (bn[bn_word_len - 1 - i / CC_BN_DIGIT_BYTES] >> (CC_BN_DIGIT_BITS - 8 - (i % CC_BN_DIGIT_BYTES) * 8)) & 0xFF;
+        dst[i] = (bn[bn_word_len - 1 - i / CC_BN_WORD_BYTES] >> (CC_BN_WORD_BITS - 8 - (i % CC_BN_WORD_BYTES) * 8)) & 0xFF;
     }
 }
 
@@ -62,7 +62,7 @@ void cc_bn_to_u8(const cc_bn_t *bn, size_t bn_word_len, uint8_t *dst)
 //  return the number of words used in bn
 size_t cc_u8_to_bn_fit(const uint8_t *src, size_t byte_len, cc_bn_t *bn)
 {
-    size_t bn_word_len = (byte_len + CC_BN_DIGIT_BYTES - 1) / CC_BN_DIGIT_BYTES;
+    size_t bn_word_len = (byte_len + CC_BN_WORD_BYTES - 1) / CC_BN_WORD_BYTES;
     cc_u8_to_bn(src, byte_len, bn_word_len, bn);
     return bn_word_len;
 }
@@ -79,7 +79,7 @@ size_t cc_bn_to_u8_fit(const cc_bn_t *bn, size_t bn_word_len, uint8_t *dst)
     {
         if ((bn[i] != 0) || (n > 0)) // Skip leading zeros
         {
-            for (j = CC_BN_DIGIT_BITS - 8; j >= 0; j -= 8)
+            for (j = CC_BN_WORD_BITS - 8; j >= 0; j -= 8)
             {
                 tmp = (bn[i] >> j) & 0xFF;
                 if (tmp != 0 || n > 0) // Skip leading zeros
@@ -258,15 +258,15 @@ void cc_bn_xor(const cc_bn_t *src1, const cc_bn_t *src2, size_t bn_word_len, cc_
 
 cc_bn_t cc_bn_get_bit(const cc_bn_t *bn, size_t bit_index)
 {
-    int digit_index = bit_index / CC_BN_DIGIT_BITS;
-    int bit_index_in_digit = bit_index % CC_BN_DIGIT_BITS;
+    int digit_index = bit_index / CC_BN_WORD_BITS;
+    int bit_index_in_digit = bit_index % CC_BN_WORD_BITS;
     return (bn[digit_index] >> bit_index_in_digit) & 0x01;
 }
 
 void cc_bn_set_bit(cc_bn_t *bn, size_t bit_index, cc_bn_t bit)
 {
-    int digit_index = bit_index / CC_BN_DIGIT_BITS;
-    int bit_index_in_digit = bit_index % CC_BN_DIGIT_BITS;
+    int digit_index = bit_index / CC_BN_WORD_BITS;
+    int bit_index_in_digit = bit_index % CC_BN_WORD_BITS;
     bn[digit_index] = (bn[digit_index] & ~(1 << bit_index_in_digit)) | (bit << bit_index_in_digit);
 }
 
@@ -285,7 +285,7 @@ size_t cc_bn_bit_len(const cc_bn_t *bn, size_t bn_word_len)
                 tmp >>= 1;
                 j++;
             }
-            return i * CC_BN_DIGIT_BITS + j;
+            return i * CC_BN_WORD_BITS + j;
         }
     }
     return 0; // If all digits are zero, return 0 bits
@@ -306,7 +306,7 @@ size_t cc_bn_byte_len(const cc_bn_t *bn, size_t bn_word_len)
                 tmp >>= 8;
                 j++;
             }
-            return i * CC_BN_DIGIT_BYTES + j;
+            return i * CC_BN_WORD_BYTES + j;
         }
     }
     return 0; // If all digits are zero, return 0 bytes
@@ -332,7 +332,7 @@ void cc_bn_rshift_1(const cc_bn_t *bn_in, size_t bn_word_len, cc_bn_t *bn_out)
     size_t i;
     for (i = 0; i < bn_word_len - 1; i += 1)
     {
-        bn_out[i] = (bn_in[i + 1] << (CC_BN_DIGIT_BITS - 1)) | (bn_in[i] >> 1);
+        bn_out[i] = (bn_in[i + 1] << (CC_BN_WORD_BITS - 1)) | (bn_in[i] >> 1);
     }
     bn_out[bn_word_len - 1] = bn_in[bn_word_len - 1] >> 1;
 }
@@ -342,10 +342,10 @@ void cc_bn_rshift_1(const cc_bn_t *bn_in, size_t bn_word_len, cc_bn_t *bn_out)
 cc_bn_t cc_bn_lshift_1(const cc_bn_t *bn_in, size_t bn_word_len, cc_bn_t *bn_out)
 {
     int i;
-    cc_bn_t carry = bn_in[bn_word_len - 1] >> (CC_BN_DIGIT_BITS - 1);
+    cc_bn_t carry = bn_in[bn_word_len - 1] >> (CC_BN_WORD_BITS - 1);
     for (i = bn_word_len - 1; i > 0; i -= 1)
     {
-        bn_out[i] = (bn_in[i] << 1) | (bn_in[i - 1] >> (CC_BN_DIGIT_BITS - 1));
+        bn_out[i] = (bn_in[i] << 1) | (bn_in[i - 1] >> (CC_BN_WORD_BITS - 1));
     }
     bn_out[0] = bn_in[0] << 1;
 
@@ -356,9 +356,9 @@ cc_bn_t cc_bn_lshift_1(const cc_bn_t *bn_in, size_t bn_word_len, cc_bn_t *bn_out
 void cc_bn_lshift(const cc_bn_t *bn_in, size_t bn_word_len, size_t shift_bit_len, cc_bn_t *bn_out)
 {
     int i;
-    int shift_word_len = shift_bit_len / CC_BN_DIGIT_BITS;
-    int shift_bit_len_in_word = shift_bit_len % CC_BN_DIGIT_BITS;
-    int remaining_bit_len = CC_BN_DIGIT_BITS - shift_bit_len_in_word;
+    int shift_word_len = shift_bit_len / CC_BN_WORD_BITS;
+    int shift_bit_len_in_word = shift_bit_len % CC_BN_WORD_BITS;
+    int remaining_bit_len = CC_BN_WORD_BITS - shift_bit_len_in_word;
 
     if (shift_word_len >= bn_word_len)
     {
@@ -397,9 +397,9 @@ void cc_bn_lshift(const cc_bn_t *bn_in, size_t bn_word_len, size_t shift_bit_len
 void cc_bn_rshift(const cc_bn_t *bn_in, size_t bn_word_len, size_t shift_bit_len, cc_bn_t *bn_out)
 {
     int i;
-    int shift_word_len = shift_bit_len / CC_BN_DIGIT_BITS;
-    int shift_bit_len_in_word = shift_bit_len % CC_BN_DIGIT_BITS;
-    int remaining_bit_len = CC_BN_DIGIT_BITS - shift_bit_len_in_word;
+    int shift_word_len = shift_bit_len / CC_BN_WORD_BITS;
+    int shift_bit_len_in_word = shift_bit_len % CC_BN_WORD_BITS;
+    int remaining_bit_len = CC_BN_WORD_BITS - shift_bit_len_in_word;
 
     if (shift_word_len >= bn_word_len)
     {
