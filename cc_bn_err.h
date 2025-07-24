@@ -6,7 +6,7 @@ typedef enum
 {
     CC_BN_SUCCESS = 0,
     CC_BN_IS_PRIME = 1,       // 100% certainty that the number is prime
-    CC_BN_PROBABLY_PRIME = 2, // prime test passed, but not 100% certain
+    CC_BN_PROBABLY_PRIME = 2, // miller-rabin prime test passed, but not 100% certain
     CC_BN_IS_COMPOSITE = 3,   // 100% certainty that the number is composite
 
     CC_BN_ERR_LEN_TOO_SHORT = 0x100, // ERROR: bn length too short

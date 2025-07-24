@@ -1,14 +1,14 @@
 #include "cc_bn_mul.h"
 #include <assert.h>
 
-// note: bn_out must be at least bn_word_len+1
+// note: bn_out must be at least bn_word_len + 1
 void cc_bn_mul_word(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
 {
     size_t i;
     cc_bn_t carry = 0;
     for (i = 0; i < bn_word_len; i++)
     {
-        uint64_t t = (uint64_t)A[i] * (uint64_t)d + (uint64_t)carry;
+        cc_bn_dword_t t = (cc_bn_dword_t)A[i] * (cc_bn_dword_t)d + (cc_bn_dword_t)carry;
         carry = t >> CC_BN_DIGIT_BITS;
         R[i] = t & CC_BN_DIGIT_MAX;
     }
@@ -17,7 +17,8 @@ void cc_bn_mul_word(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
 
 // R = R + A * d
 // R_word_len = bn_word_len + 1, input R[bn_word_len] may need to be zero
-void cc_bn_mul_word_add(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
+void cc_bn_mul_word_add(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d,
+                        cc_bn_t *R)
 {
     if (bn_word_len == 0)
     {
@@ -28,7 +29,7 @@ void cc_bn_mul_word_add(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t
     cc_bn_t carry = 0;
     for (i = 0; i < bn_word_len; i++)
     {
-        uint64_t t = (uint64_t)A[i] * (uint64_t)d + (uint64_t)carry + (uint64_t)R[i];
+        cc_bn_dword_t t = (cc_bn_dword_t)A[i] * (cc_bn_dword_t)d + (cc_bn_dword_t)carry + (cc_bn_dword_t)R[i];
         carry = t >> CC_BN_DIGIT_BITS;
         R[i] = t & CC_BN_DIGIT_MAX;
     }
@@ -68,7 +69,7 @@ void cc_bn_mul(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_w
 void cc_bn_mont_R2(const cc_bn_t *N, size_t N_word_len, cc_bn_t *R2)
 {
     size_t i;
-    size_t N_bit_len = ((cc_bn_bit_len(N, N_word_len) + 31) / 32) * 32;
+    size_t N_bit_len = ((cc_bn_bit_len(N, N_word_len) + (CC_BN_DIGIT_BITS - 1)) / CC_BN_DIGIT_BITS) * CC_BN_DIGIT_BITS;
 
     // t=1
     cc_bn_set_one(R2, N_word_len);
@@ -108,7 +109,7 @@ cc_bn_t cc_bn_mul_word_add_ret(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, 
     cc_bn_t carry = 0;
     for (i = 0; i < bn_word_len; i++)
     {
-        uint64_t t = (uint64_t)A[i] * (uint64_t)d + (uint64_t)carry + (uint64_t)R[i];
+        cc_bn_dword_t t = (cc_bn_dword_t)A[i] * (cc_bn_dword_t)d + (cc_bn_dword_t)carry + (cc_bn_dword_t)R[i];
         carry = t >> CC_BN_DIGIT_BITS;
         R[i] = t & CC_BN_DIGIT_MAX;
     }

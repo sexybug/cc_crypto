@@ -53,7 +53,7 @@ cc_bn_status_t cc_bn_rand_range(cc_bn_t *N, size_t bn_word_len, cc_crypto_rng_f 
             // random bit length <= N bit length
             if ((bits % CC_BN_DIGIT_BITS) != 0)
             {
-                R[bn_real_word_len - 1] &= (uint64_t)((1ULL << (bits % CC_BN_DIGIT_BITS)) - 1);
+                R[bn_real_word_len - 1] &= (((cc_bn_dword_t)1 << (bits % CC_BN_DIGIT_BITS)) - 1);
             }
 
         } while (cc_bn_is_zero(R, bn_word_len));

@@ -48,7 +48,7 @@ void test_cc_bn_mul_words() {
         cc_bn_mul_words(A, B, 1, R);
         
         // 手动计算期望结果：0x12345678 * 0x9ABCDEF0
-        uint64_t expected_full = (uint64_t)0x12345678 * 0x9ABCDEF0;
+        cc_bn_dword_t expected_full = (cc_bn_dword_t)0x12345678 * 0x9ABCDEF0;
         cc_bn_t expected[] = {
             (cc_bn_t)(expected_full & 0xFFFFFFFF),
             (cc_bn_t)(expected_full >> 32)
@@ -139,7 +139,7 @@ void test_cc_bn_mul_words() {
                 cc_bn_mul_words(A, B, 1, R);
                 
                 // 验证结果等于直接相乘
-                uint64_t expected_full = (uint64_t)test_values[i] * test_values[j];
+                cc_bn_dword_t expected_full = (cc_bn_dword_t)test_values[i] * test_values[j];
                 cc_bn_t expected[] = {
                     (cc_bn_t)(expected_full & 0xFFFFFFFF),
                     (cc_bn_t)(expected_full >> 32)

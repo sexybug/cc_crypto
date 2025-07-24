@@ -21,6 +21,17 @@ int main(void)
     }
 
     {
+        cc_bn_t N[] = {0x7FFFFFFF};
+        size_t N_len = sizeof(N) / sizeof(N[0]);
+
+        size_t bits = cc_bn_bit_len(N, N_len);
+        int iterations = calc_miller_rabin_iterations(bits);
+        cc_bn_status_t res = cc_bn_miller_rabin(N, N_len, iterations, cc_crypto_rng_ex);
+
+        assert(res == CC_BN_PROBABLY_PRIME);
+    }
+
+    {
         cc_bn_t N[2] = {0x7C16BAD7, 0xCDD1ADCB};
         size_t N_len = sizeof(N) / sizeof(N[0]);
 

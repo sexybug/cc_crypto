@@ -22,7 +22,7 @@ int compare_bn(const cc_bn_t *a, const cc_bn_t *b, size_t len)
 
 void test_cc_bn_mul_uint()
 {
-    printf("开始测试 cc_bn_mul_uint 函数...\n");
+    printf("开始测试 cc_bn_mul_word 函数...\n");
 
     // 测试用例1：基本乘法，无进位
     {
@@ -31,7 +31,7 @@ void test_cc_bn_mul_uint()
         cc_bn_t d = 2;
         cc_bn_t expected[] = {0x2468acf0, 0};
 
-        cc_bn_mul_uint(bn_in, 1, d, bn_out);
+        cc_bn_mul_word(bn_in, 1, d, bn_out);
         assert(compare_bn(bn_out, expected, 2));
         printf("测试用例1通过：基本乘法无进位\n");
     }
@@ -43,7 +43,7 @@ void test_cc_bn_mul_uint()
         cc_bn_t d = 3;
         cc_bn_t expected[] = {0x80000000, 1};
 
-        cc_bn_mul_uint(bn_in, 1, d, bn_out);
+        cc_bn_mul_word(bn_in, 1, d, bn_out);
         assert(compare_bn(bn_out, expected, 2));
         printf("测试用例2通过：乘法产生进位\n");
     }
@@ -55,7 +55,7 @@ void test_cc_bn_mul_uint()
         cc_bn_t d = 0;
         cc_bn_t expected[] = {0, 0, 0};
 
-        cc_bn_mul_uint(bn_in, 2, d, bn_out);
+        cc_bn_mul_word(bn_in, 2, d, bn_out);
         assert(compare_bn(bn_out, expected, 3));
         printf("测试用例3通过：乘以0\n");
     }
@@ -67,7 +67,7 @@ void test_cc_bn_mul_uint()
         cc_bn_t d = 1;
         cc_bn_t expected[] = {0x12345678, 0xabcdef01, 0};
 
-        cc_bn_mul_uint(bn_in, 2, d, bn_out);
+        cc_bn_mul_word(bn_in, 2, d, bn_out);
         assert(compare_bn(bn_out, expected, 3));
         printf("测试用例4通过：乘以1\n");
     }
@@ -79,7 +79,7 @@ void test_cc_bn_mul_uint()
         cc_bn_t d = CC_BN_DIGIT_MAX;
         cc_bn_t expected[] = {1, CC_BN_DIGIT_MAX - 1};
 
-        cc_bn_mul_uint(bn_in, 1, d, bn_out);
+        cc_bn_mul_word(bn_in, 1, d, bn_out);
         assert(compare_bn(bn_out, expected, 2));
         printf("测试用例5通过：乘以最大值\n");
     }
@@ -91,7 +91,7 @@ void test_cc_bn_mul_uint()
         cc_bn_t d = 2;
         cc_bn_t expected[] = {CC_BN_DIGIT_MAX - 1, CC_BN_DIGIT_MAX, CC_BN_DIGIT_MAX, 1};
 
-        cc_bn_mul_uint(bn_in, 3, d, bn_out);
+        cc_bn_mul_word(bn_in, 3, d, bn_out);
         assert(compare_bn(bn_out, expected, 4));
         printf("测试用例6通过：多位数乘法连续进位\n");
     }
@@ -102,7 +102,7 @@ void test_cc_bn_mul_uint()
         cc_bn_t bn_out[1] = {0xFF}; // 初始化为非零值
         cc_bn_t d = 5;
 
-        cc_bn_mul_uint(bn_in, 0, d, bn_out);
+        cc_bn_mul_word(bn_in, 0, d, bn_out);
         assert(bn_out[0] == 0); // 进位应该为0
         printf("测试用例7通过：空数组处理\n");
     }
@@ -114,7 +114,7 @@ void test_cc_bn_mul_uint()
         cc_bn_t d = CC_BN_DIGIT_MAX;
         cc_bn_t expected[] = {CC_BN_DIGIT_MAX, 0};
 
-        cc_bn_mul_uint(bn_in, 1, d, bn_out);
+        cc_bn_mul_word(bn_in, 1, d, bn_out);
         assert(compare_bn(bn_out, expected, 2));
         printf("测试用例8通过：单个数字边界值\n");
     }
@@ -132,10 +132,10 @@ void test_cc_bn_mul_uint()
             bn_in[i] = i + 1;
         }
 
-        cc_bn_mul_uint(bn_in, len, d, bn_out);
+        cc_bn_mul_word(bn_in, len, d, bn_out);
 
         // 验证：手动计算第一个元素
-        uint64_t expected_first = (uint64_t)1 * d;
+        cc_bn_dword_t expected_first = (cc_bn_dword_t)1 * d;
         assert(bn_out[0] == (expected_first & CC_BN_DIGIT_MAX));
         printf("测试用例9通过：大数组测试\n");
     }
@@ -146,7 +146,7 @@ void test_cc_bn_mul_uint()
         cc_bn_t bn_out[3] = {0};
         cc_bn_t d = 0x80000000;
 
-        cc_bn_mul_uint(bn_in, 2, d, bn_out);
+        cc_bn_mul_word(bn_in, 2, d, bn_out);
 
         // 验证结果不全为零（确保计算发生）
         int all_zero = 1;

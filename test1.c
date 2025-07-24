@@ -17,12 +17,19 @@ uint32_t mbedtls_mpi_core_montmul_init(const uint32_t *N)
 }
 
 int main() {
-    uint32_t v=0x80000000;
-    v = v>>1;
+    // uint32_t v=0x80000000;
+    // v = v>>1;
 
-    uint32_t a = 0xf0000001%3;
+    // uint32_t a = 0xf0000001%3;
 
-    uint32_t N[2]={0x87654321,0x87654321};
-    uint32_t N_inv= mbedtls_mpi_core_montmul_init(N);
+    // uint32_t N[2]={0x87654321,0x87654321};
+    // uint32_t N_inv= mbedtls_mpi_core_montmul_init(N);
+
+    uint64_t a = 1<<32;
+    uint64_t b = (uint64_t)1<<32;
+
+    printf("%llx\n", a);
+    printf("%llx\n", b);
+
     return 0;
 }

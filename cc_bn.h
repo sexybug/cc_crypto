@@ -5,13 +5,13 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-// note: cc_bn_t must be uint32_t
 typedef uint32_t cc_bn_t;
+typedef uint64_t cc_bn_dword_t; // double word
 
 #define CC_BN_DIGIT_BYTES sizeof(cc_bn_t)
 #define CC_BN_DIGIT_BITS (CC_BN_DIGIT_BYTES * 8)
-#define CC_BN_DIGIT_MAX ((1ULL << CC_BN_DIGIT_BITS) - 1)
-#define CC_BN_DIGIT_MASK ((1ULL << CC_BN_DIGIT_BITS) - 1)
+#define CC_BN_DIGIT_MAX (((cc_bn_dword_t)1 << CC_BN_DIGIT_BITS) - 1)
+#define CC_BN_DIGIT_MASK (((cc_bn_dword_t)1 << CC_BN_DIGIT_BITS) - 1)
 
 void cc_u8_to_bn(const uint8_t *src, size_t byte_len, size_t bn_word_len, cc_bn_t *bn);
 
