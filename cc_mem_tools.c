@@ -11,24 +11,26 @@ void cc_swap_u32_array(uint32_t *array, size_t word_size)
     }
 }
 
-void cc_memset_u32(uint32_t *dest, uint32_t value, size_t word_size)
+void cc_memset_u32(uint32_t *dst, uint32_t value, size_t word_size)
 {
     size_t i;
     for (i = 0; i < word_size; i++)
     {
-        dest[i] = value;
+        dst[i] = value;
     }
 }
 
-void cc_memcpy_u32(uint32_t *dest, const uint32_t *src, size_t word_size)
+// dst cannot alias src
+void cc_memcpy_u32(uint32_t *dst, const uint32_t *src, size_t word_size)
 {
     size_t i;
     for (i = 0; i < word_size; i++)
     {
-        dest[i] = src[i];
+        dst[i] = src[i];
     }
 }
 
+// dst can alias src1 src2
 void cc_memxor(uint8_t *dst, const uint8_t *src1, const uint8_t *src2, size_t len)
 {
     size_t i;
@@ -38,6 +40,7 @@ void cc_memxor(uint8_t *dst, const uint8_t *src1, const uint8_t *src2, size_t le
     }
 }
 
+// dst can alias src1 src2
 void cc_memxor_u32(uint32_t *dst, const uint32_t *src1, const uint32_t *src2, size_t word_size)
 {
     size_t i;
@@ -60,6 +63,7 @@ int cc_memcmp_u32(const uint32_t *src1, const uint32_t *src2, size_t word_size)
     return 0;
 }
 
+// reverse bytes in an array of 8-bit unsigned integers
 void cc_reverse_u8_array(uint8_t *array, size_t len)
 {
     size_t i;
@@ -71,6 +75,7 @@ void cc_reverse_u8_array(uint8_t *array, size_t len)
     }
 }
 
+// reverse words in an array of 32-bit unsigned integers
 void cc_reverse_u32_array(uint32_t *array, size_t word_size)
 {
     size_t i;
