@@ -98,7 +98,7 @@ void test_cc_bn_mul_uint()
 
     // 测试用例7：空数组（长度为0）
     {
-        cc_bn_t bn_in[1];
+        cc_bn_t bn_in[1] = {0};
         cc_bn_t bn_out[1] = {0xFF}; // 初始化为非零值
         cc_bn_t d = 5;
 

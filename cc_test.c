@@ -168,7 +168,7 @@ void print_u64(const char *title, const uint64_t *ptr, size_t len)
         {
             printf("    ");
         }
-        printf("0x%016lx, ", ptr[i]);
+        printf("0x%016llx, ", ptr[i]);
         if ((i + 1) % 4 == 0 || ((i + 1) == len && (i + 1) % 4 != 0))
         {
             printf("\n");

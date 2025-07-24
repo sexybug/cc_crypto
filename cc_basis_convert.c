@@ -5,8 +5,6 @@
 
 #define BN_WORD_LEN 12
 
-typedef cc_bn_t cc_bn_t[BN_WORD_LEN];
-
 // ECC359正规基转多项式基映射表
 uint32_t BM_359[359 * BN_WORD_LEN] = {
     0xfe5946c8, 0x680bae8f, 0xa4a28b0e, 0x18674f89, 0x7c0bd95f, 0xd0c95464, 0x2642e1e7, 0x5e0df9f6, 0x797c1d16, 0xe21189e9, 0x254cdf05, 0x00000066,
