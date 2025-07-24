@@ -20,5 +20,9 @@
         "cc_bn_exp.h": "c",
         "cc_bn_mod.h": "c"
     },
-    "Codegeex.RepoIndex": true
+    "Codegeex.RepoIndex": true,
+    "cpp-check-lint.cppcheck.--suppress=": [
+        "missingIncludeSystem",
+        "missingInclude"
+    ]
 }

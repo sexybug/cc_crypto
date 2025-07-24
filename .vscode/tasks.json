@@ -29,6 +29,8 @@
             "label": "test bn",
             "command": "gcc.exe",
             "args": [
+                "-I",
+                "${workspaceFolder}",
                 "-fdiagnostics-color=always",
                 "-g",
                 "${workspaceFolder}\\cc_test.c",

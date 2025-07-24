@@ -15,7 +15,7 @@ cc_bn_status_t cc_bn_div(cc_bn_t *A, size_t A_word_len, cc_bn_t *N, size_t N_wor
                          cc_bn_t *Q, cc_bn_t *R);
 
 // compare {carry, A} with B
-int cc_bn_cmp_carry(cc_bn_t carry, const cc_bn_t *A, cc_bn_t *B, size_t bn_word_len);
+int cc_bn_cmp_carry(cc_bn_t carry, const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len);
 
 // R = A + d mod N, A < N
 void cc_bn_mod_add_word(const cc_bn_t *A, cc_bn_t d, const cc_bn_t *N, size_t bn_word_len, cc_bn_t *R);
