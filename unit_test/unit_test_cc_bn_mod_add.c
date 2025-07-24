@@ -12,7 +12,7 @@ int main()
         cc_bn_t N[4] = {0xFFFFFFFF, 0, 0, 0};
         cc_bn_t R[4] = {0, 0, 0, 0};
         cc_bn_t expected[4] = {2, 0, 0, 0};
-        cc_bn_mod_add(A, B, N, word_len, R);
+        cc_bn_mod_add(R, A, B, N, word_len);
         assert(memcmp(R, expected, sizeof(R)) == 0);
     }
 
@@ -23,7 +23,7 @@ int main()
         cc_bn_t N[4] = {0xFFFFFFFF, 0, 0, 0};
         cc_bn_t R[4] = {0, 0, 0, 0};
         cc_bn_t expected[4] = {0xfffffffd, 0, 0, 0};
-        cc_bn_mod_add(A, B, N, word_len, R);
+        cc_bn_mod_add(R, A, B, N, word_len);
         assert(memcmp(R, expected, sizeof(R)) == 0);
     }
 
@@ -34,7 +34,7 @@ int main()
         cc_bn_t N[4] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
         cc_bn_t R[4] = {0, 0, 0, 0};
         cc_bn_t expected[4] = {0xfffffffd, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
-        cc_bn_mod_add(A, B, N, word_len, R);
+        cc_bn_mod_add(R, A, B, N, word_len);
         assert(memcmp(R, expected, sizeof(R)) == 0);
     }
 
@@ -45,8 +45,8 @@ int main()
         cc_bn_t N[4] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
         cc_bn_t R[4] = {0, 0, 0, 0};
         cc_bn_t expected[4] = {0xfffffffd, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
-        cc_bn_mod_add(A, B, N, word_len, A);
-        assert(memcmp(A, expected, sizeof(R)) == 0);
+        cc_bn_mod_add(R, A, B, N, word_len);
+        assert(memcmp(R, expected, sizeof(R)) == 0);
     }
 
     {
@@ -56,7 +56,7 @@ int main()
         cc_bn_t N[4] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
         cc_bn_t R[4] = {0, 1, 2, 3};
         cc_bn_t expected[4] = {0, 1, 2, 3};
-        cc_bn_mod_add(A, B, N, word_len, R);
+        cc_bn_mod_add(R, A, B, N, word_len);
         assert(memcmp(R, expected, sizeof(R)) == 0);
     }
 
@@ -67,7 +67,7 @@ int main()
         cc_bn_t N[4] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
         cc_bn_t R[4] = {0, 1, 2, 3};
         cc_bn_t expected[4] = {0xFFFFFFFE, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
-        cc_bn_mod_add(A, B, N, word_len, R);
+        cc_bn_mod_add(R, A, B, N, word_len);
         assert(memcmp(R, expected, sizeof(R)) == 0);
     }
 

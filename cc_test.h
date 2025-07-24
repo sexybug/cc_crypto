@@ -108,8 +108,4 @@ void print_u64(const char *title, const uint64_t *ptr, size_t len);
 
 void print_bn(const char *title, const cc_bn_t *bn, size_t len);
 
-cc_bn_t hex_to_bn_word(const char *str, size_t char_size);
-
-void hex_to_bn(const char *str, cc_bn_t *bn, size_t bn_word_len);
-
 #endif // CC_TEST_H

@@ -4,8 +4,10 @@
 
 #include "cc_bn.h"
 
-// note: bn_out must be at least bn_word_len+1
-void cc_bn_mul_word(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R);
+// R = A * d
+// note: R must be at least bn_word_len + 1
+// R can alias A
+void cc_bn_mul_word(cc_bn_t *R, const cc_bn_t *A, size_t bn_word_len, cc_bn_t d);
 
 // R = R + A * d
 // R_word_len = bn_word_len + 1, R[bn_word_len] may need to be zero

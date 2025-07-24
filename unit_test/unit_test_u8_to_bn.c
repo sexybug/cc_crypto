@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <assert.h>
 
-#include "cc_bn.h"
+#include "cc_bn_convert.h"
 
 // 测试用例1：正常情况 - 字节数组完全填充大数
 void test_normal_case_exact_fit() {
@@ -15,7 +15,7 @@ void test_normal_case_exact_fit() {
     size_t bn_word_len = 2;
     cc_bn_t bn[2];
     
-    cc_u8_to_bn(src, byte_len, bn_word_len, bn);
+    cc_u8_to_bn(src, byte_len, bn, bn_word_len);
     
     assert(bn[0] == 0xABCDEF01);
     assert(bn[1] == 0x12345678);
@@ -31,7 +31,7 @@ void test_zero_padding() {
     size_t bn_word_len = 2;
     cc_bn_t bn[2];
     
-    cc_u8_to_bn(src, byte_len, bn_word_len, bn);
+    cc_u8_to_bn(src, byte_len, bn, bn_word_len);
     
     assert(bn[0] == 0x00001234);
     assert(bn[1] == 0x00000000);
@@ -47,7 +47,7 @@ void test_non_aligned_bytes() {
     size_t bn_word_len = 1;
     cc_bn_t bn[1];
     
-    cc_u8_to_bn(src, byte_len, bn_word_len, bn);
+    cc_u8_to_bn(src, byte_len, bn, bn_word_len);
     
     assert(bn[0] == 0x00123456);
     printf("通过\n");
@@ -62,7 +62,7 @@ void test_single_byte() {
     size_t bn_word_len = 1;
     cc_bn_t bn[1];
     
-    cc_u8_to_bn(src, byte_len, bn_word_len, bn);
+    cc_u8_to_bn(src, byte_len, bn, bn_word_len);
     
     assert(bn[0] == 0x000000FF);
     printf("通过\n");
@@ -77,7 +77,7 @@ void test_zero_bytes() {
     size_t bn_word_len = 2;
     cc_bn_t bn[2] = {0xFFFFFFFF, 0xFFFFFFFF}; // 预填充非零值
     
-    cc_u8_to_bn(src, byte_len, bn_word_len, bn);
+    cc_u8_to_bn(src, byte_len, bn, bn_word_len);
     
     assert(bn[0] == 0x00000000);
     assert(bn[1] == 0x00000000);
@@ -93,7 +93,7 @@ void test_byte_len_exceeds_capacity() {
     size_t bn_word_len = 2;
     cc_bn_t bn[2] = {0xFFFFFFFF, 0xFFFFFFFF}; // 预填充值
     
-    cc_u8_to_bn(src, byte_len, bn_word_len, bn);
+    cc_u8_to_bn(src, byte_len, bn, bn_word_len);
     
     // 函数应该直接返回，不修改bn数组
     assert(bn[0] == 0xFFFFFFFF);
@@ -110,7 +110,7 @@ void test_byte_len_equals_capacity() {
     size_t bn_word_len = 2;
     cc_bn_t bn[2];
     
-    cc_u8_to_bn(src, byte_len, bn_word_len, bn);
+    cc_u8_to_bn(src, byte_len, bn, bn_word_len);
     
     assert(bn[0] == 0xABCDEF01);
     assert(bn[1] == 0x12345678);
@@ -126,7 +126,7 @@ void test_large_array() {
     size_t bn_word_len = 3;
     cc_bn_t bn[3];
     
-    cc_u8_to_bn(src, byte_len, bn_word_len, bn);
+    cc_u8_to_bn(src, byte_len, bn, bn_word_len);
     
     assert(bn[0] == 0x99AABBCC);
     assert(bn[1] == 0x55667788);
@@ -143,7 +143,7 @@ void test_single_word_bn() {
     size_t bn_word_len = 1;
     cc_bn_t bn[1];
     
-    cc_u8_to_bn(src, byte_len, bn_word_len, bn);
+    cc_u8_to_bn(src, byte_len, bn, bn_word_len);
     
     assert(bn[0] == 0x0000ABCD);
     printf("通过\n");
@@ -158,7 +158,7 @@ void test_all_zero_bytes() {
     size_t bn_word_len = 2;
     cc_bn_t bn[2];
     
-    cc_u8_to_bn(src, byte_len, bn_word_len, bn);
+    cc_u8_to_bn(src, byte_len, bn, bn_word_len);
     
     assert(bn[0] == 0x00000000);
     assert(bn[1] == 0x00000000);

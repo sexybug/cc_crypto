@@ -30,7 +30,7 @@ void test_cc_bn_sub_small()
         cc_bn_t expected[] = {3, 2};
         memset(result, 0, sizeof(result));
         
-        borrow = cc_bn_sub_small(A, 2, B, 2, result);
+        borrow = cc_bn_sub_small(result, A, 2, B, 2);
         assert(borrow == 0);
         assert(arrays_equal(result, expected, 2));
         printf("测试用例1: 基本减法，无借位 - 通过\n");
@@ -44,7 +44,7 @@ void test_cc_bn_sub_small()
         cc_bn_t expected[] = {(cc_bn_t)(-3), 1};
         memset(result, 0, sizeof(result));
         
-        borrow = cc_bn_sub_small(A, 2, B, 2, result);
+        borrow = cc_bn_sub_small(result, A, 2, B, 2);
         assert(borrow == 0);
         assert(arrays_equal(result, expected, 2));
         printf("测试用例2: 需要借位的减法 - 通过\n");
@@ -58,7 +58,7 @@ void test_cc_bn_sub_small()
         cc_bn_t expected[] = {7, 3, 3};
         memset(result, 0, sizeof(result));
         
-        borrow = cc_bn_sub_small(A, 3, B, 2, result);
+        borrow = cc_bn_sub_small(result, A, 3, B, 2);
         assert(borrow == 0);
         assert(arrays_equal(result, expected, 3));
         printf("测试用例3: A长度大于B长度 - 通过\n");
@@ -72,7 +72,7 @@ void test_cc_bn_sub_small()
         cc_bn_t expected[] = {(cc_bn_t)(-1), (cc_bn_t)(-1), 0};
         memset(result, 0, sizeof(result));
         
-        borrow = cc_bn_sub_small(A, 3, B, 1, result);
+        borrow = cc_bn_sub_small(result, A, 3, B, 1);
         assert(borrow == 0);
         assert(arrays_equal(result, expected, 3));
         printf("测试用例4: A长度大于B长度且需要借位传播 - 通过\n");
@@ -85,7 +85,7 @@ void test_cc_bn_sub_small()
         cc_bn_t B[] = {2, 3};
         memset(result, 0, sizeof(result));
         
-        borrow = cc_bn_sub_small(A, 2, B, 2, result);
+        borrow = cc_bn_sub_small(result, A, 2, B, 2);
         assert(borrow == 1);
         printf("测试用例5: 结果产生最终借位 - 通过\n");
     }
@@ -98,7 +98,7 @@ void test_cc_bn_sub_small()
         cc_bn_t expected[] = {7};
         memset(result, 0, sizeof(result));
         
-        borrow = cc_bn_sub_small(A, 1, B, 1, result);
+        borrow = cc_bn_sub_small(result, A, 1, B, 1);
         assert(borrow == 0);
         assert(arrays_equal(result, expected, 1));
         printf("测试用例6: 单个元素减法，无借位 - 通过\n");
@@ -112,7 +112,7 @@ void test_cc_bn_sub_small()
         cc_bn_t expected[] = {(cc_bn_t)(-7)};
         memset(result, 0, sizeof(result));
         
-        borrow = cc_bn_sub_small(A, 1, B, 1, result);
+        borrow = cc_bn_sub_small(result, A, 1, B, 1);
         assert(borrow == 1);
         assert(arrays_equal(result, expected, 1));
         printf("测试用例7: 单个元素减法，有借位 - 通过\n");
@@ -126,7 +126,7 @@ void test_cc_bn_sub_small()
         cc_bn_t expected[] = {0};
         memset(result, 0, sizeof(result));
         
-        borrow = cc_bn_sub_small(A, 1, B, 1, result);
+        borrow = cc_bn_sub_small(result, A, 1, B, 1);
         assert(borrow == 0);
         assert(arrays_equal(result, expected, 1));
         printf("测试用例8: 零减法 - 通过\n");
@@ -140,7 +140,7 @@ void test_cc_bn_sub_small()
         cc_bn_t expected[] = {(cc_bn_t)(-2)};
         memset(result, 0, sizeof(result));
         
-        borrow = cc_bn_sub_small(A, 1, B, 1, result);
+        borrow = cc_bn_sub_small(result, A, 1, B, 1);
         assert(borrow == 0);
         assert(arrays_equal(result, expected, 1));
         printf("测试用例9: 最大值减法 - 通过\n");
@@ -154,7 +154,7 @@ void test_cc_bn_sub_small()
         cc_bn_t expected[] = {(cc_bn_t)(-1), (cc_bn_t)(-1), (cc_bn_t)(-1), 0};
         memset(result, 0, sizeof(result));
         
-        borrow = cc_bn_sub_small(A, 4, B, 3, result);
+        borrow = cc_bn_sub_small(result, A, 4, B, 3);
         assert(borrow == 0);
         assert(arrays_equal(result, expected, 4));
         printf("测试用例10: 复杂借位传播 - 通过\n");

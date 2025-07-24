@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "cc_basis_convert.h"
+#include "cc_gf2m_basis_convert.h"
 
 #define BN_WORD_LEN 12
 
@@ -1298,6 +1298,15 @@ uint32_t BM_281[281 * BN_WORD_LEN] = {
 		0x8142dac5,0x96dd3d0d,0xae435a8a,0x17009c8f,0x05e1191c,0xd3e6f83c,0x7c773b56,0x9f31dd3c,0x0140a966,0x00000000,0x00000000,0x00000000,
 		0xf1c65a1b,0xe8a31a0e,0xcf7b0859,0xb78c9a38,0xac5a8b87,0xfd93f90e,0xbf83d1b8,0x749e5b70,0x00d95473,0x00000000,0x00000000,0x00000000,
 };
+
+static void cc_bn_xor(const cc_bn_t *src1, const cc_bn_t *src2, size_t bn_word_len, cc_bn_t *dst)
+{
+    size_t i;
+    for (i = 0; i < bn_word_len; i++)
+    {
+        dst[i] = src1[i] ^ src2[i];
+    }
+}
 
 void cc_basis_convert(const cc_bn_t *src, size_t bn_word_len, const cc_bn_t *maps, cc_bn_t *dst)
 {

@@ -1,8 +1,10 @@
 #include "cc_bn_mul.h"
 #include <assert.h>
 
-// note: bn_out must be at least bn_word_len + 1
-void cc_bn_mul_word(const cc_bn_t *A, size_t bn_word_len, cc_bn_t d, cc_bn_t *R)
+// R = A * d
+// note: R must be at least bn_word_len + 1
+// R can alias A
+void cc_bn_mul_word(cc_bn_t *R, const cc_bn_t *A, size_t bn_word_len, cc_bn_t d)
 {
     size_t i;
     cc_bn_t carry = 0;
@@ -77,10 +79,10 @@ void cc_bn_mont_R2(const cc_bn_t *N, size_t N_word_len, cc_bn_t *R2)
     for (i = 0; i < N_bit_len * 2; i++)
     {
         // t = t << 1
-        cc_bn_t carry = cc_bn_lshift_1(R2, N_word_len, R2);
+        cc_bn_t carry = cc_bn_lshift_1(R2, R2, N_word_len);
         if ((cc_bn_cmp(R2, N_word_len, N, N_word_len) > 0) || carry)
         {
-            cc_bn_sub_small(R2, N_word_len, N, N_word_len, R2);
+            cc_bn_sub_small(R2, R2, N_word_len, N, N_word_len);
         }
     }
 }
@@ -167,7 +169,7 @@ void cc_bn_mont_mul_word(const cc_bn_t *A, const cc_bn_t b, const cc_bn_t *N, si
     // if d >= N, d = d - N
     if ((cc_bn_cmp(R, bn_word_len, N, bn_word_len) >= 0) || carry)
     {
-        cc_bn_sub_small(R, bn_word_len, N, bn_word_len, R);
+        cc_bn_sub_small(R, R, bn_word_len, N, bn_word_len);
     }
 }
 
@@ -213,6 +215,6 @@ void cc_bn_mont_mul(const cc_bn_t *A, const cc_bn_t *B, const cc_bn_t *N, size_t
     // if d >= N, d = d - N
     if ((cc_bn_cmp(R, bn_word_len, N, bn_word_len) >= 0) || carry)
     {
-        cc_bn_sub_small(R, bn_word_len, N, bn_word_len, R);
+        cc_bn_sub_small(R, R, bn_word_len, N, bn_word_len);
     }
 }

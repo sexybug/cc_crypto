@@ -2,6 +2,7 @@
 #include "cc_bn_exp.h"
 #include "cc_bn_mul.h"
 #include "cc_bn_mod.h"
+#include "cc_bn_div.h"
 #include "cc_bn_config.h"
 
 cc_bn_status_t cc_bn_mod(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *N, size_t N_word_len, cc_bn_t *R)
@@ -13,7 +14,7 @@ cc_bn_status_t cc_bn_mod(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *N, 
 
     cc_bn_copy(A_tmp, A, A_word_len);
     cc_bn_copy(N_tmp, N, N_word_len);
-    cc_bn_status_t div_status = cc_bn_div(A_tmp, A_word_len, N_tmp, N_word_len, Q_tmp, R_tmp);
+    cc_bn_status_t div_status = cc_bn_div_unsafe(Q_tmp, R_tmp, A_tmp, A_word_len, N_tmp, N_word_len);
     if (CC_BN_ERR(div_status))
     {
         return div_status;
@@ -125,8 +126,8 @@ cc_bn_status_t cc_bn_mont_sqrt_p3(const cc_bn_t *A, const cc_bn_t *P, size_t bn_
     cc_bn_t r[CC_BN_MAX_WORDS];
 
     // t = (p + 1)/4
-    cc_bn_add_word(P, bn_word_len, 1, t);
-    cc_bn_rshift(t, bn_word_len, 2, t);
+    cc_bn_add_word(t, P, bn_word_len, 1);
+    cc_bn_rshift(t, t, bn_word_len, 2);
 
     // r = a^((p + 1)/4)
     cc_bn_mont_exp(A, t, P, bn_word_len, Ni, r);
@@ -150,7 +151,7 @@ void cc_bn_mont_inv(const cc_bn_t *A, const cc_bn_t *P, size_t bn_word_len, cc_b
 
     // e = p - 2
     cc_bn_t E[CC_BN_MAX_WORDS];
-    cc_bn_sub_word(P, bn_word_len, 2, E);
+    cc_bn_sub_word(E, P, bn_word_len, 2);
 
     // r = a^(p - 2)
     cc_bn_mont_exp(A, E, P, bn_word_len, Ni, R);

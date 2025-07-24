@@ -1,0 +1,200 @@
+
+#include "cc_bn_convert.h"
+#include <string.h>
+
+static cc_bn_t cc_u8_to_bn_word(const uint8_t *src, size_t byte_len)
+{
+    size_t i;
+    cc_bn_t word = 0;
+    for (i = 0; (i < byte_len) && (i < CC_BN_WORD_BYTES); i++)
+    {
+        word = (word << 8) | src[i];
+    }
+    return word;
+}
+
+void cc_u8_to_bn(const uint8_t *src, size_t byte_len, cc_bn_t *bn, size_t bn_word_len)
+{
+    int i;
+    int bn_index = bn_word_len - 1;
+
+    // 检查是否有足够空间存储数据
+    if (byte_len > bn_word_len * CC_BN_WORD_BYTES)
+    {
+        return;
+    }
+
+    // 前方需要补多少字节的0
+    int zero_pad_len = bn_word_len * CC_BN_WORD_BYTES - byte_len;
+
+    for (i = 0; i < zero_pad_len / CC_BN_WORD_BYTES; i++)
+    {
+        bn[bn_index] = 0;
+        bn_index -= 1;
+    }
+    // 最高的word需要从src中读取多少字节
+    int left_u8_len = byte_len % CC_BN_WORD_BYTES;
+    if (left_u8_len != 0)
+    {
+        bn[bn_index] = cc_u8_to_bn_word(src, left_u8_len);
+        bn_index -= 1;
+    }
+
+    int src_index = left_u8_len;
+    while (bn_index >= 0)
+    {
+        bn[bn_index] = cc_u8_to_bn_word(src + src_index, CC_BN_WORD_BYTES);
+        bn_index -= 1;
+        src_index += CC_BN_WORD_BYTES;
+    }
+}
+
+// return the number of bytes used in dst
+size_t cc_bn_to_u8(const cc_bn_t *bn, size_t bn_word_len, uint8_t *dst)
+{
+    int i;
+    int byte_len = bn_word_len * CC_BN_WORD_BYTES;
+
+    for (i = 0; i < byte_len; i++)
+    {
+        dst[i] = (bn[bn_word_len - 1 - i / CC_BN_WORD_BYTES] >> (CC_BN_WORD_BITS - 8 - (i % CC_BN_WORD_BYTES) * 8)) & 0xFF;
+    }
+    return byte_len;
+}
+
+// bn will be filled with the minimum number of words needed to fit the byte array
+// return the number of words used in bn
+size_t cc_u8_to_bn_fit(const uint8_t *src, size_t byte_len, cc_bn_t *bn)
+{
+    size_t bn_word_len = (byte_len + CC_BN_WORD_BYTES - 1) / CC_BN_WORD_BYTES;
+    cc_u8_to_bn(src, byte_len, bn, bn_word_len);
+    return bn_word_len;
+}
+
+// dst will be filled with the minimum number of bytes needed to fit the bn
+// return the number of bytes used in dst
+size_t cc_bn_to_u8_fit(const cc_bn_t *bn, size_t bn_word_len, uint8_t *dst)
+{
+    int i, j;
+    size_t n = 0;
+    uint8_t tmp;
+
+    for (i = bn_word_len - 1; i >= 0; i--)
+    {
+        if ((bn[i] != 0) || (n > 0)) // Skip leading zeros
+        {
+            for (j = CC_BN_WORD_BITS - 8; j >= 0; j -= 8)
+            {
+                tmp = (bn[i] >> j) & 0xFF;
+                if (tmp != 0 || n > 0) // Skip leading zeros
+                {
+                    dst[n++] = (uint8_t)tmp;
+                }
+            }
+        }
+    }
+
+    if (n == 0) // If all digits are zero, return at least one byte
+    {
+        dst[n++] = 0;
+    }
+    return n; // Return the number of bytes written
+}
+
+static inline uint8_t hex_char_to_u8(char c)
+{
+    if (c >= '0' && c <= '9')
+    {
+        return (c - '0');
+    }
+    else if (c >= 'a' && c <= 'f')
+    {
+        return 10 + (c - 'a');
+    }
+    else if (c >= 'A' && c <= 'F')
+    {
+        return 10 + (c - 'A');
+    }
+    else
+    {
+        return -1;
+    }
+}
+static inline char u8_to_hex_char(uint8_t value)
+{
+    if (value <= 9)
+    {
+        return '0' + value;
+    }
+    else if (value <= 15)
+    {
+        return 'A' + (value - 10);
+    }
+    return '?'; // Error case
+}
+
+cc_bn_t hex_to_bn_word(const char *str, size_t char_size)
+{
+    size_t i;
+    cc_bn_t bn = 0;
+    for (i = 0; (i < char_size) && (i < CC_BN_WORD_BYTES * 2); i++)
+    {
+        bn = (bn << 4) | hex_char_to_u8(str[i]);
+    }
+    return bn;
+}
+
+void hex_to_bn(const char *str, cc_bn_t *bn, size_t bn_word_len)
+{
+    int i;
+    size_t str_len = strlen(str);
+    int byte_len = (str_len + 1) / 2;
+    int bn_index = bn_word_len - 1;
+
+    if (byte_len > bn_word_len * CC_BN_WORD_BYTES)
+    {
+        // Handle error: input string is too long
+        return;
+    }
+
+    int zero_pad_len = bn_word_len * CC_BN_WORD_BYTES - byte_len;
+    for (i = 0; i < zero_pad_len / CC_BN_WORD_BYTES; i++)
+    {
+        bn[bn_index] = 0;
+        bn_index -= 1;
+    }
+
+    int left_str_len = str_len % (CC_BN_WORD_BYTES * 2);
+    if (left_str_len != 0)
+    {
+        bn[bn_index] = hex_to_bn_word(str, left_str_len);
+        bn_index -= 1;
+    }
+
+    int str_index = left_str_len;
+    while (bn_index >= 0)
+    {
+        bn[bn_index] = hex_to_bn_word(str + str_index, CC_BN_WORD_BYTES * 2);
+        bn_index -= 1;
+        str_index += CC_BN_WORD_BYTES * 2;
+    }
+}
+
+// return hex string length
+size_t bn_to_hex(const cc_bn_t *bn, size_t bn_word_len, char *hex)
+{
+    size_t i, j;
+    size_t hex_len = bn_word_len * CC_BN_WORD_BYTES * 2;
+
+    cc_bn_t tmp;
+    for (i = 0; i < bn_word_len; i++)
+    {
+        tmp = bn[bn_word_len - 1 - i]; // 从高位开始处理
+        for (j = 0; j < CC_BN_WORD_BYTES * 2; j++)
+        {
+            hex[i * CC_BN_WORD_BYTES * 2 + j] = u8_to_hex_char((tmp >> (CC_BN_WORD_BITS - 4 - j * 4)) & 0x0F);
+        }
+    }
+    hex[hex_len] = '\0';
+    return hex_len;
+}

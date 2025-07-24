@@ -1,8 +1,8 @@
-#ifndef CC_BASIS_CONVERT_H
-#define CC_BASIS_CONVERT_H
+#ifndef CC_GF2M_BASIS_CONVERT_H
+#define CC_GF2M_BASIS_CONVERT_H
 
 #include "cc_bn.h"
 
 void cc_basis_convert(const cc_bn_t *src, size_t bn_word_len, const cc_bn_t *maps, cc_bn_t *dst);
 
-#endif // CC_BASIS_CONVERT_H
+#endif // CC_GF2M_BASIS_CONVERT_H

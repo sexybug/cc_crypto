@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdint.h>
 
-#include "cc_test.h"
+#include "cc_bn_convert.h"
 
 // 测试用例
 void test_hex_to_bn() {

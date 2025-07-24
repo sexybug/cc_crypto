@@ -22,11 +22,11 @@ void test_cc_bn_rshift()
         cc_bn_t output[2];
         cc_bn_t expected[2] = {0, 0};
 
-        cc_bn_rshift(input, 2, 64, output); // 移位64位，等于2个字长
+        cc_bn_rshift(output, input, 2, 64); // 移位64位，等于2个字长
         assert(cc_bn_compare(output, expected, 2) == 0);
         printf("通过: 移位64位结果为零\n");
 
-        cc_bn_rshift(input, 2, 100, output); // 移位100位，大于2个字长
+        cc_bn_rshift(output, input, 2, 100); // 移位100位，大于2个字长
         assert(cc_bn_compare(output, expected, 2) == 0);
         printf("通过: 移位100位结果为零\n\n");
     }
@@ -37,7 +37,7 @@ void test_cc_bn_rshift()
         cc_bn_t input[] = {0x12345678, 0x9ABCDEF0, 0xFEDCBA98};
         cc_bn_t output[3];
 
-        cc_bn_rshift(input, 3, 0, output);
+        cc_bn_rshift(output, input, 3, 0);
         assert(cc_bn_compare(output, input, 3) == 0);
         printf("通过: 移位0位结果与输入相同\n\n");
     }
@@ -49,12 +49,12 @@ void test_cc_bn_rshift()
         cc_bn_t output[4];
         cc_bn_t expected[] = {0x9ABCDEF0, 0xFEDCBA98, 0x11223344, 0};
 
-        cc_bn_rshift(input, 4, 32, output); // 右移32位（1个字）
+        cc_bn_rshift(output, input, 4, 32); // 右移32位（1个字）
         assert(cc_bn_compare(output, expected, 4) == 0);
         printf("通过: 右移32位\n");
 
         cc_bn_t expected2[] = {0xFEDCBA98, 0x11223344, 0, 0};
-        cc_bn_rshift(input, 4, 64, output); // 右移64位（2个字）
+        cc_bn_rshift(output, input, 4, 64); // 右移64位（2个字）
         assert(cc_bn_compare(output, expected2, 4) == 0);
         printf("通过: 右移64位\n\n");
     }
@@ -66,7 +66,7 @@ void test_cc_bn_rshift()
         cc_bn_t output[2];
 
         // 右移4位
-        cc_bn_rshift(input, 2, 4, output);
+        cc_bn_rshift(output, input, 2, 4);
         // 0x12345678 >> 4 = 0x01234567，但还需要从高位借位
         // 0x9ABCDEF0的低4位是0，所以第一个字变成0x01234567
         // 0x9ABCDEF0 >> 4 = 0x09ABCDEF
@@ -75,7 +75,7 @@ void test_cc_bn_rshift()
         printf("通过: 右移4位\n");
 
         // 右移1位
-        cc_bn_rshift(input, 2, 1, output);
+        cc_bn_rshift(output, input, 2, 1);
         cc_bn_t expected2[] = {0x091A2B3C, 0x4D5E6F78};
         assert(cc_bn_compare(output, expected2, 2) == 0);
         printf("通过: 右移1位\n\n");
@@ -87,12 +87,12 @@ void test_cc_bn_rshift()
         cc_bn_t input[] = {0x80000000};
         cc_bn_t output[1];
 
-        cc_bn_rshift(input, 1, 1, output);
+        cc_bn_rshift(output, input, 1, 1);
         cc_bn_t expected[] = {0x40000000};
         assert(cc_bn_compare(output, expected, 1) == 0);
         printf("通过: 单字右移1位\n");
 
-        cc_bn_rshift(input, 1, 31, output);
+        cc_bn_rshift(output, input, 1, 31);
         cc_bn_t expected2[] = {0x00000001};
         assert(cc_bn_compare(output, expected2, 1) == 0);
         printf("通过: 单字右移31位\n\n");
@@ -104,7 +104,7 @@ void test_cc_bn_rshift()
         cc_bn_t input[] = {0xFFFFFFFF, 0x80000000};
         cc_bn_t output[2];
 
-        cc_bn_rshift(input, 2, 31, output);
+        cc_bn_rshift(output, input, 2, 31);
         // 0xFFFFFFFF >> 31 = 0x1，加上0x80000000的最低位0 << 1 = 0x1
         // 0x80000000 >> 31 = 0x1
         cc_bn_t expected[] = {0x00000001, 0x00000001};
@@ -119,7 +119,7 @@ void test_cc_bn_rshift()
         cc_bn_t output[3];
         cc_bn_t expected[] = {0, 0, 0};
 
-        cc_bn_rshift(input, 3, 15, output);
+        cc_bn_rshift(output, input, 3, 15);
         assert(cc_bn_compare(output, expected, 3) == 0);
         printf("通过: 全零输入右移15位\n\n");
     }
@@ -130,7 +130,7 @@ void test_cc_bn_rshift()
         cc_bn_t input[] = {0xFFFFFFFF, 0xFFFFFFFF};
         cc_bn_t output[2];
 
-        cc_bn_rshift(input, 2, 8, output);
+        cc_bn_rshift(output, input, 2, 8);
         // 每个字右移8位，需要从高位借8位
         cc_bn_t expected[] = {0xFFFFFFFF, 0x00FFFFFF};
         assert(cc_bn_compare(output, expected, 2) == 0);
@@ -143,7 +143,7 @@ void test_cc_bn_rshift()
         cc_bn_t input[] = {0x12345678, 0x9ABCDEF0, 0xFEDCBA98};
         cc_bn_t output[3];
 
-        cc_bn_rshift(input, 3, 36, output); // 32 + 4位
+        cc_bn_rshift(output, input, 3, 36); // 32 + 4位
         // 相当于先右移32位，再右移4位
         cc_bn_t expected[] = {0x89ABCDEF, 0x0FEDCBA9, 0};
         assert(cc_bn_compare(output, expected, 3) == 0);

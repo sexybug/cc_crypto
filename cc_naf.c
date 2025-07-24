@@ -28,18 +28,18 @@ size_t naf(cc_bn_t *K, size_t K_word_len, size_t w, int8_t *naf)
             naf[i] = ki;
             if (ki > 0)
             {
-                cc_bn_sub_word(K, K_word_len, ki, K);
+                cc_bn_sub_word(K, K, K_word_len, ki);
             }
             else
             {
-                cc_bn_add_word(K, K_word_len, -ki, K);
+                cc_bn_add_word(K, K, K_word_len, -ki);
             }
         }
         else
         {
             naf[i] = 0;
         }
-        cc_bn_rshift_1(K, K_word_len, K);
+        cc_bn_rshift_1(K, K, K_word_len);
         i++;
     }
     return i;
