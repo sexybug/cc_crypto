@@ -11,7 +11,7 @@
  */
 cc_bn_status_t cc_bn_prime_trial_division(const cc_bn_t *X, size_t bn_word_len);
 
-int calc_miller_rabin_iterations(int bits);
+int cc_bn_prime_calc_miller_rabin_iterations(int bits);
 
 // refer to FIPS 186-5 B.3.1
 // W > 2

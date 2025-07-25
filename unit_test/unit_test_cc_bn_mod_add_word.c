@@ -4,13 +4,6 @@
 #include "cc_bn.h"
 #include "cc_bn_mod.h"
 
-
-// 测试辅助函数：设置大数为指定值
-void set_bn(cc_bn_t *bn, size_t len, const cc_bn_t *values)
-{
-    memcpy(bn, values, len * sizeof(cc_bn_t));
-}
-
 // 测试辅助函数：比较大数是否相等
 int compare_bn(const cc_bn_t *a, const cc_bn_t *b, size_t len)
 {

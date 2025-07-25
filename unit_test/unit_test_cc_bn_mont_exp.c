@@ -2,8 +2,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdio.h>
-#include "cc_bn_mul.h"
-#include "cc_bn_exp.h"
+#include "cc_bn_mont.h"
 
 int main(void)
 {
@@ -21,10 +20,10 @@ int main(void)
         cc_bn_t Ni = cc_bn_mont_Ni(N);
         cc_bn_mont_RR(RR, N, N_len);
 
-        cc_bn_mont_mul(montA, A, RR, N, N_len, Ni);
+        cc_bn_core_mont_mul(montA, A, RR, N, N_len, Ni);
         cc_bn_mont_exp(montC, montA, B, N, N_len, Ni);
-        cc_bn_mont_mul(C, montC, one, N, N_len, Ni);
-        // cc_bn_mont_mul_word(montC, 1, N, N_len, Ni, C);
+        cc_bn_core_mont_mul(C, montC, one, N, N_len, Ni);
+        // cc_bn_core_mont_mul_word(montC, 1, N, N_len, Ni, C);
 
         assert(memcmp(C, expected, sizeof(expected)) == 0);
     }
@@ -41,10 +40,10 @@ int main(void)
         cc_bn_t Ni = cc_bn_mont_Ni(N);
         cc_bn_mont_RR(RR, N, N_len);
 
-        cc_bn_mont_mul(montA, A, RR, N, N_len, Ni);
+        cc_bn_core_mont_mul(montA, A, RR, N, N_len, Ni);
         cc_bn_mont_exp(montC, montA, B, N, N_len, Ni);
-        // cc_bn_mont_mul(montC, one, N, N_len, Ni, C);
-        cc_bn_mont_mul_word(C, montC, 1, N, N_len, Ni);
+        // cc_bn_core_mont_mul(montC, one, N, N_len, Ni, C);
+        cc_bn_core_mont_mul_word(C, montC, 1, N, N_len, Ni);
 
         assert(memcmp(C, expected, sizeof(expected)) == 0);
     }
@@ -61,10 +60,10 @@ int main(void)
         cc_bn_t Ni = cc_bn_mont_Ni(N);
         cc_bn_mont_RR(RR, N, N_len);
 
-        cc_bn_mont_mul(montA, A, RR, N, N_len, Ni);
+        cc_bn_core_mont_mul(montA, A, RR, N, N_len, Ni);
         cc_bn_mont_exp(montC, montA, B, N, N_len, Ni);
-        // cc_bn_mont_mul(montC, one, N, N_len, Ni, C);
-        cc_bn_mont_mul_word(C, montC, 1, N, N_len, Ni);
+        // cc_bn_core_mont_mul(montC, one, N, N_len, Ni, C);
+        cc_bn_core_mont_mul_word(C, montC, 1, N, N_len, Ni);
 
         assert(memcmp(C, expected, sizeof(expected)) == 0);
     }
@@ -81,10 +80,10 @@ int main(void)
         cc_bn_t Ni = cc_bn_mont_Ni(N);
         cc_bn_mont_RR(RR, N, N_len);
 
-        cc_bn_mont_mul(montA, A, RR, N, N_len, Ni);
+        cc_bn_core_mont_mul(montA, A, RR, N, N_len, Ni);
         cc_bn_mont_exp(montC, montA, B, N, N_len, Ni);
-        // cc_bn_mont_mul(montC, one, N, N_len, Ni, C);
-        cc_bn_mont_mul_word(C, montC, 1, N, N_len, Ni);
+        // cc_bn_core_mont_mul(montC, one, N, N_len, Ni, C);
+        cc_bn_core_mont_mul_word(C, montC, 1, N, N_len, Ni);
 
         assert(memcmp(C, expected, sizeof(expected)) == 0);
     }
@@ -101,10 +100,10 @@ int main(void)
         cc_bn_t Ni = cc_bn_mont_Ni(N);
         cc_bn_mont_RR(RR, N, N_len);
 
-        cc_bn_mont_mul(montA, A, RR, N, N_len, Ni);
+        cc_bn_core_mont_mul(montA, A, RR, N, N_len, Ni);
         cc_bn_mont_exp(montC, montA, B, N, N_len, Ni);
-        // cc_bn_mont_mul(montC, one, N, N_len, Ni, C);
-        cc_bn_mont_mul_word(C, montC, 1, N, N_len, Ni);
+        // cc_bn_core_mont_mul(montC, one, N, N_len, Ni, C);
+        cc_bn_core_mont_mul_word(C, montC, 1, N, N_len, Ni);
 
         assert(memcmp(C, expected, sizeof(expected)) == 0);
     }

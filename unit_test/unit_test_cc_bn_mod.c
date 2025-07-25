@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include "cc_bn_div.h"
+#include "cc_bn_mod.h"
 #include "cc_bn_config.h"
 
 // 辅助函数：比较两个大数是否相等
@@ -17,7 +17,7 @@ int bn_equals(const cc_bn_t *a, const cc_bn_t *b, size_t word_len)
 
 void test_cc_bn_div()
 {
-    printf("开始测试 cc_bn_div_unsafe 函数...\n");
+    printf("开始测试 cc_bn_core_div 函数...\n");
 
     // 测试用例1：除数为零
     {
@@ -31,7 +31,7 @@ void test_cc_bn_div()
         A[0] = 10;
         cc_bn_set_zero(N, 4);
 
-        int result = cc_bn_div_unsafe(Q, R, A, 4, N, 4);
+        int result = cc_bn_core_div(Q, R, A, 4, N, 4);
         assert(result == CC_BN_ERR_DIV_BY_ZERO);
         printf("测试1通过：除数为零错误处理\n");
     }
@@ -48,7 +48,7 @@ void test_cc_bn_div()
         A[0] = 5;
         N[0] = 3;
 
-        int result = cc_bn_div_unsafe(Q, R, A, 2, N, 4);
+        int result = cc_bn_core_div(Q, R, A, 2, N, 4);
         assert(result == CC_BN_SUCCESS);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
@@ -67,7 +67,7 @@ void test_cc_bn_div()
         A[0] = 5;  // A = 5
         N[0] = 10; // N = 10
 
-        int result = cc_bn_div_unsafe(Q, R, A, 4, N, 4);
+        int result = cc_bn_core_div(Q, R, A, 4, N, 4);
         assert(result == CC_BN_SUCCESS);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
@@ -86,7 +86,7 @@ void test_cc_bn_div()
         A[0] = 12; // A = 12
         N[0] = 3;  // N = 3
 
-        int result = cc_bn_div_unsafe(Q, R, A, 4, N, 4);
+        int result = cc_bn_core_div(Q, R, A, 4, N, 4);
         assert(result == CC_BN_SUCCESS);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
@@ -105,7 +105,7 @@ void test_cc_bn_div()
         A[0] = 13; // A = 13
         N[0] = 3;  // N = 3
 
-        int result = cc_bn_div_unsafe(Q, R, A, 4, N, 4);
+        int result = cc_bn_core_div(Q, R, A, 4, N, 4);
         assert(result == CC_BN_SUCCESS);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
@@ -124,7 +124,7 @@ void test_cc_bn_div()
         A[0] = 42; // A = 42
         N[0] = 1;  // N = 1
 
-        int result = cc_bn_div_unsafe(Q, R, A, 4, N, 4);
+        int result = cc_bn_core_div(Q, R, A, 4, N, 4);
         assert(result == CC_BN_SUCCESS);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
@@ -143,7 +143,7 @@ void test_cc_bn_div()
         A[0] = 15; // A = 15
         N[0] = 15; // N = 15
 
-        int result = cc_bn_div_unsafe(Q, R, A, 4, N, 4);
+        int result = cc_bn_core_div(Q, R, A, 4, N, 4);
         assert(result == CC_BN_SUCCESS);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
@@ -162,7 +162,7 @@ void test_cc_bn_div()
         A[1] = 0x1;        // A = 2^32 + 2^32 - 1
         N[0] = 0x10000;    // N = 65536
 
-        int result = cc_bn_div_unsafe(Q, R, A, 4, N, 4);
+        int result = cc_bn_core_div(Q, R, A, 4, N, 4);
         assert(result == CC_BN_SUCCESS);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
@@ -188,7 +188,7 @@ void test_cc_bn_div()
         N[0] = 0x1000;
         N[1] = 0x2000;
 
-        int result = cc_bn_div_unsafe(Q, R, A, 8, N, 4);
+        int result = cc_bn_core_div(Q, R, A, 8, N, 4);
         assert(result == CC_BN_SUCCESS);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
@@ -207,7 +207,7 @@ void test_cc_bn_div()
         A[0] = 100;
         N[0] = 1;
 
-        int result = cc_bn_div_unsafe(Q, R, A, 4, N, 4);
+        int result = cc_bn_core_div(Q, R, A, 4, N, 4);
         assert(result == CC_BN_SUCCESS);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
@@ -222,7 +222,7 @@ void test_cc_bn_div()
         cc_bn_t expected_Q[2] = {0x00000000, 1};
         cc_bn_t expected_R[1] = {0x00000001};
 
-        int result = cc_bn_div_unsafe(Q, R, A, 2, N, 1);
+        int result = cc_bn_core_div(Q, R, A, 2, N, 1);
         assert(result == CC_BN_SUCCESS);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
@@ -237,7 +237,7 @@ void test_cc_bn_div()
         cc_bn_t expected_Q[2] = {0x00000001, 0};
         cc_bn_t expected_R[2] = {0xfffffffe, 0};
 
-        int result = cc_bn_div_unsafe(Q, R, A, 2, N, 2);
+        int result = cc_bn_core_div(Q, R, A, 2, N, 2);
         assert(result == CC_BN_SUCCESS);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));

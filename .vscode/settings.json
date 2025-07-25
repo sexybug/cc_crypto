@@ -17,10 +17,8 @@
         "stdlib.h": "c",
         "time.h": "c",
         "cc_crypto_rng.h": "c",
-        "cc_bn_exp.h": "c",
         "cc_bn_mod.h": "c",
-        "cc_bn_convert.h": "c",
-        "cc_bn_div.h": "c"
+        "cc_bn_convert.h": "c"
     },
     "Codegeex.RepoIndex": true,
     "cpp-check-lint.cppcheck.--suppress=": [

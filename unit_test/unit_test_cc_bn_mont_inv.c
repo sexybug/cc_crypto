@@ -19,9 +19,9 @@ int main(void)
         cc_bn_t Ni = cc_bn_mont_Ni(N);
         cc_bn_mont_RR(RR, N, N_len);
 
-        cc_bn_mont_mul(montA, A, RR, N, N_len, Ni);
+        cc_bn_core_mont_mul(montA, A, RR, N, N_len, Ni);
         cc_bn_mont_inv(montC, montA, N, N_len, Ni);
-        cc_bn_mont_mul(C, montC, one, N, N_len, Ni);
+        cc_bn_core_mont_mul(C, montC, one, N, N_len, Ni);
 
         assert(memcmp(C, expected, sizeof(expected)) == 0);
     }

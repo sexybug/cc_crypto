@@ -7,7 +7,7 @@
 #include "cc_naf.h"
 #include "cc_test.h"
 
-void print_naf(int8_t *naf, size_t naf_len)
+void print_naf(const int8_t *naf, size_t naf_len)
 {
     printf("NAF: \n");
     for (size_t i = naf_len - 1; i < naf_len; i--)

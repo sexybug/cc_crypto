@@ -3,8 +3,9 @@
 #define CC_BN_CONFIG_H
 
 #include "cc_bn.h"
+#include "cc_bn_err.h"
 
-#define CC_BN_MAX_BITS 8192 // max bits of BN, used for stack allocation
+#define CC_BN_MAX_BITS 8192 // max bits of input BN, used for stack allocation
 #define CC_BN_MAX_BYTES (CC_BN_MAX_BITS / 8)
 #define CC_BN_MAX_WORDS (CC_BN_MAX_BITS / CC_BN_WORD_BITS)
 

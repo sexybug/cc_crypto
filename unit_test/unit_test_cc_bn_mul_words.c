@@ -11,7 +11,7 @@ int bn_equal(const cc_bn_t *a, const cc_bn_t *b, size_t len) {
 }
 
 void test_cc_bn_mul_words() {
-    printf("开始测试 cc_bn_mul_words 函数\n");
+    printf("开始测试 cc_bn_core_mul_words 函数\n");
     
     // 测试用例1：零乘以任意数
     {
@@ -21,7 +21,7 @@ void test_cc_bn_mul_words() {
         cc_bn_t R[4];
         cc_bn_t expected[] = {0, 0, 0, 0};
         
-        cc_bn_mul_words(R, A, B, 2);
+        cc_bn_core_mul_words(R, A, B, 2);
         assert(bn_equal(R, expected, 4));
         printf("✓ 通过\n");
     }
@@ -34,7 +34,7 @@ void test_cc_bn_mul_words() {
         cc_bn_t R[4];
         cc_bn_t expected[] = {0, 0, 0, 0};
         
-        cc_bn_mul_words(R, A, B, 2);
+        cc_bn_core_mul_words(R, A, B, 2);
         assert(bn_equal(R, expected, 4));
         printf("✓ 通过\n");
     }
@@ -46,7 +46,7 @@ void test_cc_bn_mul_words() {
         cc_bn_t B[] = {0x9ABCDEF0};
         cc_bn_t R[2];
         
-        cc_bn_mul_words(R, A, B, 1);
+        cc_bn_core_mul_words(R, A, B, 1);
         
         // 手动计算期望结果：0x12345678 * 0x9ABCDEF0
         cc_bn_dword_t expected_full = (cc_bn_dword_t)0x12345678 * 0x9ABCDEF0;
@@ -67,7 +67,7 @@ void test_cc_bn_mul_words() {
         cc_bn_t R[4];
         cc_bn_t expected[] = {0x12345678, 0x9ABCDEF0, 0, 0};
         
-        cc_bn_mul_words(R, A, B, 2);
+        cc_bn_core_mul_words(R, A, B, 2);
         assert(bn_equal(R, expected, 4));
         printf("✓ 通过\n");
     }
@@ -80,7 +80,7 @@ void test_cc_bn_mul_words() {
         cc_bn_t R[4];
         cc_bn_t expected[] = {0x12345678, 0x9ABCDEF0, 0, 0};
         
-        cc_bn_mul_words(R, A, B, 2);
+        cc_bn_core_mul_words(R, A, B, 2);
         assert(bn_equal(R, expected, 4));
         printf("✓ 通过\n");
     }
@@ -93,7 +93,7 @@ void test_cc_bn_mul_words() {
         cc_bn_t R[2];
         cc_bn_t expected[] = {0x00000001, 0xFFFFFFFE};
         
-        cc_bn_mul_words(R, A, B, 1);
+        cc_bn_core_mul_words(R, A, B, 1);
         assert(bn_equal(R, expected, 2));
         printf("✓ 通过\n");
     }
@@ -106,7 +106,7 @@ void test_cc_bn_mul_words() {
         cc_bn_t R[6];
         cc_bn_t expected[] = {0xca5f6bf0, 0x508dfea4,0x69a96090,0xf966a0a8,0x4a424b60,0x048d159e};
         
-        cc_bn_mul_words(R, A, B, 3);
+        cc_bn_core_mul_words(R, A, B, 3);
         assert(bn_equal(R, expected, 6));
         printf("✓ 通过\n");
     }
@@ -118,8 +118,8 @@ void test_cc_bn_mul_words() {
         cc_bn_t B[] = {0xFEDCBA98, 0x76543210};
         cc_bn_t R1[4], R2[4];
         
-        cc_bn_mul_words(R1, A, B, 2);
-        cc_bn_mul_words(R2, B, A, 2);
+        cc_bn_core_mul_words(R1, A, B, 2);
+        cc_bn_core_mul_words(R2, B, A, 2);
         
         assert(bn_equal(R1, R2, 4));
         printf("✓ 通过\n");
@@ -137,7 +137,7 @@ void test_cc_bn_mul_words() {
                 cc_bn_t B[] = {test_values[j]};
                 cc_bn_t R[2];
                 
-                cc_bn_mul_words(R, A, B, 1);
+                cc_bn_core_mul_words(R, A, B, 1);
                 
                 // 验证结果等于直接相乘
                 cc_bn_dword_t expected_full = (cc_bn_dword_t)test_values[i] * test_values[j];
@@ -160,7 +160,7 @@ void test_cc_bn_mul_words() {
         cc_bn_t R[4];
         cc_bn_t expected[] = {0x00000001, 0x00000000, 0xfffffffe, 0xffffffff};
         
-        cc_bn_mul_words(R, A, B, 2);
+        cc_bn_core_mul_words(R, A, B, 2);
         assert(bn_equal(R, expected, 4));
         printf("✓ 通过\n");
     }

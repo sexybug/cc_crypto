@@ -4,7 +4,7 @@
 #include <string.h>
 #include "cc_test.h"
 
-void print_naf2k(int *naf2k, int len)
+void print_naf2k(const int *naf2k, int len)
 {
     printf("NAF2k: \n");
     for (int i = len - 1; i >= 0; i--)
