@@ -44,7 +44,7 @@ void test_cc_bn_div()
         cc_bn_t expected_R[4] = {5, 0, 0, 0};
 
         cc_bn_status_t result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(compare_bn(Q, expected_Q, 4));
         assert(compare_bn(R, expected_R, 4));
         printf("✓ A < N 情况处理正确\n");
@@ -61,7 +61,7 @@ void test_cc_bn_div()
         cc_bn_t expected_R[4] = {0, 0, 0, 0};
 
         cc_bn_status_t result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(compare_bn(Q, expected_Q, 4));
         assert(compare_bn(R, expected_R, 4));
         printf("✓ A = N 情况处理正确\n");
@@ -78,7 +78,7 @@ void test_cc_bn_div()
         cc_bn_t expected_R[4] = {0, 0, 0, 0};
 
         cc_bn_status_t result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(compare_bn(Q, expected_Q, 4));
         assert(compare_bn(R, expected_R, 4));
         printf("✓ 简单整除处理正确\n");
@@ -95,7 +95,7 @@ void test_cc_bn_div()
         cc_bn_t expected_R[4] = {2, 0, 0, 0};
 
         cc_bn_status_t result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(compare_bn(Q, expected_Q, 4));
         assert(compare_bn(R, expected_R, 4));
         printf("✓ 有余数除法处理正确\n");
@@ -110,7 +110,7 @@ void test_cc_bn_div()
         cc_bn_t R[4] = {0};
 
         cc_bn_status_t result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         printf("✓ 大数除法执行成功\n");
     }
 
@@ -125,7 +125,7 @@ void test_cc_bn_div()
         cc_bn_t expected_R[4] = {0, 0, 0, 0};
 
         cc_bn_status_t result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(compare_bn(Q, expected_Q, 4));
         assert(compare_bn(R, expected_R, 4));
         printf("✓ 除数为1处理正确\n");
@@ -142,7 +142,7 @@ void test_cc_bn_div()
         cc_bn_t expected_R[4] = {0, 0, 0, 0};
 
         cc_bn_status_t result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(compare_bn(Q, expected_Q, 4));
         assert(compare_bn(R, expected_R, 4));
         printf("✓ 被除数为0处理正确\n");
@@ -157,7 +157,7 @@ void test_cc_bn_div()
         cc_bn_t R[4] = {0};
 
         cc_bn_status_t result = cc_bn_core_div(Q, R, A, 8, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         printf("✓ 不同字长度处理正确\n");
     }
 
@@ -170,7 +170,7 @@ void test_cc_bn_div()
         cc_bn_t R[4] = {0};
 
         cc_bn_status_t result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         printf("✓ 最大值除法执行成功\n");
     }
 

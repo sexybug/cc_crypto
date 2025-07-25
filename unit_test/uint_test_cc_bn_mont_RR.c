@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdio.h>
-#include "cc_bn_mul.h"
+#include "cc_bn_mont.h"
 
 int main(void)
 {

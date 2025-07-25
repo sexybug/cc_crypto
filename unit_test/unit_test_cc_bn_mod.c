@@ -49,7 +49,7 @@ void test_cc_bn_div()
         N[0] = 3;
 
         int result = cc_bn_core_div(Q, R, A, 2, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
         printf("测试2通过：被除数长度小于除数长度\n");
@@ -68,7 +68,7 @@ void test_cc_bn_div()
         N[0] = 10; // N = 10
 
         int result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
         printf("测试3通过：被除数小于除数\n");
@@ -87,7 +87,7 @@ void test_cc_bn_div()
         N[0] = 3;  // N = 3
 
         int result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
         printf("测试4通过：简单整除\n");
@@ -106,7 +106,7 @@ void test_cc_bn_div()
         N[0] = 3;  // N = 3
 
         int result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
         printf("测试5通过：带余数除法\n");
@@ -125,7 +125,7 @@ void test_cc_bn_div()
         N[0] = 1;  // N = 1
 
         int result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
         printf("测试6通过：除数为1\n");
@@ -144,7 +144,7 @@ void test_cc_bn_div()
         N[0] = 15; // N = 15
 
         int result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
         printf("测试7通过：相等数相除\n");
@@ -163,7 +163,7 @@ void test_cc_bn_div()
         N[0] = 0x10000;    // N = 65536
 
         int result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
         printf("测试8通过：大数除法\n");
@@ -189,7 +189,7 @@ void test_cc_bn_div()
         N[1] = 0x2000;
 
         int result = cc_bn_core_div(Q, R, A, 8, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
         printf("测试9通过：多字长度除法\n");
@@ -208,7 +208,7 @@ void test_cc_bn_div()
         N[0] = 1;
 
         int result = cc_bn_core_div(Q, R, A, 4, N, 4);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
         printf("测试10通过：最小非零除数\n");
@@ -223,7 +223,7 @@ void test_cc_bn_div()
         cc_bn_t expected_R[1] = {0x00000001};
 
         int result = cc_bn_core_div(Q, R, A, 2, N, 1);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
         printf("测试11通过：大数除法\n");
@@ -238,7 +238,7 @@ void test_cc_bn_div()
         cc_bn_t expected_R[2] = {0xfffffffe, 0};
 
         int result = cc_bn_core_div(Q, R, A, 2, N, 2);
-        assert(result == CC_BN_SUCCESS);
+        assert(result == CC_BN_OK);
         assert(bn_equals(Q, expected_Q, sizeof(expected_Q) / sizeof(expected_Q[0])));
         assert(bn_equals(R, expected_R, sizeof(expected_R) / sizeof(expected_R[0])));
         printf("测试12通过：大数除法\n");

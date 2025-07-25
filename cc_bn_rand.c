@@ -52,5 +52,5 @@ cc_bn_status_t cc_bn_rand_range(cc_bn_t *R, const cc_bn_t *N, size_t bn_word_len
         // if bit_index < 0, now R = N,  re-generate R
     } while (cc_bn_cmp_words(R, N, bn_word_len) == 0);
 
-    return CC_BN_SUCCESS;
+    return CC_BN_OK;
 }

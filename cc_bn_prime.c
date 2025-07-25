@@ -24,31 +24,9 @@ int cc_bn_prime_calc_miller_rabin_iterations(int bits)
                              : 51);
 }
 
-// R = A^E mod N
-// R can alias A, R cannot alias N
-void cc_bn_mr_exp(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *R2, cc_bn_t Ni)
-{
-    cc_bn_t T[CC_BN_MAX_WORDS];
-    cc_bn_core_mont_mul(T, A, R2, N, bn_word_len, Ni);
-    cc_bn_mont_exp(R, T, E, N, bn_word_len, Ni);
-    cc_bn_core_mont_mul_word(T, R, 1, N, bn_word_len, Ni);
-    cc_bn_copy(R, T, bn_word_len);
-}
-
-// R = A^2 mod N
-// R can alias A, R cannot alias N
-void cc_bn_mr_square(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *R2, cc_bn_t Ni)
-{
-    cc_bn_t T[CC_BN_MAX_WORDS];
-    cc_bn_core_mont_mul(T, A, R2, N, bn_word_len, Ni);
-    cc_bn_core_mont_mul(R, T, T, N, bn_word_len, Ni);
-    cc_bn_core_mont_mul_word(T, R, 1, N, bn_word_len, Ni);
-    cc_bn_copy(R, T, bn_word_len);
-}
-
 // refer to FIPS 186-5 B.3.1
 // W > 2
-cc_bn_status_t cc_bn_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int iterations, cc_crypto_rng_f rng)
+cc_bn_status_t cc_bn_prime_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int iterations, cc_crypto_rng_f rng)
 {
     int a, i, j;
     cc_bn_t W1[CC_BN_MAX_WORDS];
@@ -134,4 +112,26 @@ cc_bn_status_t cc_bn_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int iter
         }
     }
     return CC_BN_PROBABLY_PRIME;
+}
+
+// return CC_BN_ERR_INVALID_ARG if X is invalid
+// return CC_BN_IS_PRIME if X is certainly prime
+// return CC_BN_PROBABLY_PRIME if X is probably prime
+// return CC_BN_IS_COMPOSITE if X is composite
+cc_bn_status_t cc_bn_prime_check(const cc_bn_t *X, size_t bn_word_len, cc_crypto_rng_f rng)
+{
+    // if X = 0 or 1, it is invalid
+    if (cc_bn_cmp_word(X, bn_word_len, 1) <= 0)
+    {
+        return CC_BN_ERR_INVALID_ARG;
+    }
+
+    cc_bn_status_t trial_div_ret = cc_bn_prime_trial_division(X, bn_word_len);
+    if (trial_div_ret != CC_BN_PROBABLY_PRIME)
+    {
+        return trial_div_ret;
+    }
+
+    int iterations = cc_bn_prime_calc_miller_rabin_iterations(cc_bn_bit_len(X, bn_word_len));
+    return cc_bn_prime_miller_rabin(X, bn_word_len, iterations, rng);
 }

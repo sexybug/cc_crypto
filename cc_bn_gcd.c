@@ -68,4 +68,3 @@ size_t cc_bn_gcd(cc_bn_t *D, const cc_bn_t *A, size_t A_word_len, const cc_bn_t 
         return cc_bn_gcd_unsafe(D, B, B_word_len, A, A_word_len);
     }
 }
-
