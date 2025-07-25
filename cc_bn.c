@@ -151,6 +151,19 @@ void cc_bn_copy(cc_bn_t *dst, const cc_bn_t *src, size_t bn_word_len)
     }
 }
 
+// swap A and B
+void cc_bn_swap(cc_bn_t *A, cc_bn_t *B, size_t bn_word_len)
+{
+    size_t i;
+    cc_bn_t tmp;
+    for (i = 0; i < bn_word_len; i++)
+    {
+        tmp = A[i];
+        A[i] = B[i];
+        B[i] = tmp;
+    }
+}
+
 // bn = bit(n-1)bit(n-2)...bit(0), bit(n-1) is the most significant bit
 cc_bn_t cc_bn_get_bit(const cc_bn_t *bn, size_t bit_index)
 {
@@ -164,6 +177,29 @@ void cc_bn_set_bit(cc_bn_t *bn, size_t bit_index, cc_bn_t bit)
     int digit_index = bit_index / CC_BN_WORD_BITS;
     int bit_index_in_digit = bit_index % CC_BN_WORD_BITS;
     bn[digit_index] = (bn[digit_index] & ~(1 << bit_index_in_digit)) | (bit << bit_index_in_digit);
+}
+
+// return least significant bit index
+// bn != 0
+// example: 0x01 -> 0, 0x02 -> 1, 0x04 -> 2
+size_t cc_bn_lsb(const cc_bn_t *bn, size_t bn_word_len)
+{
+    int i, j = 0;
+    cc_bn_t tmp = 1;
+    for (i = 0; i < bn_word_len; i++)
+    {
+        if (bn[i] != 0)
+        {
+            j = 0;
+            while ((bn[i] & tmp) == 0)
+            {
+                tmp <<= 1;
+                j++;
+            }
+            break;
+        }
+    }
+    return i * CC_BN_WORD_BITS + j;
 }
 
 size_t cc_bn_bit_len(const cc_bn_t *bn, size_t bn_word_len)
@@ -252,6 +288,11 @@ cc_bn_t cc_bn_lshift_1(cc_bn_t *R, const cc_bn_t *A, size_t bn_word_len)
 // R can alias A
 void cc_bn_lshift(cc_bn_t *R, const cc_bn_t *A, size_t bn_word_len, size_t shift_bit_len)
 {
+    if (R == A && shift_bit_len == 0)
+    {
+        return;
+    }
+
     int i;
     int shift_word_len = shift_bit_len / CC_BN_WORD_BITS;
     int shift_bit_len_in_word = shift_bit_len % CC_BN_WORD_BITS;
@@ -294,6 +335,11 @@ void cc_bn_lshift(cc_bn_t *R, const cc_bn_t *A, size_t bn_word_len, size_t shift
 // R can alias A
 void cc_bn_rshift(cc_bn_t *R, const cc_bn_t *A, size_t bn_word_len, size_t shift_bit_len)
 {
+    if (R == A && shift_bit_len == 0)
+    {
+        return;
+    }
+
     int i;
     int shift_word_len = shift_bit_len / CC_BN_WORD_BITS;
     int shift_bit_len_in_word = shift_bit_len % CC_BN_WORD_BITS;
@@ -435,6 +481,7 @@ cc_bn_t cc_bn_sub_words(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, size_t b
 
 // R = A - B
 // A_word_len must >= B_word_len
+// R_word_len = A_word_len
 // R can alias A B
 cc_bn_t cc_bn_sub_small(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len)
 {

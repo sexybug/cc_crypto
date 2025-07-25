@@ -34,9 +34,17 @@ int cc_bn_cmp(const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_wo
 
 void cc_bn_copy(cc_bn_t *dst, const cc_bn_t *src, size_t bn_word_len);
 
+// swap A and B
+void cc_bn_swap(cc_bn_t *A, cc_bn_t *B, size_t bn_word_len);
+
 // bn = bit(n-1)bit(n-2)...bit(0), bit(n-1) is the most significant bit
 cc_bn_t cc_bn_get_bit(const cc_bn_t *bn, size_t bit_index);
 void cc_bn_set_bit(cc_bn_t *bn, size_t bit_index, cc_bn_t bit);
+
+// return least significant bit index
+// bn != 0
+// example: 0x01 -> 0, 0x02 -> 1, 0x04 -> 2
+size_t cc_bn_lsb(const cc_bn_t *bn, size_t bn_word_len);
 
 size_t cc_bn_bit_len(const cc_bn_t *bn, size_t bn_word_len);
 size_t cc_bn_byte_len(const cc_bn_t *bn, size_t bn_word_len);
@@ -87,6 +95,7 @@ cc_bn_t cc_bn_sub_words(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, size_t b
 
 // R = A - B
 // A_word_len must >= B_word_len
+// R_word_len = A_word_len
 // R can alias A B
 cc_bn_t cc_bn_sub_small(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len);
 

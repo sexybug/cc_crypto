@@ -38,6 +38,7 @@
                 "${workspaceFolder}\\cc_bn_mul.c",
                 "${workspaceFolder}\\cc_bn_mont.c",
                 "${workspaceFolder}\\cc_bn_mod.c",
+                "${workspaceFolder}\\cc_bn_gcd.c",
                 "${workspaceFolder}\\cc_bn_prime.c",
                 "${workspaceFolder}\\cc_bn_prime_trial_div.c",
                 "${workspaceFolder}\\cc_crypto_rng.c",
