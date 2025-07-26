@@ -144,6 +144,7 @@ cc_bn_t hex_to_bn_word(const char *str, size_t char_size)
     return bn;
 }
 
+// hex string can be odd length
 void hex_to_bn(const char *str, cc_bn_t *bn, size_t bn_word_len)
 {
     int i;
@@ -180,6 +181,7 @@ void hex_to_bn(const char *str, cc_bn_t *bn, size_t bn_word_len)
     }
 }
 
+// note: hex string ends with '\0', you must make sure memory is enough
 // return hex string length
 size_t bn_to_hex(const cc_bn_t *bn, size_t bn_word_len, char *hex)
 {
@@ -197,4 +199,47 @@ size_t bn_to_hex(const cc_bn_t *bn, size_t bn_word_len, char *hex)
     }
     hex[hex_len] = '\0';
     return hex_len;
+}
+
+// bn will be filled with the minimum number of words needed to fit the hex string
+// hex string can be odd length
+// return the number of words used in bn
+size_t hex_to_bn_fit(const char *str, cc_bn_t *bn)
+{
+    size_t str_len = strlen(str);
+    size_t bn_word_len = (str_len + 1) / (CC_BN_WORD_BYTES * 2);
+    hex_to_bn(str, bn, bn_word_len);
+    return bn_word_len;
+}
+
+// note: hex string ends with '\0', you must make sure memory is enough
+// dst will be filled with the minimum number of hex chars needed to fit the bn
+// return the number of hex chars in dst
+size_t bn_to_hex_fit(const cc_bn_t *bn, size_t bn_word_len, char *hex_str)
+{
+    int i, j;
+    size_t n = 0;
+    uint8_t tmp;
+
+    for (i = bn_word_len - 1; i >= 0; i--)
+    {
+        if ((bn[i] != 0) || (n > 0)) // Skip leading zeros
+        {
+            for (j = CC_BN_WORD_BITS - 4; j >= 0; j -= 4)
+            {
+                tmp = (bn[i] >> j) & 0x0F;
+                if (tmp != 0 || n > 0) // Skip leading zeros
+                {
+                    hex_str[n++] = u8_to_hex_char(tmp);
+                }
+            }
+        }
+    }
+    if (n == 0) // If all digits are zero, return "00"
+    {
+        hex_str[n++] = '0';
+        hex_str[n++] = '0';
+    }
+    hex_str[n] = '\0';
+    return n;
 }

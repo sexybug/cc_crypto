@@ -65,11 +65,7 @@ cc_bn_status_t cc_bn_prime_miller_rabin(const cc_bn_t *W, size_t bn_word_len, in
         do
         {
             // generate B in [1, w-2]
-            cc_bn_status_t rand_status = cc_bn_rand_range(B, W1, bn_word_len, rng);
-            if (CC_BN_ERR(rand_status))
-            {
-                return rand_status;
-            }
+            CC_BN_CHK(cc_bn_rand_range(B, W1, bn_word_len, rng));
             // if B = 1, re-generate B
         } while (cc_bn_cmp_word(B, bn_word_len, 1) <= 0);
 

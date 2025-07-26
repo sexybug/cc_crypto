@@ -31,6 +31,7 @@
             "args": [
                 "-I",
                 "${workspaceFolder}",
+                "${workspaceFolder}/rsa",
                 "-fdiagnostics-color=always",
                 "-g",
                 "${workspaceFolder}\\cc_test.c",
@@ -45,6 +46,7 @@
                 "${workspaceFolder}\\cc_bn_rand.c",
                 "${workspaceFolder}\\cc_bn_convert.c",
                 "${workspaceFolder}\\cc_naf.c",
+                "${workspaceFolder}\\cc_rsa_core.c",
                 "${file}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
