@@ -23,4 +23,6 @@ cc_bn_status_t cc_bn_prime_miller_rabin(const cc_bn_t *W, size_t bn_word_len, in
 // return CC_BN_IS_COMPOSITE if X is composite
 cc_bn_status_t cc_bn_prime_check(const cc_bn_t *X, size_t bn_word_len, cc_crypto_rng_f rng);
 
+cc_bn_status_t cc_bn_gen_prime(cc_bn_t *X, size_t bits, cc_crypto_rng_f rng);
+
 #endif // CC_BN_PRIME_H

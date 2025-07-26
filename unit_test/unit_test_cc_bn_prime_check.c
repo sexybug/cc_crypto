@@ -4,9 +4,12 @@
 #include <stdio.h>
 #include "cc_crypto_rng.h"
 #include "cc_bn_prime.h"
+#include <stdlib.h>
+#include <time.h>
 
 int main(void)
 {
+    srand(time(NULL));
     {
         cc_bn_t N[] = {0xF};
         size_t N_len = sizeof(N) / sizeof(N[0]);
@@ -15,7 +18,7 @@ int main(void)
 
         assert(res == CC_BN_IS_COMPOSITE);
     }
-    
+
     {
         cc_bn_t N[] = {151};
         size_t N_len = sizeof(N) / sizeof(N[0]);

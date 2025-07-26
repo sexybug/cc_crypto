@@ -433,6 +433,7 @@ cc_bn_t cc_bn_add_small(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const c
 }
 
 // R = A + B
+// R_word_len = max(A_word_len, B_word_len)
 // R can alias A B
 cc_bn_t cc_bn_add(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len)
 {

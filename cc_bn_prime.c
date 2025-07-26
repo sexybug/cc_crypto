@@ -62,12 +62,8 @@ cc_bn_status_t cc_bn_prime_miller_rabin(const cc_bn_t *W, size_t bn_word_len, in
     for (i = 0; i < iterations; i++)
     {
         /* (Step 4.1-4.2) obtain a Random string of bits b where 1 < b < w-1 */
-        do
-        {
-            // generate B in [1, w-2]
-            CC_BN_CHK(cc_bn_rand_range(B, W1, bn_word_len, rng));
-            // if B = 1, re-generate B
-        } while (cc_bn_cmp_word(B, bn_word_len, 1) <= 0);
+        // generate B in [2, w-2]
+        CC_BN_CHK(cc_bn_core_rand_rangeN(B, 2, W1, bn_word_len, rng));
 
         /* (Step 4.3) z = b^m mod w */
         cc_bn_core_mod_exp_mont(Z, B, M, W, bn_word_len, RR, Ni);
@@ -130,4 +126,21 @@ cc_bn_status_t cc_bn_prime_check(const cc_bn_t *X, size_t bn_word_len, cc_crypto
 
     int iterations = cc_bn_prime_calc_miller_rabin_iterations(cc_bn_bit_len(X, bn_word_len));
     return cc_bn_prime_miller_rabin(X, bn_word_len, iterations, rng);
+}
+
+cc_bn_status_t cc_bn_gen_prime(cc_bn_t *X, size_t bits, cc_crypto_rng_f rng)
+{
+    cc_bn_status_t check_ret;
+    do
+    {
+        cc_bn_rand_bits(X, bits, rng);
+        X[0] |= 1; // set X odd
+        check_ret = cc_bn_prime_check(X, (bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS, rng);
+        if (check_ret == CC_BN_ERR_GEN_RAND)
+        {
+            return check_ret; // rng error
+        }
+    } while (!((check_ret == CC_BN_IS_PRIME) || (check_ret == CC_BN_PROBABLY_PRIME)));
+
+    return CC_BN_OK;
 }
