@@ -12,6 +12,9 @@ typedef uint64_t cc_bn_dword_t; // double word
 #define CC_BN_WORD_BITS (CC_BN_WORD_BYTES * 8)
 #define CC_BN_WORD_MAX (((cc_bn_dword_t)1 << CC_BN_WORD_BITS) - 1)
 
+#define CC_BN_IS_ODD(bn) ((bn[0]) & 1)
+#define CC_BN_IS_EVEN(bn) (!CC_BN_IS_ODD(bn))
+
 // set bn=0
 void cc_bn_set_zero(cc_bn_t *bn, size_t bn_word_len);
 
@@ -63,6 +66,7 @@ cc_bn_t cc_bn_lshift_1(cc_bn_t *R, const cc_bn_t *A, size_t bn_word_len);
 void cc_bn_lshift(cc_bn_t *R, const cc_bn_t *A, size_t bn_word_len, size_t shift_bit_len);
 
 // R = A >> shift_bit_len
+// shift_bit_len can be any number
 // R can alias A
 void cc_bn_rshift(cc_bn_t *R, const cc_bn_t *A, size_t bn_word_len, size_t shift_bit_len);
 

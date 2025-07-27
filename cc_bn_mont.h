@@ -3,7 +3,7 @@
 #define CC_BN_MONT_H
 
 #include "cc_bn.h"
-#include "cc_bn_err.h"
+#include "cc_err.h"
 
 // pre-compute montgomery multiplication RR
 // N must be odd
@@ -54,9 +54,9 @@ void cc_bn_mont_inv(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *P, size_t bn_wo
 
 // r = A^(1/2) mod P,  P is prim and P = 3 (mod 4), A is montgomery form
 // (P - R) is also a square root of A
-// not every number has a square root, return CC_BN_ERR_NOT_SQUARE if not found
+// not every number has a square root, return CC_ERR_BN_NOT_SQUARE if not found
 // R can alias A P
-cc_bn_status_t cc_bn_mont_sqrt_p3(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *P, size_t bn_word_len, cc_bn_t Ni);
+cc_status_t cc_bn_mont_sqrt_p3(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *P, size_t bn_word_len, cc_bn_t Ni);
 
 // R = A*B mod N, A,B,R isn't montgomery form, A B < N
 // R can alias A B N

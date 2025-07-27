@@ -7,16 +7,31 @@
 int main()
 {
     {
+        cc_bn_t A[CC_BN_MAX_WORDS] = {0x010001};
+        cc_bn_t N[CC_BN_MAX_WORDS] = {0xFFA61464, 0x1583164D};
+        cc_bn_t expect[] = {0x7E84DB71, 0x011CB1BE};
+        cc_bn_t R[CC_BN_MAX_WORDS];
+        size_t A_word_len = 1;
+        size_t N_word_len = 2;
+        cc_status_t status;
+
+        // 测试1: A<N 的情况
+        status = cc_bn_exgcd_mod_inv(R, A, A_word_len, N, N_word_len);
+        assert(status == CC_OK);
+        assert(memcmp(R, expect, N_word_len * CC_BN_WORD_BYTES) == 0);
+    }
+
+    {
         cc_bn_t A[CC_BN_MAX_WORDS];
         cc_bn_t N[CC_BN_MAX_WORDS] = {1};
         cc_bn_t R[CC_BN_MAX_WORDS];
         size_t A_word_len = 1;
         size_t N_word_len = 1;
-        cc_bn_status_t status;
+        cc_status_t status;
 
         // 测试1: N <= 1 的情况
-        status = cc_bn_mod_inv(R, A, A_word_len, N, N_word_len);
-        assert(status == CC_BN_ERR_INVALID_ARG);
+        status = cc_bn_exgcd_mod_inv(R, A, A_word_len, N, N_word_len);
+        assert(status == CC_ERR_BN_INVALID_ARG);
     }
     {
         cc_bn_t A[CC_BN_MAX_WORDS] = {0x07};
@@ -25,11 +40,25 @@ int main()
         cc_bn_t R[CC_BN_MAX_WORDS];
         size_t A_word_len = 1;
         size_t N_word_len = 1;
-        cc_bn_status_t status;
+        cc_status_t status;
 
         // 测试1: N <= 1 的情况
-        status = cc_bn_mod_inv(R, A, A_word_len, N, N_word_len);
-        assert(status == CC_BN_OK);
+        status = cc_bn_exgcd_mod_inv(R, A, A_word_len, N, N_word_len);
+        assert(status == CC_OK);
+        assert(memcmp(R, expect, N_word_len * CC_BN_WORD_BYTES) == 0);
+    }
+    {
+        cc_bn_t A[CC_BN_MAX_WORDS] = {0x86BDCB8D};
+        cc_bn_t N[CC_BN_MAX_WORDS] = {0xA37C734D};
+        cc_bn_t expect[] = {0x157C2479};
+        cc_bn_t R[CC_BN_MAX_WORDS];
+        size_t A_word_len = 1;
+        size_t N_word_len = 1;
+        cc_status_t status;
+
+        // 测试1: N <= 1 的情况
+        status = cc_bn_exgcd_mod_inv(R, A, A_word_len, N, N_word_len);
+        assert(status == CC_OK);
         assert(memcmp(R, expect, N_word_len * CC_BN_WORD_BYTES) == 0);
     }
     {
@@ -39,11 +68,11 @@ int main()
         cc_bn_t R[CC_BN_MAX_WORDS];
         size_t A_word_len = 3;
         size_t N_word_len = 2;
-        cc_bn_status_t status;
+        cc_status_t status;
 
         // 测试1: A>N 的情况
-        status = cc_bn_mod_inv(R, A, A_word_len, N, N_word_len);
-        assert(status == CC_BN_OK);
+        status = cc_bn_exgcd_mod_inv(R, A, A_word_len, N, N_word_len);
+        assert(status == CC_OK);
         assert(memcmp(R, expect, N_word_len * CC_BN_WORD_BYTES) == 0);
     }
     {
@@ -53,11 +82,11 @@ int main()
         cc_bn_t R[CC_BN_MAX_WORDS];
         size_t A_word_len = 3;
         size_t N_word_len = 2;
-        cc_bn_status_t status;
+        cc_status_t status;
 
         // 测试1: A和N不互素 的情况
-        status = cc_bn_mod_inv(R, A, A_word_len, N, N_word_len);
-        assert(status == CC_BN_ERR_NO_INVERSE);
+        status = cc_bn_exgcd_mod_inv(R, A, A_word_len, N, N_word_len);
+        assert(status == CC_ERR_BN_NO_INVERSE);
     }
 
     {
@@ -67,11 +96,11 @@ int main()
         cc_bn_t R[CC_BN_MAX_WORDS];
         size_t A_word_len = 1;
         size_t N_word_len = 2;
-        cc_bn_status_t status;
+        cc_status_t status;
 
         // 测试1: A<N 的情况
-        status = cc_bn_mod_inv(R, A, A_word_len, N, N_word_len);
-        assert(status == CC_BN_OK);
+        status = cc_bn_exgcd_mod_inv(R, A, A_word_len, N, N_word_len);
+        assert(status == CC_OK);
         assert(memcmp(R, expect, N_word_len * CC_BN_WORD_BYTES) == 0);
     }
 

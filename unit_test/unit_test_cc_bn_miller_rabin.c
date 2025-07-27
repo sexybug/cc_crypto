@@ -16,7 +16,7 @@ int main(void)
 
         size_t bits = cc_bn_bit_len(N, N_len);
         int iterations = cc_bn_prime_calc_miller_rabin_iterations(bits);
-        cc_bn_status_t res = cc_bn_prime_miller_rabin(N, N_len, iterations, cc_crypto_rng_ex);
+        cc_status_t res = cc_bn_prime_miller_rabin(N, N_len, iterations, cc_crypto_rng_ex);
 
         assert(res == CC_BN_IS_COMPOSITE);
     }
@@ -27,7 +27,7 @@ int main(void)
 
         size_t bits = cc_bn_bit_len(N, N_len);
         int iterations = cc_bn_prime_calc_miller_rabin_iterations(bits);
-        cc_bn_status_t res = cc_bn_prime_miller_rabin(N, N_len, iterations, cc_crypto_rng_ex);
+        cc_status_t res = cc_bn_prime_miller_rabin(N, N_len, iterations, cc_crypto_rng_ex);
 
         assert(res == CC_BN_PROBABLY_PRIME);
     }
@@ -37,7 +37,7 @@ int main(void)
         size_t N_len = sizeof(N) / sizeof(N[0]);
 
         int iterations = cc_bn_prime_calc_miller_rabin_iterations(cc_bn_bit_len(N, N_len));
-        cc_bn_status_t res = cc_bn_prime_miller_rabin(N, N_len, iterations, cc_crypto_rng_ex);
+        cc_status_t res = cc_bn_prime_miller_rabin(N, N_len, iterations, cc_crypto_rng_ex);
 
         assert(res == CC_BN_PROBABLY_PRIME);
     }
@@ -47,7 +47,7 @@ int main(void)
         size_t N_len = sizeof(N) / sizeof(N[0]);
 
         int iterations = cc_bn_prime_calc_miller_rabin_iterations(cc_bn_bit_len(N, N_len));
-        cc_bn_status_t res = cc_bn_prime_miller_rabin(N, N_len, iterations, cc_crypto_rng_ex);
+        cc_status_t res = cc_bn_prime_miller_rabin(N, N_len, iterations, cc_crypto_rng_ex);
 
         assert(res == CC_BN_PROBABLY_PRIME);
     }
@@ -57,7 +57,7 @@ int main(void)
         size_t N_len = sizeof(N) / sizeof(N[0]);
 
         int iterations = cc_bn_prime_calc_miller_rabin_iterations(cc_bn_bit_len(N, N_len));
-        cc_bn_status_t res = cc_bn_prime_miller_rabin(N, N_len, iterations, cc_crypto_rng_ex);
+        cc_status_t res = cc_bn_prime_miller_rabin(N, N_len, iterations, cc_crypto_rng_ex);
 
         assert(res == CC_BN_IS_COMPOSITE);
     }

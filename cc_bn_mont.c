@@ -239,9 +239,9 @@ void cc_bn_mont_inv(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *P, size_t bn_wo
 
 // r = A^(1/2) mod P,  P is prim and P = 3 (mod 4), A is montgomery form
 // (P - R) is also a square root of A
-// not every number has a square root, return CC_BN_ERR_NOT_SQUARE if not found
+// not every number has a square root, return CC_ERR_BN_NOT_SQUARE if not found
 // R can alias A P
-cc_bn_status_t cc_bn_mont_sqrt_p3(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *P, size_t bn_word_len, cc_bn_t Ni)
+cc_status_t cc_bn_mont_sqrt_p3(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *P, size_t bn_word_len, cc_bn_t Ni)
 {
     // R = A^((P + 1)/4) when P = 3 (mod 4)
 
@@ -260,11 +260,11 @@ cc_bn_status_t cc_bn_mont_sqrt_p3(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *P
     // check R^2 = A
     if (cc_bn_cmp_words(T, A, bn_word_len) != 0)
     {
-        return CC_BN_ERR_NOT_SQUARE;
+        return CC_ERR_BN_NOT_SQUARE;
     }
 
     cc_bn_copy(R, R1, bn_word_len);
-    return CC_BN_OK;
+    return CC_OK;
 }
 
 // R = A*B mod N, A,B,R isn't montgomery form, A B < N

@@ -284,7 +284,7 @@ static int calc_trial_divisions(int bits)
 /*
  * Small divisors test, to quickly eliminate non-primes.
  */
-cc_bn_status_t cc_bn_prime_trial_division(const cc_bn_t *X, size_t bn_word_len)
+cc_status_t cc_bn_prime_trial_division(const cc_bn_t *X, size_t bn_word_len)
 {
     size_t i;
     int trial_divisions = calc_trial_divisions(cc_bn_bit_len(X, bn_word_len));

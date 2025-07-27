@@ -2,7 +2,7 @@
 #define CC_BN_MOD_H
 
 #include "cc_bn.h"
-#include "cc_bn_err.h"
+#include "cc_err.h"
 
 // R = A mod d, d != 0
 // Vertical division
@@ -46,11 +46,11 @@ void cc_bn_mod_half(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *N, size_t bn_wo
 // Q_word_len = A_word_len, R_word_len = N_word_len
 // Q cannot alias A N
 // R can alias A N
-cc_bn_status_t cc_bn_core_div(cc_bn_t *Q, cc_bn_t *R, cc_bn_t *A, size_t A_word_len, cc_bn_t *N, size_t N_word_len);
+cc_status_t cc_bn_core_div(cc_bn_t *Q, cc_bn_t *R, cc_bn_t *A, size_t A_word_len, cc_bn_t *N, size_t N_word_len);
 
 // R = A mod N, R length = N length
 // R can alias A N
-cc_bn_status_t cc_bn_mod(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *N, size_t N_word_len);
+cc_status_t cc_bn_mod(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *N, size_t N_word_len);
 
 // R = A * B mod N
 // R_word_len = bn_word_len
@@ -70,8 +70,21 @@ void cc_bn_core_mod_exp(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const c
 // R can alias A E N
 void cc_bn_mod_exp(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *E, size_t E_word_len, const cc_bn_t *N, size_t N_word_len);
 
+// assume: a > b and a,b not all even
+// g = x*a - y*b
+// X Y word_len at least bn_word_len + 1
+// G X Y cannot alias A B
+cc_status_t cc_bn_core_binary_exgcd_unsafe(cc_bn_t *G, cc_bn_t *X, cc_bn_t *Y, const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len);
+
+// assume: a > b
+// a b can all even
+// g = x*a - y*b
+// X Y word_len at least bn_word_len + 1
+// G X Y cannot alias A B
+cc_status_t cc_bn_binary_exgcd_unsafe(cc_bn_t *G, cc_bn_t *X, cc_bn_t *Y, const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len);
+
 // R = A^-1 mod N, R_word_len = N_word_len
 // R can alias A N
-cc_bn_status_t cc_bn_mod_inv(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *N, size_t N_word_len);
+cc_status_t cc_bn_exgcd_mod_inv(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *N, size_t N_word_len);
 
 #endif // CC_BN_MOD_H

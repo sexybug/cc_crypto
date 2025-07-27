@@ -5,7 +5,7 @@
 #include "cc_bn.h"
 
 // D = gcd(A, B)
-// return D_word_len, D_word_len = A_word_len or B_word_len
+// return D_word_len, D_word_len = min(A_word_len, B_word_len) if A,B != 0
 // D can alias A B
 size_t cc_bn_gcd(cc_bn_t *D, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len);
 

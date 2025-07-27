@@ -22,15 +22,15 @@ size_t cc_bn_mul_word(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, cc_bn_t d
 // R = R + A * d
 // R_word_len must >= A_word_len + 1
 // R can alias A
-cc_bn_status_t cc_bn_mul_word_add(cc_bn_t *R, size_t R_word_len, const cc_bn_t *A, size_t A_word_len, cc_bn_t d)
+cc_status_t cc_bn_mul_word_add(cc_bn_t *R, size_t R_word_len, const cc_bn_t *A, size_t A_word_len, cc_bn_t d)
 {
     if (A_word_len == 0)
     {
-        return CC_BN_OK;
+        return CC_OK;
     }
     if (R_word_len < A_word_len + 1)
     {
-        return CC_BN_ERR_LEN_TOO_SHORT;
+        return CC_ERR_BN_LEN_TOO_SHORT;
     }
 
     size_t i;
@@ -46,7 +46,7 @@ cc_bn_status_t cc_bn_mul_word_add(cc_bn_t *R, size_t R_word_len, const cc_bn_t *
         R[i] += carry;
         carry = R[i] < carry;
     }
-    return CC_BN_OK;
+    return CC_OK;
 }
 
 // R = A * B, vertical multiplication

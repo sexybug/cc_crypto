@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
     HexString2Hex(key_str, 32, key);
     print_binary(key, 32);
 
-    cc_u8_to_bn(key, 32, 8, K);
+    cc_bn_from_u8(key, 32, 8, K);
 
     int naf2k[257] = {0};
     compute_naf2k(naf2k, K);

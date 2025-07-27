@@ -332,6 +332,7 @@ void cc_bn_lshift(cc_bn_t *R, const cc_bn_t *A, size_t bn_word_len, size_t shift
 }
 
 // R = A >> shift_bit_len
+// shift_bit_len can be any number
 // R can alias A
 void cc_bn_rshift(cc_bn_t *R, const cc_bn_t *A, size_t bn_word_len, size_t shift_bit_len)
 {
@@ -433,7 +434,6 @@ cc_bn_t cc_bn_add_small(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const c
 }
 
 // R = A + B
-// R_word_len = max(A_word_len, B_word_len)
 // R can alias A B
 cc_bn_t cc_bn_add(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len)
 {
