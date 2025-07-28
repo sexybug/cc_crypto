@@ -66,7 +66,7 @@ cc_status_t cc_bn_prime_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int i
         CC_CHK(cc_bn_core_rand_rangeN(B, 2, W1, bn_word_len, rng));
 
         /* (Step 4.3) z = b^m mod w */
-        cc_bn_core_mod_exp_mont(Z, B, M, W, bn_word_len, RR, Ni);
+        cc_bn_core_mod_exp_mont(Z, B, M, bn_word_len, W, bn_word_len, RR, Ni);
 
         /* (Step 4.4) if z = 1 or z = w-1 then go to Step 4.7 */
         if (cc_bn_cmp_word(Z, bn_word_len, 1) == 0 || cc_bn_cmp_words(Z, W1, bn_word_len) == 0)

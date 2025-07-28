@@ -1,6 +1,7 @@
 
 #include "cc_bn_mont.h"
 #include "cc_bn_config.h"
+#include "cc_bn_mod.h"
 
 // pre-compute montgomery multiplication RR
 // N must be odd
@@ -189,10 +190,10 @@ void cc_bn_mont_square(cc_bn_t *D, const cc_bn_t *A, const cc_bn_t *N, size_t bn
 
 // R = mont_exp(A, E) = A^E mod N, A R is montgomery form
 // R cannot alias A E N
-void cc_bn_core_mont_exp(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len, cc_bn_t Ni)
+void cc_bn_core_mont_exp(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, size_t E_word_len, const cc_bn_t *N, size_t bn_word_len, cc_bn_t Ni)
 {
     int i;
-    size_t E_bit_len = cc_bn_bit_len(E, bn_word_len);
+    size_t E_bit_len = cc_bn_bit_len(E, E_word_len);
     if (E_bit_len == 0)
     {
         cc_bn_set_one(R, bn_word_len);
@@ -216,10 +217,10 @@ void cc_bn_core_mont_exp(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, const c
 
 // R = mont_exp(A, E) = A^E mod N, A R is montgomery form
 // R can alias A E N
-void cc_bn_mont_exp(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len, cc_bn_t Ni)
+void cc_bn_mont_exp(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, size_t E_word_len, const cc_bn_t *N, size_t bn_word_len, cc_bn_t Ni)
 {
     cc_bn_t T[CC_BN_MAX_WORDS];
-    cc_bn_core_mont_exp(T, A, E, N, bn_word_len, Ni);
+    cc_bn_core_mont_exp(T, A, E, E_word_len, N, bn_word_len, Ni);
     cc_bn_copy(R, T, bn_word_len);
 }
 
@@ -234,7 +235,7 @@ void cc_bn_mont_inv(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *P, size_t bn_wo
     cc_bn_sub_word(E, P, bn_word_len, 2);
 
     // R = A^(P - 2)
-    cc_bn_mont_exp(R, A, E, P, bn_word_len, Ni);
+    cc_bn_mont_exp(R, A, E, bn_word_len, P, bn_word_len, Ni);
 }
 
 // r = A^(1/2) mod P,  P is prim and P = 3 (mod 4), A is montgomery form
@@ -253,7 +254,7 @@ cc_status_t cc_bn_mont_sqrt_p3(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *P, s
     cc_bn_rshift(T, T, bn_word_len, 2);
 
     // R = A^((P + 1)/4)
-    cc_bn_mont_exp(R1, A, T, P, bn_word_len, Ni);
+    cc_bn_mont_exp(R1, A, T, bn_word_len, P, bn_word_len, Ni);
 
     // T = R^2
     cc_bn_mont_square(T, R1, P, bn_word_len, Ni);
@@ -295,7 +296,7 @@ void cc_bn_core_mod_square_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *N, 
 
 // R = A^E mod N, using montgomery, A R isn't montgomery form, A < N
 // R can alias A E N
-void cc_bn_core_mod_exp_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *RR, cc_bn_t Ni)
+void cc_bn_core_mod_exp_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, size_t E_word_len, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *RR, cc_bn_t Ni)
 {
     cc_bn_t montA[CC_BN_MAX_WORDS];
     cc_bn_t montR[CC_BN_MAX_WORDS];
@@ -303,25 +304,28 @@ void cc_bn_core_mod_exp_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, con
     // montA = mont(A, RR)
     cc_bn_core_mont_mul(montA, A, RR, N, bn_word_len, Ni);
     // montR = montA ^ E mod N
-    cc_bn_core_mont_exp(montR, montA, E, N, bn_word_len, Ni);
+    cc_bn_core_mont_exp(montR, montA, E, E_word_len, N, bn_word_len, Ni);
     // R = mont(montR, 1)
     cc_bn_core_mont_mul_word(R, montR, 1, N, bn_word_len, Ni);
 }
 
 // R = A^E mod N, using montgomery, A R isn't montgomery form, A < N
 // R can alias A E N
-void cc_bn_mod_exp_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len)
+void cc_bn_mod_exp_mont(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *E, size_t E_word_len, const cc_bn_t *N, size_t N_word_len)
 {
     cc_bn_t RR[CC_BN_MAX_WORDS];
-    cc_bn_t montA[CC_BN_MAX_WORDS];
+    cc_bn_t TA[CC_BN_MAX_WORDS];
 
-    cc_bn_mont_RR(RR, N, bn_word_len);
+    cc_bn_mont_RR(RR, N, N_word_len);
     cc_bn_t Ni = cc_bn_mont_Ni(N);
 
-    // montA = mont(A, RR)
-    cc_bn_core_mont_mul(montA, A, RR, N, bn_word_len, Ni);
-    // RR = mont_exp(montA, E) = montA^E
-    cc_bn_core_mont_exp(RR, montA, E, N, bn_word_len, Ni);
-    // R = mont(montA^E, 1) = A^E
-    cc_bn_core_mont_mul_word(R, RR, 1, N, bn_word_len, Ni);
+    if (cc_bn_cmp(A, A_word_len, N, N_word_len) >= 0)
+    {
+        cc_bn_mod(TA, A, A_word_len, N, N_word_len);
+    }
+    else
+    {
+        cc_bn_from_words(TA, N_word_len, A, A_word_len);
+    }
+    cc_bn_core_mod_exp_mont(R, TA, E, E_word_len, N, N_word_len, RR, Ni);
 }

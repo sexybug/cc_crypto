@@ -22,6 +22,7 @@ void print_naf(const int8_t *naf, size_t naf_len)
 }
 int main()
 {
+#if 0
     cc_bn_t K2[2] = {0x42E576F7, 0x00};
 
     int8_t naf2[64];
@@ -99,6 +100,16 @@ naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = 0, naf[2] = 0, naf[1] =
         size_t naf6_len = naf(K6, 2, 4, naf6);
         printf("naf6_len = %d\n", naf6_len);
         print_naf(naf6, naf6_len);
+    }
+#endif
+
+    {
+        int K_word_len = 9;
+        cc_bn_t K[9] = {0xee102497, 0xa3ae4d96, 0x8573bb31, 0x55cf1cc6, 0xc2bed053, 0x3f36e38a, 0x7b2144b1, 0x31e9537a, 0x75bcd15};
+        int8_t nafk[CC_BN_WORD_BITS*9+1];
+        size_t nafk_len = naf(K, K_word_len, 4, nafk);
+        printf("nafk_len = %zu\n", nafk_len);
+        print_naf(nafk, nafk_len);
     }
 
     return 0;

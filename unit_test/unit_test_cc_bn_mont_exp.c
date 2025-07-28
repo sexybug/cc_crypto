@@ -21,7 +21,7 @@ int main(void)
         cc_bn_mont_RR(RR, N, N_len);
 
         cc_bn_core_mont_mul(montA, A, RR, N, N_len, Ni);
-        cc_bn_mont_exp(montC, montA, B, N, N_len, Ni);
+        cc_bn_mont_exp(montC, montA, B, N_len, N, N_len, Ni);
         cc_bn_core_mont_mul(C, montC, one, N, N_len, Ni);
         // cc_bn_core_mont_mul_word(montC, 1, N, N_len, Ni, C);
 
@@ -41,7 +41,7 @@ int main(void)
         cc_bn_mont_RR(RR, N, N_len);
 
         cc_bn_core_mont_mul(montA, A, RR, N, N_len, Ni);
-        cc_bn_mont_exp(montC, montA, B, N, N_len, Ni);
+        cc_bn_mont_exp(montC, montA, B, N_len, N, N_len, Ni);
         // cc_bn_core_mont_mul(montC, one, N, N_len, Ni, C);
         cc_bn_core_mont_mul_word(C, montC, 1, N, N_len, Ni);
 
@@ -61,7 +61,7 @@ int main(void)
         cc_bn_mont_RR(RR, N, N_len);
 
         cc_bn_core_mont_mul(montA, A, RR, N, N_len, Ni);
-        cc_bn_mont_exp(montC, montA, B, N, N_len, Ni);
+        cc_bn_mont_exp(montC, montA, B, N_len, N, N_len, Ni);
         // cc_bn_core_mont_mul(montC, one, N, N_len, Ni, C);
         cc_bn_core_mont_mul_word(C, montC, 1, N, N_len, Ni);
 
@@ -81,7 +81,7 @@ int main(void)
         cc_bn_mont_RR(RR, N, N_len);
 
         cc_bn_core_mont_mul(montA, A, RR, N, N_len, Ni);
-        cc_bn_mont_exp(montC, montA, B, N, N_len, Ni);
+        cc_bn_mont_exp(montC, montA, B, N_len, N, N_len, Ni);
         // cc_bn_core_mont_mul(montC, one, N, N_len, Ni, C);
         cc_bn_core_mont_mul_word(C, montC, 1, N, N_len, Ni);
 
@@ -101,7 +101,7 @@ int main(void)
         cc_bn_mont_RR(RR, N, N_len);
 
         cc_bn_core_mont_mul(montA, A, RR, N, N_len, Ni);
-        cc_bn_mont_exp(montC, montA, B, N, N_len, Ni);
+        cc_bn_mont_exp(montC, montA, B, N_len, N, N_len, Ni);
         // cc_bn_core_mont_mul(montC, one, N, N_len, Ni, C);
         cc_bn_core_mont_mul_word(C, montC, 1, N, N_len, Ni);
 
