@@ -267,7 +267,7 @@ cc_status_t cc_bn_mont_sqrt_p3(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *P, s
     return CC_OK;
 }
 
-// R = A*B mod N, A,B,R isn't montgomery form, A B < N
+// R = A*B mod N, using montgomery, A,B,R isn't montgomery form, A B < N
 // R can alias A B N
 void cc_bn_core_mod_mul_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *RR, cc_bn_t Ni)
 {
@@ -281,7 +281,7 @@ void cc_bn_core_mod_mul_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, con
     cc_bn_core_mont_mul_word(R, montR, 1, N, bn_word_len, Ni);
 }
 
-// R = A^2 mod N, A R isn't montgomery form, A < N
+// R = A^2 mod N, using montgomery, A R isn't montgomery form, A < N
 // R can alias A N
 void cc_bn_core_mod_square_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *RR, cc_bn_t Ni)
 {
@@ -293,7 +293,7 @@ void cc_bn_core_mod_square_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *N, 
     cc_bn_core_mont_mul_word(R, montR, 1, N, bn_word_len, Ni);
 }
 
-// R = A^E mod N, A R isn't montgomery form, A < N
+// R = A^E mod N, using montgomery, A R isn't montgomery form, A < N
 // R can alias A E N
 void cc_bn_core_mod_exp_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *RR, cc_bn_t Ni)
 {
@@ -306,4 +306,22 @@ void cc_bn_core_mod_exp_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, con
     cc_bn_core_mont_exp(montR, montA, E, N, bn_word_len, Ni);
     // R = mont(montR, 1)
     cc_bn_core_mont_mul_word(R, montR, 1, N, bn_word_len, Ni);
+}
+
+// R = A^E mod N, using montgomery, A R isn't montgomery form, A < N
+// R can alias A E N
+void cc_bn_mod_exp_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len)
+{
+    cc_bn_t RR[CC_BN_MAX_WORDS];
+    cc_bn_t montA[CC_BN_MAX_WORDS];
+
+    cc_bn_mont_RR(RR, N, bn_word_len);
+    cc_bn_t Ni = cc_bn_mont_Ni(N);
+
+    // montA = mont(A, RR)
+    cc_bn_core_mont_mul(montA, A, RR, N, bn_word_len, Ni);
+    // RR = mont_exp(montA, E) = montA^E
+    cc_bn_core_mont_exp(RR, montA, E, N, bn_word_len, Ni);
+    // R = mont(montA^E, 1) = A^E
+    cc_bn_core_mont_mul_word(R, RR, 1, N, bn_word_len, Ni);
 }

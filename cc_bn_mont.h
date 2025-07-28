@@ -58,16 +58,20 @@ void cc_bn_mont_inv(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *P, size_t bn_wo
 // R can alias A P
 cc_status_t cc_bn_mont_sqrt_p3(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *P, size_t bn_word_len, cc_bn_t Ni);
 
-// R = A*B mod N, A,B,R isn't montgomery form, A B < N
+// R = A*B mod N, using montgomery, A,B,R isn't montgomery form, A B < N
 // R can alias A B N
 void cc_bn_core_mod_mul_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *RR, cc_bn_t Ni);
 
-// R = A^2 mod N, A R isn't montgomery form, A < N
+// R = A^2 mod N, using montgomery, A R isn't montgomery form, A < N
 // R can alias A N
 void cc_bn_core_mod_square_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *RR, cc_bn_t Ni);
 
-// R = A^E mod N, A R isn't montgomery form, A < N
+// R = A^E mod N, using montgomery, A R isn't montgomery form, A < N
 // R can alias A E N
 void cc_bn_core_mod_exp_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len, const cc_bn_t *RR, cc_bn_t Ni);
+
+// R = A^E mod N, using montgomery, A R isn't montgomery form, A < N
+// R can alias A E N
+void cc_bn_mod_exp_mont(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *E, const cc_bn_t *N, size_t bn_word_len);
 
 #endif // CC_BN_MONT_H

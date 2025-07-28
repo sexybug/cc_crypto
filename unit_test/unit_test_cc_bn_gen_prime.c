@@ -13,7 +13,7 @@ int main()
     {
         cc_bn_t R[2] = {0xFFFFFFFF, 0xFFFFFFFF};
         size_t bits = 32;
-        size_t len = (bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
+        size_t len = cc_bn_word_len_from_bit_len(bits);
         cc_status_t ret = cc_bn_gen_prime(R, bits, cc_crypto_rng_ex);
         print_bn("R", R, len);
         assert(ret == CC_OK);
@@ -21,7 +21,7 @@ int main()
     {
         cc_bn_t R[2] = {0xFFFFFFFF, 0xFFFFFFFF};
         size_t bits = 48;
-        size_t len = (bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
+        size_t len = cc_bn_word_len_from_bit_len(bits);
         cc_status_t ret = cc_bn_gen_prime(R, bits, cc_crypto_rng_ex);
         print_bn("R", R, len);
         assert(ret == CC_OK);
@@ -30,7 +30,7 @@ int main()
     {
         cc_bn_t R[256] = {0xFFFFFFFF, 0xFFFFFFFF};
         size_t bits = 99;
-        size_t len = (bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
+        size_t len = cc_bn_word_len_from_bit_len(bits);
         cc_status_t ret = cc_bn_gen_prime(R, bits, cc_crypto_rng_ex);
         print_bn("R", R, len);
         assert(ret == CC_OK);
@@ -39,7 +39,7 @@ int main()
     {
         cc_bn_t R[256] = {0xFFFFFFFF, 0xFFFFFFFF};
         size_t bits = 2048;
-        size_t len = (bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
+        size_t len = cc_bn_word_len_from_bit_len(bits);
         cc_status_t ret = cc_bn_gen_prime(R, bits, cc_crypto_rng_ex);
         print_bn("R", R, len);
         assert(ret == CC_OK);

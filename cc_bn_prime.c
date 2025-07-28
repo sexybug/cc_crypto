@@ -36,7 +36,7 @@ cc_status_t cc_bn_prime_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int i
     cc_bn_t RR[CC_BN_MAX_WORDS];
 
     // if w is even, it is composite
-    if ((W[0] & 1) == 0)
+    if (CC_BN_IS_EVEN(W))
     {
         return CC_BN_IS_COMPOSITE;
     }
@@ -138,7 +138,7 @@ cc_status_t cc_bn_gen_prime(cc_bn_t *X, size_t bits, cc_crypto_rng_f rng)
         cc_bn_rand_bits(X, bits, rng);
         cc_bn_set_bit(X, bits - 1, 1); // make X is n bits
         X[0] |= 1;                     // set X odd
-        check_ret = cc_bn_prime_check(X, (bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS, rng);
+        check_ret = cc_bn_prime_check(X, cc_bn_word_len_from_bit_len(bits), rng);
         if (check_ret == CC_ERR_BN_GEN_RAND)
         {
             return check_ret; // rng error

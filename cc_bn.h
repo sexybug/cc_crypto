@@ -15,6 +15,11 @@ typedef uint64_t cc_bn_dword_t; // double word
 #define CC_BN_IS_ODD(bn) ((bn[0]) & 1)
 #define CC_BN_IS_EVEN(bn) (!CC_BN_IS_ODD(bn))
 
+static inline size_t cc_bn_word_len_from_bit_len(size_t bit_len)
+{
+    return (bit_len + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
+}
+
 // set bn=0
 void cc_bn_set_zero(cc_bn_t *bn, size_t bn_word_len);
 

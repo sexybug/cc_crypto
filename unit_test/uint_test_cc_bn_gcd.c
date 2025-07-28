@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "cc_bn_gcd.h"
+#include "cc_bn_mod.h"
 
 int main(int argc, char **argv)
 {

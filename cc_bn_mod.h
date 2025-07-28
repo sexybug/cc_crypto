@@ -70,6 +70,11 @@ void cc_bn_core_mod_exp(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const c
 // R can alias A E N
 void cc_bn_mod_exp(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *E, size_t E_word_len, const cc_bn_t *N, size_t N_word_len);
 
+// D = gcd(A, B)
+// return D_word_len, D_word_len = min(A_word_len, B_word_len) if A,B != 0
+// D can alias A B
+size_t cc_bn_gcd(cc_bn_t *D, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len);
+
 // assume: a > b and a,b not all even
 // g = x*a - y*b
 // X Y word_len at least bn_word_len + 1

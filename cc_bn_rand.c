@@ -8,7 +8,7 @@
 // generate a random number R in [0, 2^bits-1]
 void cc_bn_rand_bits(cc_bn_t *R, size_t bits, cc_crypto_rng_f rng)
 {
-    size_t bn_word_len = (bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
+    size_t bn_word_len = cc_bn_word_len_from_bit_len(bits);
     rng(R, bn_word_len * CC_BN_WORD_BYTES);
     if ((bits % CC_BN_WORD_BITS) != 0)
     {
@@ -28,7 +28,7 @@ cc_status_t cc_bn_rand_bits_gh0(cc_bn_t *R, size_t bits, cc_crypto_rng_f rng)
             return CC_ERR_BN_GEN_RAND;
         }
         cc_bn_rand_bits(R, bits, rng);
-    } while (cc_bn_is_zero(R, (bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS));
+    } while (cc_bn_is_zero(R, cc_bn_word_len_from_bit_len(bits)));
 
     return CC_OK;
 }

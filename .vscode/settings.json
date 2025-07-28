@@ -19,7 +19,6 @@
         "cc_crypto_rng.h": "c",
         "cc_bn_mod.h": "c",
         "cc_bn_convert.h": "c",
-        "cc_bn_gcd.h": "c",
         "cc_bn_mont.h": "c"
     },
     "Codegeex.RepoIndex": true,

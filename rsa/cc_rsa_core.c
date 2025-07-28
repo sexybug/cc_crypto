@@ -4,22 +4,54 @@
 #include "cc_bn_mod.h"
 #include "cc_bn_mul.h"
 #include "cc_bn_mont.h"
-#include "cc_bn_gcd.h"
 #include "cc_crypto_rng.h"
 
 // at most try 1000 times to generate key
 #define COUNT_MAX 1000
 
+void cc_rsa_set_pubkey(cc_rsa_pubkey_st *pubkey, const cc_bn_t *N, const cc_bn_t *E, size_t bits)
+{
+    size_t N_words = cc_bn_word_len_from_bit_len(bits);
+
+    pubkey->bits = bits;
+    cc_bn_copy(pubkey->N, N, N_words);
+    cc_bn_copy(pubkey->E, E, N_words);
+}
+
+void cc_rsa_set_privkey(cc_rsa_privkey_st *privkey, const cc_bn_t *N, const cc_bn_t *D, size_t bits)
+{
+    size_t N_words = cc_bn_word_len_from_bit_len(bits);
+
+    privkey->bits = bits;
+    cc_bn_copy(privkey->N, N, N_words);
+    cc_bn_copy(privkey->D, D, N_words);
+}
+
+void cc_rsa_set_privkey_crt(cc_rsa_privkey_st *privkey, const cc_bn_t *N, const cc_bn_t *D, const cc_bn_t *P, const cc_bn_t *Q, const cc_bn_t *DP, const cc_bn_t *DQ, const cc_bn_t *QP, size_t bits)
+{
+    size_t N_words = cc_bn_word_len_from_bit_len(bits);
+    size_t PQ_words = cc_bn_word_len_from_bit_len(bits >> 1);
+
+    privkey->bits = bits;
+    cc_bn_copy(privkey->N, N, N_words);
+    cc_bn_copy(privkey->D, D, N_words);
+    cc_bn_copy(privkey->P, P, PQ_words);
+    cc_bn_copy(privkey->Q, Q, PQ_words);
+    cc_bn_copy(privkey->DP, DP, PQ_words);
+    cc_bn_copy(privkey->DQ, DQ, PQ_words);
+    cc_bn_copy(privkey->QP, QP, PQ_words);
+}
+
 // E>3, bits(E)<=bits, E is odd
-cc_status_t cc_rsa_core_gen_key(cc_rsa_privkey_st *privkey,
+cc_status_t cc_rsa_core_gen_key(cc_rsa_pubkey_st *pubkey, cc_rsa_privkey_st *privkey,
                                 size_t bits, const cc_bn_t *E, size_t E_word_len, bool crt,
                                 cc_crypto_rng_f rng)
 {
     int count = 0;
-    cc_bn_t H[CC_BN_MAX_WORDS];
-    cc_bn_t G[CC_BN_MAX_WORDS];
+    cc_bn_t H[CC_RSA_PQ_MAX_WORDS * 2];
+    cc_bn_t *G = pubkey->N;
     cc_bn_t *L = privkey->N;
-    size_t N_words = (bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
+    size_t N_words = cc_bn_word_len_from_bit_len(bits);
 
     if ((bits % 2 != 0) || (bits < 8) || (bits > CC_BN_MAX_BITS))
     {
@@ -34,7 +66,7 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_privkey_st *privkey,
     size_t PQ_bits = bits >> 1;
     // note: N_words <= PQ_words*2
     size_t PQ_words = (PQ_bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
-    cc_bn_from_words(privkey->E, N_words, E, E_word_len);
+    cc_bn_from_words(pubkey->E, N_words, E, E_word_len);
 
     /*
      * find primes P and Q with P > Q so that:
@@ -53,8 +85,8 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_privkey_st *privkey,
         CC_CHK(cc_bn_gen_prime(privkey->P, PQ_bits, rng));
         CC_CHK(cc_bn_gen_prime(privkey->Q, PQ_bits, rng));
 
-        // privkey->P[0] = 0xA37C734D;
-        // privkey->Q[0] = 0x86BDCB8D;
+        // key->P[0] = 0xA37C734D;
+        // key->Q[0] = 0x86BDCB8D;
 
         // make P > Q
         if (cc_bn_cmp_words(privkey->P, privkey->Q, PQ_words) < 0)
@@ -77,7 +109,7 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_privkey_st *privkey,
         cc_bn_core_mul_words(H, privkey->P, privkey->Q, PQ_words);
 
         /* check GCD(E, (P-1)*(Q-1)) == 1 (FIPS 186-4 §B.3.1 criterion 2(a)) */
-        cc_bn_gcd(G, privkey->E, N_words, H, N_words);
+        cc_bn_gcd(G, pubkey->E, N_words, H, N_words);
         if (!cc_bn_is_one(G, N_words))
         {
             continue;
@@ -89,7 +121,7 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_privkey_st *privkey,
         // L = LCM(P-1, Q-1) = (P-1)*(Q-1) / GCD(P-1, Q-1) = H/G
         CC_CHK(cc_bn_core_div(L, H, H, N_words, G, PQ_words));
         // D = E^-1 mod L
-        CC_CHK(cc_bn_exgcd_mod_inv(privkey->D, privkey->E, N_words, L, N_words));
+        CC_CHK(cc_bn_exgcd_mod_inv(privkey->D, pubkey->E, N_words, L, N_words));
 
         if (cc_bn_bit_len(privkey->D, N_words) <= PQ_bits)
         {
@@ -120,6 +152,9 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_privkey_st *privkey,
     cc_bn_core_mul_words(privkey->N, privkey->P, privkey->Q, PQ_words);
     privkey->bits = bits;
 
+    cc_bn_copy(pubkey->N, privkey->N, N_words);
+    pubkey->bits = bits;
+
     return CC_OK;
 }
 
@@ -128,10 +163,10 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_privkey_st *privkey,
 cc_status_t cc_rsa_validate_params(size_t bits, const cc_bn_t *N, const cc_bn_t *E, const cc_bn_t *D, const cc_bn_t *P, const cc_bn_t *Q, cc_crypto_rng_f rng)
 {
     cc_bn_t T[CC_BN_MAX_WORDS * 2];
-    cc_bn_t TP[CC_BN_MAX_WORDS / 2];
+    cc_bn_t TP[CC_RSA_PQ_MAX_WORDS];
 
-    size_t N_words = (bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
-    size_t PQ_words = ((bits >> 1) + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
+    size_t N_words = cc_bn_word_len_from_bit_len(bits);
+    size_t PQ_words = cc_bn_word_len_from_bit_len(bits >> 1);
 
     // check P is prime
     if (P != NULL)
@@ -210,11 +245,11 @@ cc_status_t cc_rsa_validate_params(size_t bits, const cc_bn_t *N, const cc_bn_t 
 
 cc_status_t cc_rsa_validate_crt(size_t bits, const cc_bn_t *D, const cc_bn_t *P, const cc_bn_t *Q, const cc_bn_t *DP, const cc_bn_t *DQ, const cc_bn_t *QP)
 {
-    cc_bn_t T[CC_BN_MAX_WORDS];
-    cc_bn_t TP[CC_BN_MAX_WORDS / 2];
+    cc_bn_t T[CC_RSA_PQ_MAX_WORDS * 2];
+    cc_bn_t TP[CC_RSA_PQ_MAX_WORDS];
 
-    size_t N_words = (bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
-    size_t PQ_words = ((bits >> 1) + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
+    size_t N_words = cc_bn_word_len_from_bit_len(bits);
+    size_t PQ_words = cc_bn_word_len_from_bit_len(bits >> 1);
 
     /* Check that D - DP == 0 mod P - 1 */
     if (P != NULL && D != NULL && DP != NULL)
@@ -258,6 +293,78 @@ cc_status_t cc_rsa_validate_crt(size_t bits, const cc_bn_t *D, const cc_bn_t *P,
             return CC_ERR_RSA_VALIDATE_KEY;
         }
     }
+
+    return CC_OK;
+}
+
+// C = M^E mod N
+// M < N
+// C can alias M
+cc_status_t cc_rsa_core_public_op(cc_rsa_pubkey_st *pubkey, const cc_bn_t *M, cc_bn_t *C)
+{
+    size_t N_words = cc_bn_word_len_from_bit_len(pubkey->bits);
+
+    // if M >= N, return error
+    if (cc_bn_cmp_words(M, pubkey->N, N_words) >= 0)
+    {
+        return CC_ERR_BN_INVALID_ARG;
+    }
+
+    // C = M^E mod N
+    cc_bn_mod_exp_mont(C, M, pubkey->E, pubkey->N, N_words);
+
+    return CC_OK;
+}
+
+// M = C^D mod N
+// C < N
+// M can alias C
+cc_status_t cc_rsa_core_private_op(cc_rsa_privkey_st *privkey, const cc_bn_t *C, cc_bn_t *M)
+{
+    size_t N_words = cc_bn_word_len_from_bit_len(privkey->bits);
+
+    // if C >= N, return error
+    if (cc_bn_cmp_words(M, privkey->N, N_words) >= 0)
+    {
+        return CC_ERR_BN_INVALID_ARG;
+    }
+
+    // M = C^D mod N
+    cc_bn_mod_exp_mont(M, C, privkey->D, privkey->N, N_words);
+
+    return CC_OK;
+}
+
+// M = C^D mod N
+// C < N
+// M can alias C
+cc_status_t cc_rsa_core_private_op_crt(cc_rsa_privkey_st *privkey, const cc_bn_t *C, cc_bn_t *M)
+{
+    size_t N_words = cc_bn_word_len_from_bit_len(privkey->bits);
+    size_t PQ_words = cc_bn_word_len_from_bit_len(privkey->bits >> 1);
+
+    // if C >= N, return error
+    if (cc_bn_cmp_words(M, privkey->N, N_words) >= 0)
+    {
+        return CC_ERR_BN_INVALID_ARG;
+    }
+
+    cc_bn_t M1[CC_RSA_PQ_MAX_WORDS];
+    cc_bn_t M2[CC_RSA_PQ_MAX_WORDS];
+    cc_bn_t MT[CC_RSA_PQ_MAX_WORDS * 2];
+
+    // M1 = C^DP mod P
+    cc_bn_mod_exp_mont(M1, C, privkey->DP, privkey->P, PQ_words);
+    // M2 = C^DQ mod Q
+    cc_bn_mod_exp_mont(M2, C, privkey->DQ, privkey->Q, PQ_words);
+    // H = (M1 - M2) mod P
+    cc_bn_mod_sub(M1, M1, M2, privkey->P, PQ_words);
+    // H = (M1 - M2) * QP mod P
+    cc_bn_mod_mul_words(M1, M1, privkey->QP, privkey->P, PQ_words);
+    // MT = Q * H
+    cc_bn_mul(MT, privkey->Q, PQ_words, M1, PQ_words);
+    // M = M2 + MT
+    cc_bn_add(M, M2, PQ_words, MT, N_words);
 
     return CC_OK;
 }
