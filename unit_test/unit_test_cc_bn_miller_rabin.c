@@ -9,7 +9,7 @@
 
 int main(void)
 {
-    srand(time(NULL));
+    srand32(time(NULL));
     {
         cc_bn_t N[] = {0xF};
         size_t N_len = sizeof(N) / sizeof(N[0]);

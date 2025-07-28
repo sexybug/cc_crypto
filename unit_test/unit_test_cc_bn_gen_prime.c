@@ -9,7 +9,7 @@
 
 int main()
 {
-    srand(time(NULL));
+    srand32(time(NULL));
     {
         cc_bn_t R[2] = {0xFFFFFFFF, 0xFFFFFFFF};
         size_t bits = 32;

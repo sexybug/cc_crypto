@@ -10,7 +10,7 @@
 
 int main()
 {
-    srand(time(NULL));
+    srand32(time(NULL));
 
     {
         cc_rsa_privkey_st privkey;

@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include "cc_crypto_rng.h"
 
 uint32_t mbedtls_mpi_core_montmul_init(const uint32_t *N)
 {
@@ -40,6 +42,26 @@ int main()
         size_t a = 0xFFFFFFFF;
         int b = a;
         printf("%d\n", b);
+    }
+
+    // {
+    //     srand(time(NULL));
+    //     int i;
+    //     for (i = 0; i < 100; i++)
+    //     {
+    //         uint32_t a = rand();
+    //         printf("%08x\n", a);
+    //     }
+    // }
+
+    {
+        srand32(time(NULL));
+        int i;
+        for (i = 0; i < 100; i++)
+        {
+            uint32_t a = rand32();
+            printf("%08x\n", a);
+        }
     }
 
     return 0;
