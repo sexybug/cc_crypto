@@ -6,6 +6,8 @@
 #include "cc_bn_mont.h"
 #include "cc_crypto_rng.h"
 
+#include "cc_test.h"
+
 // at most try 1000 times to generate key
 #define COUNT_MAX 1000
 
@@ -118,9 +120,6 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_pubkey_st *pubkey, cc_rsa_privkey_st *pri
         CC_CHK(cc_bn_gen_prime(privkey->P, PQ_bits, rng));
         CC_CHK(cc_bn_gen_prime(privkey->Q, PQ_bits, rng));
 
-        // key->P[0] = 0xA37C734D;
-        // key->Q[0] = 0x86BDCB8D;
-
         // make P > Q
         if (cc_bn_cmp_words(privkey->P, privkey->Q, PQ_words) < 0)
         {
@@ -148,12 +147,12 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_pubkey_st *pubkey, cc_rsa_privkey_st *pri
             continue;
         }
 
-        /* compute smallest possible D = E^-1 mod LCM(P-1, Q-1) (FIPS 186-4 §B.3.1 criterion 3(b)) */
+        /* compute smallest possible D = E^-1 mod LCM(P-1, Q-1) (FIPS 186-5 A.1.1) */
         // G = GCD(P-1, Q-1)
         cc_bn_gcd(G, privkey->P, PQ_words, privkey->Q, PQ_words);
         // L = LCM(P-1, Q-1) = (P-1)*(Q-1) / GCD(P-1, Q-1) = H/G
         CC_CHK(cc_bn_core_div(L, H, H, N_words, G, PQ_words));
-        // D = E^-1 mod L
+        // D = E^-1 mod LCM(P-1, Q-1)
         CC_CHK(cc_bn_exgcd_mod_inv(privkey->D, pubkey->E, N_words, L, N_words));
 
         if (cc_bn_bit_len(privkey->D, N_words) <= PQ_bits)
@@ -252,22 +251,21 @@ cc_status_t cc_rsa_validate_params(size_t bits, const cc_bn_t *N, const cc_bn_t 
             return CC_ERR_RSA_VALIDATE_KEY;
         }
 
-        /* Compute D*E-1 mod P-1 = 0 */
+        /* Compute D*E mod P-1 = 1 */
         // T = D*E
         cc_bn_mul_words(T, D, E, N_words);
-        cc_bn_sub_word(T, T, N_words * 2, 1);
 
         cc_bn_sub_word(TP, P, PQ_words, 1);
         CC_CHK(cc_bn_mod(TP, T, N_words * 2, TP, PQ_words));
-        if (!cc_bn_is_zero(TP, PQ_words))
+        if (!cc_bn_is_one(TP, PQ_words))
         {
             return CC_ERR_RSA_VALIDATE_KEY;
         }
 
-        /* Compute D*E-1 mod Q-1 = 0 */
+        /* Compute D*E mod Q-1 = 1 */
         cc_bn_sub_word(TP, Q, PQ_words, 1);
         CC_CHK(cc_bn_mod(TP, T, N_words * 2, TP, PQ_words));
-        if (!cc_bn_is_zero(TP, PQ_words))
+        if (!cc_bn_is_one(TP, PQ_words))
         {
             return CC_ERR_RSA_VALIDATE_KEY;
         }

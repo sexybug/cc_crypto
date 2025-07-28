@@ -20,7 +20,8 @@ typedef struct
 {
     size_t bits;
     cc_bn_t N[CC_BN_MAX_WORDS];
-    cc_bn_t D[CC_RSA_PQ_MAX_WORDS];
+    cc_bn_t D[CC_BN_MAX_WORDS];
+
     cc_bn_t P[CC_RSA_PQ_MAX_WORDS];
     cc_bn_t Q[CC_RSA_PQ_MAX_WORDS];
     cc_bn_t DP[CC_RSA_PQ_MAX_WORDS];

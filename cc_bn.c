@@ -176,7 +176,7 @@ void cc_bn_set_bit(cc_bn_t *bn, size_t bit_index, cc_bn_t bit)
 {
     int digit_index = bit_index / CC_BN_WORD_BITS;
     int bit_index_in_digit = bit_index % CC_BN_WORD_BITS;
-    bn[digit_index] = (bn[digit_index] & ~(1 << bit_index_in_digit)) | (bit << bit_index_in_digit);
+    bn[digit_index] = (bn[digit_index] & (~(((cc_bn_t)1) << bit_index_in_digit))) | (bit << bit_index_in_digit);
 }
 
 // return least significant bit index
