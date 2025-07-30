@@ -8,7 +8,7 @@
 
 int main()
 {
-    srand(time(NULL));
+    srand32(time(NULL));
     {
         cc_bn_t A[2] = {0xFFFFFFFF, 1};
         cc_bn_t B[2] = {2, 2};

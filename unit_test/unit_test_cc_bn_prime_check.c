@@ -9,7 +9,15 @@
 
 int main(void)
 {
-    srand(time(NULL));
+    srand32(time(NULL));
+    {
+        cc_bn_t N[] = {1103515245};
+        size_t N_len = sizeof(N) / sizeof(N[0]);
+
+        cc_status_t res = cc_bn_prime_check(N, N_len, cc_crypto_rng_ex);
+
+        assert(res == CC_BN_IS_COMPOSITE);
+    }
     {
         cc_bn_t N[] = {0xF};
         size_t N_len = sizeof(N) / sizeof(N[0]);

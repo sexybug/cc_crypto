@@ -189,14 +189,14 @@ cc_status_t cc_bn_core_div(cc_bn_t *Q, cc_bn_t *R, cc_bn_t *A, size_t A_word_len
 // R can alias A N
 cc_status_t cc_bn_mod(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *N, size_t N_word_len)
 {
-    if (A_word_len > CC_BN_MAX_WORDS || N_word_len > CC_BN_MAX_WORDS)
+    if (A_word_len > CC_BN_MAX_WORDS * 2 || N_word_len > CC_BN_MAX_WORDS)
     {
         return CC_ERR_BN_LEN_TOO_LONG;
     }
 
-    cc_bn_t A_tmp[CC_BN_MAX_WORDS];
-    cc_bn_t N_tmp[CC_BN_MAX_WORDS];
-    cc_bn_t Q_tmp[CC_BN_MAX_WORDS];
+    cc_bn_t A_tmp[CC_BN_MAX_WORDS * 2];
+    cc_bn_t N_tmp[CC_BN_MAX_WORDS * 2];
+    cc_bn_t Q_tmp[CC_BN_MAX_WORDS * 2];
 
     cc_bn_copy(A_tmp, A, A_word_len);
     cc_bn_copy(N_tmp, N, N_word_len);

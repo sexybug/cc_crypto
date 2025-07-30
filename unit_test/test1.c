@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cc_test.h"
+#include <time.h>
+#include "cc_crypto_rng.h"
 
 uint32_t mbedtls_mpi_core_montmul_init(const uint32_t *N)
 {
@@ -52,6 +54,60 @@ int main()
         for(i=0;i<len;i++)
         {
             printf("%d,",dst[i]);
+        }
+    }
+
+     {
+        char *str = "FFFE0102";
+        int8_t dst[300];
+        int len = strlen(str)/2;
+        HexString2Hex(str, len, dst);
+        int i;
+        for(i=0;i<len;i++)
+        {
+            printf("%d,",dst[i]);
+        }
+    }
+
+    // {
+    //     srand(time(NULL));
+    //     int i;
+    //     for (i = 0; i < 100; i++)
+    //     {
+    //         uint32_t a = rand();
+    //         printf("%08x\n", a);
+    //     }
+    // }
+
+    
+
+    {
+        srand32(time(NULL));
+        int i;
+        for (i = 0; i < 100; i++)
+        {
+            uint32_t a = rand32();
+            printf("%08x\n", a);
+        }
+    }
+
+    // {
+    //     srand(time(NULL));
+    //     int i;
+    //     for (i = 0; i < 100; i++)
+    //     {
+    //         uint32_t a = rand();
+    //         printf("%08x\n", a);
+    //     }
+    // }
+
+    {
+        srand32(time(NULL));
+        int i;
+        for (i = 0; i < 100; i++)
+        {
+            uint32_t a = rand32();
+            printf("%08x\n", a);
         }
     }
 
