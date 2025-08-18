@@ -48,24 +48,12 @@ int main()
     {
         char *str = "FFFE0102";
         int8_t dst[300];
-        int len = strlen(str)/2;
+        int len = strlen(str) / 2;
         HexString2Hex(str, len, dst);
         int i;
-        for(i=0;i<len;i++)
+        for (i = 0; i < len; i++)
         {
-            printf("%d,",dst[i]);
-        }
-    }
-
-     {
-        char *str = "FFFE0102";
-        int8_t dst[300];
-        int len = strlen(str)/2;
-        HexString2Hex(str, len, dst);
-        int i;
-        for(i=0;i<len;i++)
-        {
-            printf("%d,",dst[i]);
+            printf("%d,", dst[i]);
         }
     }
 
@@ -78,8 +66,6 @@ int main()
     //         printf("%08x\n", a);
     //     }
     // }
-
-    
 
     {
         srand32(time(NULL));

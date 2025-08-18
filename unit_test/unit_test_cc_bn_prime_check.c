@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include "cc_crypto_rng.h"
 #include "cc_bn_prime.h"
+#include "cc_bn_config.h"
+#include "cc_bn_convert.h"
+
 #include <stdlib.h>
 #include <time.h>
 
@@ -68,6 +71,17 @@ int main(void)
         size_t N_len = sizeof(N) / sizeof(N[0]);
 
         cc_status_t res = cc_bn_prime_check(N, N_len, cc_crypto_rng_ex);
+
+        assert(res == CC_BN_IS_COMPOSITE);
+    }
+
+    {
+        cc_bn_t N[CC_BN_MAX_WORDS] = {0};
+        size_t bits = 2048;
+        size_t words = cc_bn_word_len_from_bit_len(bits);
+        cc_bn_from_hex(N, words, "b291b72eb2fe266318542769acac8ee76e03f15ffca91017a5ccae7d33be8291f27479a7127d9de5bf8bb8080fdf4834dd39613cbb25387eabfc3bae0ef3f9eb0295463654b56c35a0e96095e9fca26813a054818cc71e8330147b94aa2e68936c7d5103cab25cc2fa83374d00bc7f75c49e2f2b6adffd84d2a680e654f49b03850182f90c9cf743f414e046eb8b35731539bbef54a12bac223011e0ab823821f901a232002e7b1e58dedddf1787a720a213de645d2eea65caec661e15c8c808c528ba419512a624ef8ab2424f0a69277f43a47d6f8e371b2534645127285a83e950ff0308931c9ddf19c505790bc497a6e27ced7b285d029780eb3722cafbbf");
+
+        cc_status_t res = cc_bn_prime_check(N, words, cc_crypto_rng_ex);
 
         assert(res == CC_BN_IS_COMPOSITE);
     }

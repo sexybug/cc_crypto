@@ -24,12 +24,15 @@ int cc_crypto_rng_ex(void *random, size_t len)
         random_words[i] = rand32();
     }
 
-    uint8_t *random_bytes = (uint8_t *)((uint8_t *)random + left_words * 4);
-    uint32_t t = rand32();
-    for (i = 0; i < right_bytes; i++)
+    if (right_bytes > 0)
     {
-        random_bytes[i] = t & 0xFF;
-        t >>= 8;
+        uint8_t *random_bytes = (uint8_t *)((uint8_t *)random + left_words * 4);
+        uint32_t t = rand32();
+        for (i = 0; i < right_bytes; i++)
+        {
+            random_bytes[i] = t & 0xFF;
+            t >>= 8;
+        }
     }
 
     return 0;

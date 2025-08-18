@@ -107,7 +107,7 @@ naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = 0, naf[2] = 0, naf[1] =
         int K_word_len = 9;
         cc_bn_t K[9] = {0xee102497, 0xa3ae4d96, 0x8573bb31, 0x55cf1cc6, 0xc2bed053, 0x3f36e38a, 0x7b2144b1, 0x31e9537a, 0x75bcd15};
         int8_t nafk[CC_BN_WORD_BITS*9+1];
-        size_t nafk_len = naf(K, K_word_len, 4, nafk);
+        size_t nafk_len = naf(K, K_word_len, 2, nafk);
         printf("nafk_len = %zu\n", nafk_len);
         print_naf(nafk, nafk_len);
     }
