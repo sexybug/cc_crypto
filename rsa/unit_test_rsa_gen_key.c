@@ -18,7 +18,7 @@ int main()
         size_t bits = 64;
         size_t words = cc_bn_word_len_from_bit_len(bits);
         size_t PQ_words = cc_bn_word_len_from_bit_len(bits >> 1);
-        cc_bn_t E[] = {65537};
+        cc_bn_word_t E[] = {65537};
         size_t E_word_len = 1;
         bool crt = true;
         cc_status_t ret = cc_rsa_core_gen_key(&pubkey, &privkey, bits, E, E_word_len, crt, cc_crypto_rng_ex);
@@ -42,7 +42,7 @@ int main()
         size_t bits = 64 + 16;
         size_t words = cc_bn_word_len_from_bit_len(bits);
         size_t PQ_words = cc_bn_word_len_from_bit_len(bits >> 1);
-        cc_bn_t E[] = {0x7E84DB71, 0x011CB1BE};
+        cc_bn_word_t E[] = {0x7E84DB71, 0x011CB1BE};
         size_t E_word_len = 2;
         bool crt = true;
         cc_status_t ret = cc_rsa_core_gen_key(&pubkey, &privkey, bits, E, E_word_len, crt, cc_crypto_rng_ex);
@@ -66,7 +66,7 @@ int main()
         size_t bits = 4096;
         size_t words = cc_bn_word_len_from_bit_len(bits);
         size_t PQ_words = cc_bn_word_len_from_bit_len(bits >> 1);
-        cc_bn_t E[] = {0x7E84DB71, 0x011CB1BE};
+        cc_bn_word_t E[] = {0x7E84DB71, 0x011CB1BE};
         size_t E_word_len = 2;
         bool crt = true;
         cc_status_t ret = cc_rsa_core_gen_key(&pubkey, &privkey, bits, E, E_word_len, crt, cc_crypto_rng_ex);
@@ -90,7 +90,7 @@ int main()
         size_t bits = 8192;
         size_t words = cc_bn_word_len_from_bit_len(bits);
         size_t PQ_words = cc_bn_word_len_from_bit_len(bits >> 1);
-        cc_bn_t E[] = {65537};
+        cc_bn_word_t E[] = {65537};
         size_t E_word_len = 1;
         bool crt = true;
         cc_status_t ret = cc_rsa_core_gen_key(&pubkey, &privkey, bits, E, E_word_len, crt, cc_crypto_rng_ex);

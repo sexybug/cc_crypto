@@ -6,7 +6,7 @@
 #define COUNT_MAX 100
 
 // generate a random number R in [0, 2^bits-1]
-void cc_bn_rand_bits(cc_bn_t *R, size_t bits, cc_crypto_rng_f rng)
+void cc_bn_rand_bits(cc_bn_word_t *R, size_t bits, cc_crypto_rng_f rng)
 {
     size_t bn_word_len = cc_bn_word_len_from_bit_len(bits);
     rng(R, bn_word_len * CC_BN_WORD_BYTES);
@@ -17,7 +17,7 @@ void cc_bn_rand_bits(cc_bn_t *R, size_t bits, cc_crypto_rng_f rng)
 }
 
 // generate a random number R in [1, 2^bits-1]
-cc_status_t cc_bn_rand_bits_gh0(cc_bn_t *R, size_t bits, cc_crypto_rng_f rng)
+cc_status_t cc_bn_rand_bits_gh0(cc_bn_word_t *R, size_t bits, cc_crypto_rng_f rng)
 {
     int count = 0;
     do
@@ -36,9 +36,9 @@ cc_status_t cc_bn_rand_bits_gh0(cc_bn_t *R, size_t bits, cc_crypto_rng_f rng)
 // generate a random number R in [A, B]
 // you must make sure A < B
 // R cannot alias A, can alias B
-cc_status_t cc_bn_core_rand_range(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len, cc_crypto_rng_f rng)
+cc_status_t cc_bn_core_rand_range(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len, cc_crypto_rng_f rng)
 {
-    cc_bn_t RANGE[CC_BN_MAX_WORDS];
+    cc_bn_word_t RANGE[CC_BN_MAX_WORDS];
     int count = 0;
 
     cc_bn_sub_words(RANGE, B, A, bn_word_len);
@@ -62,9 +62,9 @@ cc_status_t cc_bn_core_rand_range(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B
  * @brief generate a random number R in [a, N-1]
  * @note R can alias N
  */
-cc_status_t cc_bn_core_rand_rangeN(cc_bn_t *R, cc_bn_t a, const cc_bn_t *N, size_t bn_word_len, cc_crypto_rng_f rng)
+cc_status_t cc_bn_core_rand_rangeN(cc_bn_word_t *R, cc_bn_word_t a, const cc_bn_word_t *N, size_t bn_word_len, cc_crypto_rng_f rng)
 {
-    cc_bn_t RANGE[CC_BN_MAX_WORDS];
+    cc_bn_word_t RANGE[CC_BN_MAX_WORDS];
     int count = 0;
 
     if (a < CC_BN_WORD_MAX)

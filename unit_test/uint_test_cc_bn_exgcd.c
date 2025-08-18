@@ -8,13 +8,13 @@
 int main()
 {
     {
-        cc_bn_t A[CC_BN_MAX_WORDS] = {5};
-        cc_bn_t B[CC_BN_MAX_WORDS] = {3};
-        cc_bn_t G1[] = {1};
-        cc_bn_t X1[] = {2};
-        cc_bn_t Y1[] = {3};
+        cc_bn_word_t A[CC_BN_MAX_WORDS] = {5};
+        cc_bn_word_t B[CC_BN_MAX_WORDS] = {3};
+        cc_bn_word_t G1[] = {1};
+        cc_bn_word_t X1[] = {2};
+        cc_bn_word_t Y1[] = {3};
 
-        cc_bn_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
+        cc_bn_word_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
         size_t bn_word_len = 1;
         cc_status_t status = cc_bn_binary_exgcd_unsafe(G, X, Y, A, B, bn_word_len);
         assert(status == CC_OK);
@@ -24,13 +24,13 @@ int main()
     }
 
     {
-        cc_bn_t A[CC_BN_MAX_WORDS] = {48};
-        cc_bn_t B[CC_BN_MAX_WORDS] = {18};
-        cc_bn_t G1[] = {6};
-        cc_bn_t X1[] = {0x10};
-        cc_bn_t Y1[] = {0x2A};
+        cc_bn_word_t A[CC_BN_MAX_WORDS] = {48};
+        cc_bn_word_t B[CC_BN_MAX_WORDS] = {18};
+        cc_bn_word_t G1[] = {6};
+        cc_bn_word_t X1[] = {0x10};
+        cc_bn_word_t Y1[] = {0x2A};
 
-        cc_bn_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
+        cc_bn_word_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
         size_t bn_word_len = 1;
         cc_status_t status = cc_bn_binary_exgcd_unsafe(G, X, Y, A, B, bn_word_len);
         assert(status == CC_OK);
@@ -40,13 +40,13 @@ int main()
     }
 
     {
-        cc_bn_t A[CC_BN_MAX_WORDS] = {0xFFA61464, 0x1583164D};
-        cc_bn_t B[CC_BN_MAX_WORDS] = {0x010001, 0};
-        cc_bn_t G1[] = {1, 0};
-        cc_bn_t X1[] = {0x0000f2c5, 0x00000000};
-        cc_bn_t Y1[] = {0x812138f3, 0x1466648f};
+        cc_bn_word_t A[CC_BN_MAX_WORDS] = {0xFFA61464, 0x1583164D};
+        cc_bn_word_t B[CC_BN_MAX_WORDS] = {0x010001, 0};
+        cc_bn_word_t G1[] = {1, 0};
+        cc_bn_word_t X1[] = {0x0000f2c5, 0x00000000};
+        cc_bn_word_t Y1[] = {0x812138f3, 0x1466648f};
 
-        cc_bn_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
+        cc_bn_word_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
         size_t bn_word_len = 2;
         cc_status_t status = cc_bn_binary_exgcd_unsafe(G, X, Y, A, B, bn_word_len);
         assert(status == CC_OK);
@@ -56,11 +56,11 @@ int main()
     }
 
     {
-        cc_bn_t A[CC_BN_MAX_WORDS];
-        cc_bn_t B[CC_BN_MAX_WORDS];
-        cc_bn_t G1[CC_BN_MAX_WORDS];
-        cc_bn_t X1[CC_BN_MAX_WORDS];
-        cc_bn_t Y1[CC_BN_MAX_WORDS];
+        cc_bn_word_t A[CC_BN_MAX_WORDS];
+        cc_bn_word_t B[CC_BN_MAX_WORDS];
+        cc_bn_word_t G1[CC_BN_MAX_WORDS];
+        cc_bn_word_t X1[CC_BN_MAX_WORDS];
+        cc_bn_word_t Y1[CC_BN_MAX_WORDS];
         size_t bn_word_len = 2;
 
         cc_bn_from_hex(A, bn_word_len, "DE339A6B49B27108");
@@ -69,7 +69,7 @@ int main()
         cc_bn_from_hex(X1, bn_word_len, "378fb399cb266960");
         cc_bn_from_hex(Y1, bn_word_len, "844e1be350b39dc4");
 
-        cc_bn_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
+        cc_bn_word_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
 
         cc_status_t status = cc_bn_binary_exgcd_unsafe(G, X, Y, A, B, bn_word_len);
         assert(status == CC_OK);
@@ -79,11 +79,11 @@ int main()
     }
 
     {
-        cc_bn_t A[CC_BN_MAX_WORDS];
-        cc_bn_t B[CC_BN_MAX_WORDS];
-        cc_bn_t G1[CC_BN_MAX_WORDS];
-        cc_bn_t X1[CC_BN_MAX_WORDS];
-        cc_bn_t Y1[CC_BN_MAX_WORDS];
+        cc_bn_word_t A[CC_BN_MAX_WORDS];
+        cc_bn_word_t B[CC_BN_MAX_WORDS];
+        cc_bn_word_t G1[CC_BN_MAX_WORDS];
+        cc_bn_word_t X1[CC_BN_MAX_WORDS];
+        cc_bn_word_t Y1[CC_BN_MAX_WORDS];
         size_t bn_word_len = 2;
 
         cc_bn_from_hex(A, bn_word_len, "FFFFFFFFFFFFFFFF");
@@ -92,7 +92,7 @@ int main()
         cc_bn_from_hex(X1, bn_word_len, "b6666660");
         cc_bn_from_hex(Y1, bn_word_len, "b666666669999999");
 
-        cc_bn_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
+        cc_bn_word_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
 
         cc_status_t status = cc_bn_binary_exgcd_unsafe(G, X, Y, A, B, bn_word_len);
         assert(status == CC_OK);
@@ -102,11 +102,11 @@ int main()
     }
 
     {
-        cc_bn_t A[CC_BN_MAX_WORDS];
-        cc_bn_t B[CC_BN_MAX_WORDS];
-        cc_bn_t G1[CC_BN_MAX_WORDS];
-        cc_bn_t X1[CC_BN_MAX_WORDS];
-        cc_bn_t Y1[CC_BN_MAX_WORDS];
+        cc_bn_word_t A[CC_BN_MAX_WORDS];
+        cc_bn_word_t B[CC_BN_MAX_WORDS];
+        cc_bn_word_t G1[CC_BN_MAX_WORDS];
+        cc_bn_word_t X1[CC_BN_MAX_WORDS];
+        cc_bn_word_t Y1[CC_BN_MAX_WORDS];
         size_t bn_word_len = 2;
 
         cc_bn_from_hex(A, bn_word_len, "FFFFFFFFFFFFFFFF");
@@ -115,7 +115,7 @@ int main()
         cc_bn_from_hex(X1, bn_word_len, "1");
         cc_bn_from_hex(Y1, bn_word_len, "2492492492492492");
 
-        cc_bn_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
+        cc_bn_word_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
 
         cc_status_t status = cc_bn_binary_exgcd_unsafe(G, X, Y, A, B, bn_word_len);
         assert(status == CC_OK);
@@ -125,11 +125,11 @@ int main()
     }
 
     {
-        cc_bn_t A[CC_BN_MAX_WORDS];
-        cc_bn_t B[CC_BN_MAX_WORDS];
-        cc_bn_t G1[CC_BN_MAX_WORDS];
-        cc_bn_t X1[CC_BN_MAX_WORDS];
-        cc_bn_t Y1[CC_BN_MAX_WORDS];
+        cc_bn_word_t A[CC_BN_MAX_WORDS];
+        cc_bn_word_t B[CC_BN_MAX_WORDS];
+        cc_bn_word_t G1[CC_BN_MAX_WORDS];
+        cc_bn_word_t X1[CC_BN_MAX_WORDS];
+        cc_bn_word_t Y1[CC_BN_MAX_WORDS];
         size_t bn_word_len = 2;
 
         cc_bn_from_hex(A, bn_word_len, "FFFFFFFFFFFFFFFF");
@@ -138,7 +138,7 @@ int main()
         cc_bn_from_hex(X1, bn_word_len, "1fffffffffffffff");
         cc_bn_from_hex(Y1, bn_word_len, "2000000000000000");
 
-        cc_bn_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
+        cc_bn_word_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
 
         cc_status_t status = cc_bn_binary_exgcd_unsafe(G, X, Y, A, B, bn_word_len);
         assert(status == CC_OK);
@@ -148,11 +148,11 @@ int main()
     }
 
     {
-        cc_bn_t A[CC_BN_MAX_WORDS];
-        cc_bn_t B[CC_BN_MAX_WORDS];
-        cc_bn_t G1[CC_BN_MAX_WORDS];
-        cc_bn_t X1[CC_BN_MAX_WORDS];
-        cc_bn_t Y1[CC_BN_MAX_WORDS];
+        cc_bn_word_t A[CC_BN_MAX_WORDS];
+        cc_bn_word_t B[CC_BN_MAX_WORDS];
+        cc_bn_word_t G1[CC_BN_MAX_WORDS];
+        cc_bn_word_t X1[CC_BN_MAX_WORDS];
+        cc_bn_word_t Y1[CC_BN_MAX_WORDS];
         size_t bn_word_len = 2;
 
         cc_bn_from_hex(A, bn_word_len, "FFFFFFFFFFFFFFF4");
@@ -161,7 +161,7 @@ int main()
         cc_bn_from_hex(X1, bn_word_len, "4");
         cc_bn_from_hex(Y1, bn_word_len, "7ffffffffffffff8");
 
-        cc_bn_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
+        cc_bn_word_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
 
         cc_status_t status = cc_bn_binary_exgcd_unsafe(G, X, Y, A, B, bn_word_len);
         assert(status == CC_OK);
@@ -171,11 +171,11 @@ int main()
     }
 
     {
-        cc_bn_t A[CC_BN_MAX_WORDS];
-        cc_bn_t B[CC_BN_MAX_WORDS];
-        cc_bn_t G1[CC_BN_MAX_WORDS];
-        cc_bn_t X1[CC_BN_MAX_WORDS];
-        cc_bn_t Y1[CC_BN_MAX_WORDS];
+        cc_bn_word_t A[CC_BN_MAX_WORDS];
+        cc_bn_word_t B[CC_BN_MAX_WORDS];
+        cc_bn_word_t G1[CC_BN_MAX_WORDS];
+        cc_bn_word_t X1[CC_BN_MAX_WORDS];
+        cc_bn_word_t Y1[CC_BN_MAX_WORDS];
         size_t bn_word_len = 2;
 
         cc_bn_from_hex(A, bn_word_len, "FFFFFFFFFFFFFFF0");
@@ -184,7 +184,7 @@ int main()
         cc_bn_from_hex(X1, bn_word_len, "de");
         cc_bn_from_hex(Y1, bn_word_len, "e616cd36ee616cc5");
 
-        cc_bn_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
+        cc_bn_word_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
 
         cc_status_t status = cc_bn_binary_exgcd_unsafe(G, X, Y, A, B, bn_word_len);
         assert(status == CC_OK);

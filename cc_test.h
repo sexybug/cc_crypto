@@ -106,6 +106,6 @@ void print_u32(const char *title, const uint32_t *ptr, size_t len);
  */
 void print_u64(const char *title, const uint64_t *ptr, size_t len);
 
-void print_bn(const char *title, const cc_bn_t *bn, size_t len);
+void print_bn(const char *title, const cc_bn_word_t *bn, size_t len);
 
 #endif // CC_TEST_H

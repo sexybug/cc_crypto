@@ -7,10 +7,10 @@
 int main(int argc, char **argv)
 {
     {
-        cc_bn_t A[3] = {0};
-        cc_bn_t B[3] = {18};
-        cc_bn_t G[] = {18};
-        cc_bn_t D[3];
+        cc_bn_word_t A[3] = {0};
+        cc_bn_word_t B[3] = {18};
+        cc_bn_word_t G[] = {18};
+        cc_bn_word_t D[3];
 
         size_t A_word_len = 1;
         size_t B_word_len = 1;
@@ -22,10 +22,10 @@ int main(int argc, char **argv)
         printf("A=0 test passed.\n");
     }
     {
-        cc_bn_t A[3] = {48};
-        cc_bn_t B[3] = {0};
-        cc_bn_t G[] = {48};
-        cc_bn_t D[3];
+        cc_bn_word_t A[3] = {48};
+        cc_bn_word_t B[3] = {0};
+        cc_bn_word_t G[] = {48};
+        cc_bn_word_t D[3];
 
         size_t A_word_len = 1;
         size_t B_word_len = 1;
@@ -36,10 +36,10 @@ int main(int argc, char **argv)
         assert(cc_bn_cmp_words(D, G, sizeof(G) / sizeof(G[0])) == 0);
     }
     {
-        cc_bn_t A[3] = {48};
-        cc_bn_t B[3] = {18};
-        cc_bn_t G[] = {6};
-        cc_bn_t D[3];
+        cc_bn_word_t A[3] = {48};
+        cc_bn_word_t B[3] = {18};
+        cc_bn_word_t G[] = {6};
+        cc_bn_word_t D[3];
 
         size_t A_word_len = 1;
         size_t B_word_len = 1;
@@ -51,10 +51,10 @@ int main(int argc, char **argv)
         printf("B=0 test passed.\n");
     }
     {
-        cc_bn_t A[3] = {48};
-        cc_bn_t B[3] = {18};
-        cc_bn_t G[] = {6};
-        cc_bn_t D[3];
+        cc_bn_word_t A[3] = {48};
+        cc_bn_word_t B[3] = {18};
+        cc_bn_word_t G[] = {6};
+        cc_bn_word_t D[3];
 
         size_t A_word_len = 1;
         size_t B_word_len = 1;
@@ -66,10 +66,10 @@ int main(int argc, char **argv)
         printf("bn_word_len=1 test passed.\n");
     }
     {
-        cc_bn_t A[3] = {0x48, 0x48};
-        cc_bn_t B[3] = {0x18, 0x18};
-        cc_bn_t G[] = {0x18, 0x18};
-        cc_bn_t D[3];
+        cc_bn_word_t A[3] = {0x48, 0x48};
+        cc_bn_word_t B[3] = {0x18, 0x18};
+        cc_bn_word_t G[] = {0x18, 0x18};
+        cc_bn_word_t D[3];
 
         size_t A_word_len = 2;
         size_t B_word_len = 2;
@@ -81,10 +81,10 @@ int main(int argc, char **argv)
         printf("bn_word_len=2 test passed.\n");
     }
     {
-        cc_bn_t A[3] = {0x48, 0x48};
-        cc_bn_t B[3] = {0x10000018};
-        cc_bn_t G[] = {0x8};
-        cc_bn_t D[3];
+        cc_bn_word_t A[3] = {0x48, 0x48};
+        cc_bn_word_t B[3] = {0x10000018};
+        cc_bn_word_t G[] = {0x8};
+        cc_bn_word_t D[3];
 
         size_t A_word_len = 2;
         size_t B_word_len = 1;
@@ -96,10 +96,10 @@ int main(int argc, char **argv)
         printf("A len > B len test passed.\n");
     }
     {
-        cc_bn_t A[3] = {0x48, 0x48};
-        cc_bn_t B[3] = {0x00000018, 0x00000018, 0x00000018};
-        cc_bn_t G[] = {0x48, 0};
-        cc_bn_t D[3];
+        cc_bn_word_t A[3] = {0x48, 0x48};
+        cc_bn_word_t B[3] = {0x00000018, 0x00000018, 0x00000018};
+        cc_bn_word_t G[] = {0x48, 0};
+        cc_bn_word_t D[3];
 
         size_t A_word_len = 2;
         size_t B_word_len = 3;

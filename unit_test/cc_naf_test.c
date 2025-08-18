@@ -23,7 +23,7 @@ void print_naf(const int8_t *naf, size_t naf_len)
 int main()
 {
 #if 0
-    cc_bn_t K2[2] = {0x42E576F7, 0x00};
+    cc_bn_word_t K2[2] = {0x42E576F7, 0x00};
 
     int8_t naf2[64];
     size_t naf2_len = naf(K2, 2, 2, naf2);
@@ -38,7 +38,7 @@ naf[15] = -1, naf[14] = 0, naf[13] = 0, naf[12] = 0, naf[11] = -1, naf[10] = 0, 
 naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = -1, naf[2] = 0, naf[1] = 0, naf[0] = -1,
     */
 
-    cc_bn_t K3[2] = {0x42E576F7, 0x00};
+    cc_bn_word_t K3[2] = {0x42E576F7, 0x00};
     int8_t naf3[64];
     size_t naf3_len = naf(K3, 2, 3, naf3);
     printf("naf3_len = %d\n", naf3_len);
@@ -52,7 +52,7 @@ naf[15] = 3, naf[14] = 0, naf[13] = 0, naf[12] = 0, naf[11] = -1, naf[10] = 0, n
 naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = -1, naf[2] = 0, naf[1] = 0, naf[0] = -1,
     */
 
-    cc_bn_t K4[2] = {0x42E576F7, 0x00};
+    cc_bn_word_t K4[2] = {0x42E576F7, 0x00};
     int8_t naf4[64];
     size_t naf4_len = naf(K4, 2, 4, naf4);
     printf("naf4_len = %d\n", naf4_len);
@@ -66,7 +66,7 @@ naf[15] = 0, naf[14] = 0, naf[13] = 0, naf[12] = 7, naf[11] = 0, naf[10] = 0, na
 naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = -1, naf[3] = 0, naf[2] = 0, naf[1] = 0, naf[0] = 7,
     */
 
-    cc_bn_t K5[2] = {0x42E576F7, 0x00};
+    cc_bn_word_t K5[2] = {0x42E576F7, 0x00};
     int8_t naf5[64];
     size_t naf5_len = naf(K5, 2, 5, naf5);
     printf("naf5_len = %d\n", naf5_len);
@@ -80,7 +80,7 @@ naf[15] = 11, naf[14] = 0, naf[13] = 0, naf[12] = 0, naf[11] = 0, naf[10] = 0, n
 naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = 0, naf[2] = 0, naf[1] = 0, naf[0] = -9,
     */
 
-    cc_bn_t K6[2] = {0x42E576F7, 0x00};
+    cc_bn_word_t K6[2] = {0x42E576F7, 0x00};
     int8_t naf6[64];
     size_t naf6_len = naf(K6, 2, 6, naf6);
     printf("naf6_len = %d\n", naf6_len);
@@ -95,7 +95,7 @@ naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = 0, naf[2] = 0, naf[1] =
     */
 
     {
-        cc_bn_t K6[2] = {0x000000AF, 0x00};
+        cc_bn_word_t K6[2] = {0x000000AF, 0x00};
         int8_t naf6[64];
         size_t naf6_len = naf(K6, 2, 4, naf6);
         printf("naf6_len = %d\n", naf6_len);
@@ -105,7 +105,7 @@ naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = 0, naf[2] = 0, naf[1] =
 
     {
         int K_word_len = 9;
-        cc_bn_t K[9] = {0xee102497, 0xa3ae4d96, 0x8573bb31, 0x55cf1cc6, 0xc2bed053, 0x3f36e38a, 0x7b2144b1, 0x31e9537a, 0x75bcd15};
+        cc_bn_word_t K[9] = {0xee102497, 0xa3ae4d96, 0x8573bb31, 0x55cf1cc6, 0xc2bed053, 0x3f36e38a, 0x7b2144b1, 0x31e9537a, 0x75bcd15};
         int8_t nafk[CC_BN_WORD_BITS*9+1];
         size_t nafk_len = naf(K, K_word_len, 2, nafk);
         printf("nafk_len = %zu\n", nafk_len);

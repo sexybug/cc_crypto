@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 // 辅助函数：比较两个大整数数组
-int compare_bn(const cc_bn_t *a, const cc_bn_t *b, size_t len)
+int compare_bn(const cc_bn_word_t *a, const cc_bn_word_t *b, size_t len)
 {
     for (size_t i = 0; i < len; i++)
     {
@@ -26,10 +26,10 @@ void test_cc_bn_mul_uint()
 
     // 测试用例1：基本乘法，无进位
     {
-        cc_bn_t bn_in[] = {0x12345678};
-        cc_bn_t bn_out[2] = {0};
-        cc_bn_t d = 2;
-        cc_bn_t expected[] = {0x2468acf0, 0};
+        cc_bn_word_t bn_in[] = {0x12345678};
+        cc_bn_word_t bn_out[2] = {0};
+        cc_bn_word_t d = 2;
+        cc_bn_word_t expected[] = {0x2468acf0, 0};
 
         cc_bn_mul_word(bn_out, bn_in, 1, d);
         assert(compare_bn(bn_out, expected, 2));
@@ -38,10 +38,10 @@ void test_cc_bn_mul_uint()
 
     // 测试用例2：乘法产生进位
     {
-        cc_bn_t bn_in[] = {0x80000000};
-        cc_bn_t bn_out[2] = {0};
-        cc_bn_t d = 3;
-        cc_bn_t expected[] = {0x80000000, 1};
+        cc_bn_word_t bn_in[] = {0x80000000};
+        cc_bn_word_t bn_out[2] = {0};
+        cc_bn_word_t d = 3;
+        cc_bn_word_t expected[] = {0x80000000, 1};
 
         cc_bn_mul_word(bn_out, bn_in, 1, d);
         assert(compare_bn(bn_out, expected, 2));
@@ -50,10 +50,10 @@ void test_cc_bn_mul_uint()
 
     // 测试用例3：乘以0
     {
-        cc_bn_t bn_in[] = {0x12345678, 0xabcdef01};
-        cc_bn_t bn_out[3] = {0};
-        cc_bn_t d = 0;
-        cc_bn_t expected[] = {0, 0, 0};
+        cc_bn_word_t bn_in[] = {0x12345678, 0xabcdef01};
+        cc_bn_word_t bn_out[3] = {0};
+        cc_bn_word_t d = 0;
+        cc_bn_word_t expected[] = {0, 0, 0};
 
         cc_bn_mul_word(bn_out, bn_in, 2, d);
         assert(compare_bn(bn_out, expected, 3));
@@ -62,10 +62,10 @@ void test_cc_bn_mul_uint()
 
     // 测试用例4：乘以1
     {
-        cc_bn_t bn_in[] = {0x12345678, 0xabcdef01};
-        cc_bn_t bn_out[3] = {0};
-        cc_bn_t d = 1;
-        cc_bn_t expected[] = {0x12345678, 0xabcdef01, 0};
+        cc_bn_word_t bn_in[] = {0x12345678, 0xabcdef01};
+        cc_bn_word_t bn_out[3] = {0};
+        cc_bn_word_t d = 1;
+        cc_bn_word_t expected[] = {0x12345678, 0xabcdef01, 0};
 
         cc_bn_mul_word(bn_out, bn_in, 2, d);
         assert(compare_bn(bn_out, expected, 3));
@@ -74,10 +74,10 @@ void test_cc_bn_mul_uint()
 
     // 测试用例5：乘以最大值
     {
-        cc_bn_t bn_in[] = {CC_BN_WORD_MAX};
-        cc_bn_t bn_out[2] = {0};
-        cc_bn_t d = CC_BN_WORD_MAX;
-        cc_bn_t expected[] = {1, CC_BN_WORD_MAX - 1};
+        cc_bn_word_t bn_in[] = {CC_BN_WORD_MAX};
+        cc_bn_word_t bn_out[2] = {0};
+        cc_bn_word_t d = CC_BN_WORD_MAX;
+        cc_bn_word_t expected[] = {1, CC_BN_WORD_MAX - 1};
 
         cc_bn_mul_word(bn_out, bn_in, 1, d);
         assert(compare_bn(bn_out, expected, 2));
@@ -86,10 +86,10 @@ void test_cc_bn_mul_uint()
 
     // 测试用例6：多位数乘法，连续进位
     {
-        cc_bn_t bn_in[] = {CC_BN_WORD_MAX, CC_BN_WORD_MAX, CC_BN_WORD_MAX};
-        cc_bn_t bn_out[4] = {0};
-        cc_bn_t d = 2;
-        cc_bn_t expected[] = {CC_BN_WORD_MAX - 1, CC_BN_WORD_MAX, CC_BN_WORD_MAX, 1};
+        cc_bn_word_t bn_in[] = {CC_BN_WORD_MAX, CC_BN_WORD_MAX, CC_BN_WORD_MAX};
+        cc_bn_word_t bn_out[4] = {0};
+        cc_bn_word_t d = 2;
+        cc_bn_word_t expected[] = {CC_BN_WORD_MAX - 1, CC_BN_WORD_MAX, CC_BN_WORD_MAX, 1};
 
         cc_bn_mul_word(bn_out, bn_in, 3, d);
         assert(compare_bn(bn_out, expected, 4));
@@ -98,9 +98,9 @@ void test_cc_bn_mul_uint()
 
     // 测试用例7：空数组（长度为0）
     {
-        cc_bn_t bn_in[1] = {0};
-        cc_bn_t bn_out[1] = {0xFF}; // 初始化为非零值
-        cc_bn_t d = 5;
+        cc_bn_word_t bn_in[1] = {0};
+        cc_bn_word_t bn_out[1] = {0xFF}; // 初始化为非零值
+        cc_bn_word_t d = 5;
 
         cc_bn_mul_word(bn_out, bn_in, 0, d);
         assert(bn_out[0] == 0); // 进位应该为0
@@ -109,10 +109,10 @@ void test_cc_bn_mul_uint()
 
     // 测试用例8：单个数字的边界值
     {
-        cc_bn_t bn_in[] = {1};
-        cc_bn_t bn_out[2] = {0};
-        cc_bn_t d = CC_BN_WORD_MAX;
-        cc_bn_t expected[] = {CC_BN_WORD_MAX, 0};
+        cc_bn_word_t bn_in[] = {1};
+        cc_bn_word_t bn_out[2] = {0};
+        cc_bn_word_t d = CC_BN_WORD_MAX;
+        cc_bn_word_t expected[] = {CC_BN_WORD_MAX, 0};
 
         cc_bn_mul_word(bn_out, bn_in, 1, d);
         assert(compare_bn(bn_out, expected, 2));
@@ -122,9 +122,9 @@ void test_cc_bn_mul_uint()
     // 测试用例9：大数组测试
     {
         const size_t len = 10;
-        cc_bn_t bn_in[10];
-        cc_bn_t bn_out[10 + 1] = {0};
-        cc_bn_t d = 0x12345678;
+        cc_bn_word_t bn_in[10];
+        cc_bn_word_t bn_out[10 + 1] = {0};
+        cc_bn_word_t d = 0x12345678;
 
         // 初始化输入数组
         for (size_t i = 0; i < len; i++)
@@ -142,9 +142,9 @@ void test_cc_bn_mul_uint()
 
     // 测试用例10：溢出边界测试
     {
-        cc_bn_t bn_in[] = {0x80000000, 0x80000000};
-        cc_bn_t bn_out[3] = {0};
-        cc_bn_t d = 0x80000000;
+        cc_bn_word_t bn_in[] = {0x80000000, 0x80000000};
+        cc_bn_word_t bn_out[3] = {0};
+        cc_bn_word_t d = 0x80000000;
 
         cc_bn_mul_word(bn_out, bn_in, 2, d);
 
@@ -164,9 +164,9 @@ void test_cc_bn_mul_uint()
 
     // 测试用例11：输出等于输入测试
     {
-        cc_bn_t bn_in[3] = {0x80000000, 0x80000000};
-        cc_bn_t bn_out[3] = {0};
-        cc_bn_t d = 0x80000000;
+        cc_bn_word_t bn_in[3] = {0x80000000, 0x80000000};
+        cc_bn_word_t bn_out[3] = {0};
+        cc_bn_word_t d = 0x80000000;
 
         cc_bn_mul_word(bn_out, bn_in, 2, d);
         cc_bn_mul_word(bn_in, bn_in, 2, d);

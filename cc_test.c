@@ -177,7 +177,7 @@ void print_u64(const char *title, const uint64_t *ptr, size_t len)
     printf("};\n\n");
 }
 
-void print_bn(const char *title, const cc_bn_t *bn, size_t len)
+void print_bn(const char *title, const cc_bn_word_t *bn, size_t len)
 {
     int i;
     printf("%s (%zu bytes) = {", title, len * CC_BN_WORD_BYTES);

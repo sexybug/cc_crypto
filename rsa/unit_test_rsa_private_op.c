@@ -13,11 +13,11 @@ int main()
 {
     {
         cc_rsa_privkey_st privkey;
-        cc_bn_t N[CC_BN_MAX_WORDS];
-        cc_bn_t D[CC_BN_MAX_WORDS];
-        cc_bn_t M[CC_BN_MAX_WORDS];
-        cc_bn_t C[CC_BN_MAX_WORDS];
-        cc_bn_t M_expect[CC_BN_MAX_WORDS];
+        cc_bn_word_t N[CC_BN_MAX_WORDS];
+        cc_bn_word_t D[CC_BN_MAX_WORDS];
+        cc_bn_word_t M[CC_BN_MAX_WORDS];
+        cc_bn_word_t C[CC_BN_MAX_WORDS];
+        cc_bn_word_t M_expect[CC_BN_MAX_WORDS];
 
         size_t bits = 80;
         size_t N_words = cc_bn_word_len_from_bit_len(bits);
@@ -37,11 +37,11 @@ int main()
 
     {
         cc_rsa_privkey_st privkey;
-        cc_bn_t N[CC_BN_MAX_WORDS];
-        cc_bn_t D[CC_BN_MAX_WORDS];
-        cc_bn_t M[CC_BN_MAX_WORDS];
-        cc_bn_t C[CC_BN_MAX_WORDS];
-        cc_bn_t M_expect[CC_BN_MAX_WORDS];
+        cc_bn_word_t N[CC_BN_MAX_WORDS];
+        cc_bn_word_t D[CC_BN_MAX_WORDS];
+        cc_bn_word_t M[CC_BN_MAX_WORDS];
+        cc_bn_word_t C[CC_BN_MAX_WORDS];
+        cc_bn_word_t M_expect[CC_BN_MAX_WORDS];
 
         size_t bits = 160;
         size_t N_words = cc_bn_word_len_from_bit_len(bits);

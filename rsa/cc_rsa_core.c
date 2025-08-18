@@ -11,7 +11,7 @@
 // at most try 1000 times to generate key
 #define COUNT_MAX 1000
 
-void cc_rsa_set_pubkey(cc_rsa_pubkey_st *pubkey, const cc_bn_t *N, const cc_bn_t *E, size_t bits)
+void cc_rsa_set_pubkey(cc_rsa_pubkey_st *pubkey, const cc_bn_word_t *N, const cc_bn_word_t *E, size_t bits)
 {
     size_t N_words = cc_bn_word_len_from_bit_len(bits);
 
@@ -26,7 +26,7 @@ void cc_rsa_set_pubkey(cc_rsa_pubkey_st *pubkey, const cc_bn_t *N, const cc_bn_t
     }
 }
 
-void cc_rsa_set_privkey(cc_rsa_privkey_st *privkey, const cc_bn_t *N, const cc_bn_t *D, size_t bits)
+void cc_rsa_set_privkey(cc_rsa_privkey_st *privkey, const cc_bn_word_t *N, const cc_bn_word_t *D, size_t bits)
 {
     size_t N_words = cc_bn_word_len_from_bit_len(bits);
 
@@ -41,7 +41,7 @@ void cc_rsa_set_privkey(cc_rsa_privkey_st *privkey, const cc_bn_t *N, const cc_b
     }
 }
 
-void cc_rsa_set_privkey_crt(cc_rsa_privkey_st *privkey, const cc_bn_t *N, const cc_bn_t *D, const cc_bn_t *P, const cc_bn_t *Q, const cc_bn_t *DP, const cc_bn_t *DQ, const cc_bn_t *QP, size_t bits)
+void cc_rsa_set_privkey_crt(cc_rsa_privkey_st *privkey, const cc_bn_word_t *N, const cc_bn_word_t *D, const cc_bn_word_t *P, const cc_bn_word_t *Q, const cc_bn_word_t *DP, const cc_bn_word_t *DQ, const cc_bn_word_t *QP, size_t bits)
 {
     size_t N_words = cc_bn_word_len_from_bit_len(bits);
     size_t PQ_words = cc_bn_word_len_from_bit_len(bits >> 1);
@@ -79,13 +79,13 @@ void cc_rsa_set_privkey_crt(cc_rsa_privkey_st *privkey, const cc_bn_t *N, const 
 
 // E>3, bits(E)<=bits, E is odd
 cc_status_t cc_rsa_core_gen_key(cc_rsa_pubkey_st *pubkey, cc_rsa_privkey_st *privkey,
-                                size_t bits, const cc_bn_t *E, size_t E_word_len, bool crt,
+                                size_t bits, const cc_bn_word_t *E, size_t E_word_len, bool crt,
                                 cc_crypto_rng_f rng)
 {
     int count = 0;
-    cc_bn_t H[CC_RSA_PQ_MAX_WORDS * 2];
-    cc_bn_t *G = pubkey->N;
-    cc_bn_t *L = privkey->N;
+    cc_bn_word_t H[CC_RSA_PQ_MAX_WORDS * 2];
+    cc_bn_word_t *G = pubkey->N;
+    cc_bn_word_t *L = privkey->N;
     size_t N_words = cc_bn_word_len_from_bit_len(bits);
 
     if ((bits % 2 != 0) || (bits < 8) || (bits > CC_BN_MAX_BITS))
@@ -192,10 +192,10 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_pubkey_st *pubkey, cc_rsa_privkey_st *pri
 
 // if validate pass, return CC_OK
 // if validate fail, return CC_ERR_RSA_VALIDATE_KEY
-cc_status_t cc_rsa_validate_params(size_t bits, const cc_bn_t *N, const cc_bn_t *E, const cc_bn_t *D, const cc_bn_t *P, const cc_bn_t *Q, cc_crypto_rng_f rng)
+cc_status_t cc_rsa_validate_params(size_t bits, const cc_bn_word_t *N, const cc_bn_word_t *E, const cc_bn_word_t *D, const cc_bn_word_t *P, const cc_bn_word_t *Q, cc_crypto_rng_f rng)
 {
-    cc_bn_t T[CC_BN_MAX_WORDS * 2];
-    cc_bn_t TP[CC_RSA_PQ_MAX_WORDS];
+    cc_bn_word_t T[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t TP[CC_RSA_PQ_MAX_WORDS];
 
     size_t N_words = cc_bn_word_len_from_bit_len(bits);
     size_t PQ_words = cc_bn_word_len_from_bit_len(bits >> 1);
@@ -274,10 +274,10 @@ cc_status_t cc_rsa_validate_params(size_t bits, const cc_bn_t *N, const cc_bn_t 
     return CC_OK;
 }
 
-cc_status_t cc_rsa_validate_crt(size_t bits, const cc_bn_t *D, const cc_bn_t *P, const cc_bn_t *Q, const cc_bn_t *DP, const cc_bn_t *DQ, const cc_bn_t *QP)
+cc_status_t cc_rsa_validate_crt(size_t bits, const cc_bn_word_t *D, const cc_bn_word_t *P, const cc_bn_word_t *Q, const cc_bn_word_t *DP, const cc_bn_word_t *DQ, const cc_bn_word_t *QP)
 {
-    cc_bn_t T[CC_RSA_PQ_MAX_WORDS * 2];
-    cc_bn_t TP[CC_RSA_PQ_MAX_WORDS];
+    cc_bn_word_t T[CC_RSA_PQ_MAX_WORDS * 2];
+    cc_bn_word_t TP[CC_RSA_PQ_MAX_WORDS];
 
     size_t N_words = cc_bn_word_len_from_bit_len(bits);
     size_t PQ_words = cc_bn_word_len_from_bit_len(bits >> 1);
@@ -331,7 +331,7 @@ cc_status_t cc_rsa_validate_crt(size_t bits, const cc_bn_t *D, const cc_bn_t *P,
 // C = M^E mod N
 // M < N
 // C can alias M
-cc_status_t cc_rsa_core_public_op(cc_rsa_pubkey_st *pubkey, const cc_bn_t *M, cc_bn_t *C)
+cc_status_t cc_rsa_core_public_op(cc_rsa_pubkey_st *pubkey, const cc_bn_word_t *M, cc_bn_word_t *C)
 {
     size_t N_words = cc_bn_word_len_from_bit_len(pubkey->bits);
 
@@ -350,7 +350,7 @@ cc_status_t cc_rsa_core_public_op(cc_rsa_pubkey_st *pubkey, const cc_bn_t *M, cc
 // M = C^D mod N
 // C < N
 // M can alias C
-cc_status_t cc_rsa_core_private_op(cc_rsa_privkey_st *privkey, const cc_bn_t *C, cc_bn_t *M)
+cc_status_t cc_rsa_core_private_op(cc_rsa_privkey_st *privkey, const cc_bn_word_t *C, cc_bn_word_t *M)
 {
     size_t N_words = cc_bn_word_len_from_bit_len(privkey->bits);
 
@@ -369,14 +369,14 @@ cc_status_t cc_rsa_core_private_op(cc_rsa_privkey_st *privkey, const cc_bn_t *C,
 // M = C^D mod N
 // C < N
 // M can alias C
-cc_status_t cc_rsa_core_private_op_crt(cc_rsa_privkey_st *privkey, const cc_bn_t *C, cc_bn_t *M)
+cc_status_t cc_rsa_core_private_op_crt(cc_rsa_privkey_st *privkey, const cc_bn_word_t *C, cc_bn_word_t *M)
 {
     size_t N_words = cc_bn_word_len_from_bit_len(privkey->bits);
     size_t PQ_words = cc_bn_word_len_from_bit_len(privkey->bits >> 1);
 
-    cc_bn_t M1[CC_RSA_PQ_MAX_WORDS];
-    cc_bn_t M2[CC_RSA_PQ_MAX_WORDS];
-    cc_bn_t MT[CC_RSA_PQ_MAX_WORDS * 2];
+    cc_bn_word_t M1[CC_RSA_PQ_MAX_WORDS];
+    cc_bn_word_t M2[CC_RSA_PQ_MAX_WORDS];
+    cc_bn_word_t MT[CC_RSA_PQ_MAX_WORDS * 2];
 
     // M1 = C^DP mod P
     cc_bn_mod_exp_mont(M1, C, N_words, privkey->DP, PQ_words, privkey->P, PQ_words);

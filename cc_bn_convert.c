@@ -2,10 +2,10 @@
 #include "cc_bn_convert.h"
 #include <string.h>
 
-static cc_bn_t cc_bn_word_from_u8(const uint8_t *src, size_t byte_len)
+static cc_bn_word_t cc_bn_word_from_u8(const uint8_t *src, size_t byte_len)
 {
     size_t i;
-    cc_bn_t word = 0;
+    cc_bn_word_t word = 0;
     for (i = 0; (i < byte_len) && (i < CC_BN_WORD_BYTES); i++)
     {
         word = (word << 8) | src[i];
@@ -13,7 +13,7 @@ static cc_bn_t cc_bn_word_from_u8(const uint8_t *src, size_t byte_len)
     return word;
 }
 
-void cc_bn_from_u8(cc_bn_t *bn, size_t bn_word_len, const uint8_t *src, size_t byte_len)
+void cc_bn_from_u8(cc_bn_word_t *bn, size_t bn_word_len, const uint8_t *src, size_t byte_len)
 {
     int i;
     int bn_index = bn_word_len - 1;
@@ -50,7 +50,7 @@ void cc_bn_from_u8(cc_bn_t *bn, size_t bn_word_len, const uint8_t *src, size_t b
 }
 
 // return the number of bytes used in dst
-size_t cc_bn_to_u8(uint8_t *dst, const cc_bn_t *bn, size_t bn_word_len)
+size_t cc_bn_to_u8(uint8_t *dst, const cc_bn_word_t *bn, size_t bn_word_len)
 {
     int i;
     int byte_len = bn_word_len * CC_BN_WORD_BYTES;
@@ -64,7 +64,7 @@ size_t cc_bn_to_u8(uint8_t *dst, const cc_bn_t *bn, size_t bn_word_len)
 
 // bn will be filled with the minimum number of words needed to fit the byte array
 // return the number of words used in bn
-size_t cc_bn_from_u8_fit(cc_bn_t *bn, const uint8_t *src, size_t byte_len)
+size_t cc_bn_from_u8_fit(cc_bn_word_t *bn, const uint8_t *src, size_t byte_len)
 {
     size_t bn_word_len = (byte_len + CC_BN_WORD_BYTES - 1) / CC_BN_WORD_BYTES;
     cc_bn_from_u8(bn, bn_word_len, src, byte_len);
@@ -73,7 +73,7 @@ size_t cc_bn_from_u8_fit(cc_bn_t *bn, const uint8_t *src, size_t byte_len)
 
 // dst will be filled with the minimum number of bytes needed to fit the bn
 // return the number of bytes used in dst
-size_t cc_bn_to_u8_fit(uint8_t *dst, const cc_bn_t *bn, size_t bn_word_len)
+size_t cc_bn_to_u8_fit(uint8_t *dst, const cc_bn_word_t *bn, size_t bn_word_len)
 {
     int i, j;
     size_t n = 0;
@@ -133,10 +133,10 @@ static inline char u8_to_hex_char(uint8_t value)
     return '?'; // Error case
 }
 
-cc_bn_t cc_bn_word_from_hex(const char *str, size_t char_size)
+cc_bn_word_t cc_bn_word_from_hex(const char *str, size_t char_size)
 {
     size_t i;
-    cc_bn_t bn = 0;
+    cc_bn_word_t bn = 0;
     for (i = 0; (i < char_size) && (i < CC_BN_WORD_BYTES * 2); i++)
     {
         bn = (bn << 4) | hex_char_to_u8(str[i]);
@@ -145,7 +145,7 @@ cc_bn_t cc_bn_word_from_hex(const char *str, size_t char_size)
 }
 
 // hex string can be odd length
-void cc_bn_from_hex(cc_bn_t *bn, size_t bn_word_len, const char *str)
+void cc_bn_from_hex(cc_bn_word_t *bn, size_t bn_word_len, const char *str)
 {
     int i;
     size_t str_len = strlen(str);
@@ -183,12 +183,12 @@ void cc_bn_from_hex(cc_bn_t *bn, size_t bn_word_len, const char *str)
 
 // note: hex string ends with '\0', you must make sure memory is enough
 // return hex string length
-size_t cc_bn_to_hex(char *hex, const cc_bn_t *bn, size_t bn_word_len)
+size_t cc_bn_to_hex(char *hex, const cc_bn_word_t *bn, size_t bn_word_len)
 {
     size_t i, j;
     size_t hex_len = bn_word_len * CC_BN_WORD_BYTES * 2;
 
-    cc_bn_t tmp;
+    cc_bn_word_t tmp;
     for (i = 0; i < bn_word_len; i++)
     {
         tmp = bn[bn_word_len - 1 - i]; // 从高位开始处理
@@ -204,7 +204,7 @@ size_t cc_bn_to_hex(char *hex, const cc_bn_t *bn, size_t bn_word_len)
 // bn will be filled with the minimum number of words needed to fit the hex string
 // hex string can be odd length
 // return the number of words used in bn
-size_t cc_bn_from_hex_fit(cc_bn_t *bn, const char *str)
+size_t cc_bn_from_hex_fit(cc_bn_word_t *bn, const char *str)
 {
     size_t str_len = strlen(str);
     size_t bn_word_len = (str_len + 1) / (CC_BN_WORD_BYTES * 2);
@@ -215,7 +215,7 @@ size_t cc_bn_from_hex_fit(cc_bn_t *bn, const char *str)
 // note: hex string ends with '\0', you must make sure memory is enough
 // dst will be filled with the minimum number of hex chars needed to fit the bn
 // return the number of hex chars in dst
-size_t cc_bn_to_hex_fit(char *hex_str, const cc_bn_t *bn, size_t bn_word_len)
+size_t cc_bn_to_hex_fit(char *hex_str, const cc_bn_word_t *bn, size_t bn_word_len)
 {
     int i, j;
     size_t n = 0;

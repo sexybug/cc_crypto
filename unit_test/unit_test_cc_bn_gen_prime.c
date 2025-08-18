@@ -11,7 +11,7 @@ int main()
 {
     srand32(time(NULL));
     {
-        cc_bn_t R[2] = {0xFFFFFFFF, 0xFFFFFFFF};
+        cc_bn_word_t R[2] = {0xFFFFFFFF, 0xFFFFFFFF};
         size_t bits = 32;
         size_t len = cc_bn_word_len_from_bit_len(bits);
         cc_status_t ret = cc_bn_gen_prime(R, bits, cc_crypto_rng_ex);
@@ -19,7 +19,7 @@ int main()
         assert(ret == CC_OK);
     }
     {
-        cc_bn_t R[2] = {0xFFFFFFFF, 0xFFFFFFFF};
+        cc_bn_word_t R[2] = {0xFFFFFFFF, 0xFFFFFFFF};
         size_t bits = 48;
         size_t len = cc_bn_word_len_from_bit_len(bits);
         cc_status_t ret = cc_bn_gen_prime(R, bits, cc_crypto_rng_ex);
@@ -28,7 +28,7 @@ int main()
     }
 
     {
-        cc_bn_t R[256] = {0xFFFFFFFF, 0xFFFFFFFF};
+        cc_bn_word_t R[256] = {0xFFFFFFFF, 0xFFFFFFFF};
         size_t bits = 99;
         size_t len = cc_bn_word_len_from_bit_len(bits);
         cc_status_t ret = cc_bn_gen_prime(R, bits, cc_crypto_rng_ex);
@@ -37,7 +37,7 @@ int main()
     }
 
     {
-        cc_bn_t R[256] = {0xFFFFFFFF, 0xFFFFFFFF};
+        cc_bn_word_t R[256] = {0xFFFFFFFF, 0xFFFFFFFF};
         size_t bits = 2048;
         size_t len = cc_bn_word_len_from_bit_len(bits);
         cc_status_t ret = cc_bn_gen_prime(R, bits, cc_crypto_rng_ex);

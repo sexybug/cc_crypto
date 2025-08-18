@@ -26,14 +26,14 @@ int cc_bn_prime_calc_miller_rabin_iterations(int bits)
 
 // refer to FIPS 186-5 B.3.1
 // W > 2
-cc_status_t cc_bn_prime_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int iterations, cc_crypto_rng_f rng)
+cc_status_t cc_bn_prime_miller_rabin(const cc_bn_word_t *W, size_t bn_word_len, int iterations, cc_crypto_rng_f rng)
 {
     int a, i, j;
-    cc_bn_t W1[CC_BN_MAX_WORDS];
-    cc_bn_t M[CC_BN_MAX_WORDS];
-    cc_bn_t B[CC_BN_MAX_WORDS];
-    cc_bn_t Z[CC_BN_MAX_WORDS];
-    cc_bn_t RR[CC_BN_MAX_WORDS];
+    cc_bn_word_t W1[CC_BN_MAX_WORDS];
+    cc_bn_word_t M[CC_BN_MAX_WORDS];
+    cc_bn_word_t B[CC_BN_MAX_WORDS];
+    cc_bn_word_t Z[CC_BN_MAX_WORDS];
+    cc_bn_word_t RR[CC_BN_MAX_WORDS];
 
     // if w is even, it is composite
     if (CC_BN_IS_EVEN(W))
@@ -57,7 +57,7 @@ cc_status_t cc_bn_prime_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int i
     // calc mont RR
     cc_bn_mont_RR(RR, W, bn_word_len);
 
-    cc_bn_t Ni = cc_bn_mont_Ni(W);
+    cc_bn_word_t Ni = cc_bn_mont_Ni(W);
 
     for (i = 0; i < iterations; i++)
     {
@@ -110,7 +110,7 @@ cc_status_t cc_bn_prime_miller_rabin(const cc_bn_t *W, size_t bn_word_len, int i
 // return CC_BN_IS_PRIME if X is certainly prime
 // return CC_BN_PROBABLY_PRIME if X is probably prime
 // return CC_BN_IS_COMPOSITE if X is composite
-cc_status_t cc_bn_prime_check(const cc_bn_t *X, size_t bn_word_len, cc_crypto_rng_f rng)
+cc_status_t cc_bn_prime_check(const cc_bn_word_t *X, size_t bn_word_len, cc_crypto_rng_f rng)
 {
     // if X = 0 or 1, it is invalid
     if (cc_bn_cmp_word(X, bn_word_len, 1) <= 0)
@@ -130,7 +130,7 @@ cc_status_t cc_bn_prime_check(const cc_bn_t *X, size_t bn_word_len, cc_crypto_rn
 
 // return CC_OK if generate success
 // return CC_ERR_BN_GEN_RAND if rng error
-cc_status_t cc_bn_gen_prime(cc_bn_t *X, size_t bits, cc_crypto_rng_f rng)
+cc_status_t cc_bn_gen_prime(cc_bn_word_t *X, size_t bits, cc_crypto_rng_f rng)
 {
     cc_status_t check_ret;
     do

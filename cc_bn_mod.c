@@ -4,7 +4,7 @@
 
 // R = A mod d, d != 0
 // Vertical division
-cc_bn_t cc_bn_mod_word(const cc_bn_t *A, size_t A_word_len, cc_bn_t d)
+cc_bn_word_t cc_bn_mod_word(const cc_bn_word_t *A, size_t A_word_len, cc_bn_word_t d)
 {
     size_t i;
 
@@ -28,7 +28,7 @@ cc_bn_t cc_bn_mod_word(const cc_bn_t *A, size_t A_word_len, cc_bn_t d)
 }
 
 // compare {carry, A} with B
-int cc_bn_cmp_carry(cc_bn_t carry, const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len)
+int cc_bn_cmp_carry(cc_bn_word_t carry, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len)
 {
     if (carry == 0)
     {
@@ -42,9 +42,9 @@ int cc_bn_cmp_carry(cc_bn_t carry, const cc_bn_t *A, const cc_bn_t *B, size_t bn
 
 // R = A + d mod N. A < N, d < N
 // R can alias A, R can not alias N
-void cc_bn_mod_add_word(cc_bn_t *R, const cc_bn_t *A, cc_bn_t d, const cc_bn_t *N, size_t bn_word_len)
+void cc_bn_mod_add_word(cc_bn_word_t *R, const cc_bn_word_t *A, cc_bn_word_t d, const cc_bn_word_t *N, size_t bn_word_len)
 {
-    cc_bn_t carry = cc_bn_add_word(R, A, bn_word_len, d);
+    cc_bn_word_t carry = cc_bn_add_word(R, A, bn_word_len, d);
 
     if (((carry == 0) && cc_bn_cmp_words(R, N, bn_word_len) >= 0) || (carry == 1))
     {
@@ -54,9 +54,9 @@ void cc_bn_mod_add_word(cc_bn_t *R, const cc_bn_t *A, cc_bn_t d, const cc_bn_t *
 
 // R = A + B mod N. A < N, B < N
 // R can alias A B, R can not alias N
-void cc_bn_mod_add(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, const cc_bn_t *N, size_t bn_word_len)
+void cc_bn_mod_add(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len)
 {
-    cc_bn_t carry = cc_bn_add_words(R, A, B, bn_word_len);
+    cc_bn_word_t carry = cc_bn_add_words(R, A, B, bn_word_len);
 
     if (((carry == 0) && cc_bn_cmp_words(R, N, bn_word_len) >= 0) || (carry == 1))
     {
@@ -66,16 +66,16 @@ void cc_bn_mod_add(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, const cc_bn_t
 
 // R = 2A mod N, A < N
 // R can alias A, R can not alias N
-void cc_bn_mod_double(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *N, size_t bn_word_len)
+void cc_bn_mod_double(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *N, size_t bn_word_len)
 {
     cc_bn_mod_add(R, A, A, N, bn_word_len);
 }
 
 // R = A - d mod N, A < N
 // R can alias A, R can not alias N
-void cc_bn_mod_sub_word(cc_bn_t *R, const cc_bn_t *A, cc_bn_t d, const cc_bn_t *N, size_t bn_word_len)
+void cc_bn_mod_sub_word(cc_bn_word_t *R, const cc_bn_word_t *A, cc_bn_word_t d, const cc_bn_word_t *N, size_t bn_word_len)
 {
-    cc_bn_t borrow = cc_bn_sub_word(R, A, bn_word_len, d);
+    cc_bn_word_t borrow = cc_bn_sub_word(R, A, bn_word_len, d);
 
     if (borrow == 1)
     {
@@ -85,9 +85,9 @@ void cc_bn_mod_sub_word(cc_bn_t *R, const cc_bn_t *A, cc_bn_t d, const cc_bn_t *
 
 // R = A - B mod N, A < N, B < N
 // R can alias A B, R can not alias N
-void cc_bn_mod_sub(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, const cc_bn_t *N, size_t bn_word_len)
+void cc_bn_mod_sub(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len)
 {
-    cc_bn_t borrow = cc_bn_sub_words(R, A, B, bn_word_len);
+    cc_bn_word_t borrow = cc_bn_sub_words(R, A, B, bn_word_len);
 
     if (borrow == 1)
     {
@@ -97,7 +97,7 @@ void cc_bn_mod_sub(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, const cc_bn_t
 
 // R = -A mod N, A < N
 // R can alias A N
-void cc_bn_mod_neg(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *N, size_t bn_word_len)
+void cc_bn_mod_neg(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *N, size_t bn_word_len)
 {
     cc_bn_sub_words(R, N, A, bn_word_len);
 }
@@ -105,12 +105,12 @@ void cc_bn_mod_neg(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *N, size_t bn_wor
 // R = A / 2 mod N, A < N
 // N must be odd
 // R can alias A N
-void cc_bn_mod_half(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *N, size_t bn_word_len)
+void cc_bn_mod_half(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *N, size_t bn_word_len)
 {
     // if A is odd, R = (A + N) / 2
     if (CC_BN_IS_ODD(A))
     {
-        cc_bn_t carry = cc_bn_add_words(R, A, N, bn_word_len);
+        cc_bn_word_t carry = cc_bn_add_words(R, A, N, bn_word_len);
 
         size_t i;
         for (i = 0; i < bn_word_len - 1; i += 1)
@@ -137,7 +137,7 @@ void cc_bn_mod_half(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *N, size_t bn_wo
 // Q_word_len = A_word_len, R_word_len = N_word_len
 // Q cannot alias A N
 // R can alias A N
-cc_status_t cc_bn_core_div(cc_bn_t *Q, cc_bn_t *R, cc_bn_t *A, size_t A_word_len, cc_bn_t *N, size_t N_word_len)
+cc_status_t cc_bn_core_div(cc_bn_word_t *Q, cc_bn_word_t *R, cc_bn_word_t *A, size_t A_word_len, cc_bn_word_t *N, size_t N_word_len)
 {
     // if N == 0, return ERROR
     if (cc_bn_is_zero(N, N_word_len))
@@ -187,16 +187,16 @@ cc_status_t cc_bn_core_div(cc_bn_t *Q, cc_bn_t *R, cc_bn_t *A, size_t A_word_len
 
 // R = A mod N, R length = N length
 // R can alias A N
-cc_status_t cc_bn_mod(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *N, size_t N_word_len)
+cc_status_t cc_bn_mod(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *N, size_t N_word_len)
 {
     if (A_word_len > CC_BN_MAX_WORDS * 2 || N_word_len > CC_BN_MAX_WORDS)
     {
         return CC_ERR_BN_LEN_TOO_LONG;
     }
 
-    cc_bn_t A_tmp[CC_BN_MAX_WORDS * 2];
-    cc_bn_t N_tmp[CC_BN_MAX_WORDS * 2];
-    cc_bn_t Q_tmp[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t A_tmp[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t N_tmp[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t Q_tmp[CC_BN_MAX_WORDS * 2];
 
     cc_bn_copy(A_tmp, A, A_word_len);
     cc_bn_copy(N_tmp, N, N_word_len);
@@ -207,11 +207,11 @@ cc_status_t cc_bn_mod(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_
 // R = A * B mod N
 // R_word_len = bn_word_len
 // R can alias A B N
-void cc_bn_mod_mul_words(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, const cc_bn_t *N, size_t bn_word_len)
+void cc_bn_mod_mul_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len)
 {
-    cc_bn_t P[CC_BN_MAX_WORDS * 2];
-    cc_bn_t Q[CC_BN_MAX_WORDS * 2];
-    cc_bn_t N_tmp[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t P[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t Q[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t N_tmp[CC_BN_MAX_WORDS * 2];
 
     cc_bn_copy(N_tmp, N, bn_word_len);
 
@@ -225,11 +225,11 @@ void cc_bn_mod_mul_words(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, const c
 // R = A * B mod N
 // R_word_len = N_word_len
 // R can alias A B N
-void cc_bn_mod_mul(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len, const cc_bn_t *N, size_t N_word_len)
+void cc_bn_mod_mul(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len, const cc_bn_word_t *N, size_t N_word_len)
 {
-    cc_bn_t P[CC_BN_MAX_WORDS * 2];
-    cc_bn_t Q[CC_BN_MAX_WORDS * 2];
-    cc_bn_t N_tmp[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t P[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t Q[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t N_tmp[CC_BN_MAX_WORDS * 2];
 
     cc_bn_copy(N_tmp, N, N_word_len);
 
@@ -242,10 +242,10 @@ void cc_bn_mod_mul(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_
 
 // R = A^E mod N
 // R can alias A, cannot alias E N
-void cc_bn_core_mod_exp(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *E, size_t E_word_len, const cc_bn_t *N, size_t N_word_len)
+void cc_bn_core_mod_exp(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t N_word_len)
 {
     int i;
-    cc_bn_t A_tmp[CC_BN_MAX_WORDS];
+    cc_bn_word_t A_tmp[CC_BN_MAX_WORDS];
     size_t E_bit_len = cc_bn_bit_len(E, E_word_len);
 
     // if E=0, R=1
@@ -280,9 +280,9 @@ void cc_bn_core_mod_exp(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const c
 
 // R = A^E mod N
 // R can alias A E N
-void cc_bn_mod_exp(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *E, size_t E_word_len, const cc_bn_t *N, size_t N_word_len)
+void cc_bn_mod_exp(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t N_word_len)
 {
-    cc_bn_t T[CC_BN_MAX_WORDS];
+    cc_bn_word_t T[CC_BN_MAX_WORDS];
     cc_bn_core_mod_exp(T, A, A_word_len, E, E_word_len, N, N_word_len);
     cc_bn_copy(R, T, N_word_len);
 }
@@ -291,7 +291,7 @@ void cc_bn_mod_exp(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_
 // A_word_len must >= B_word_len
 // return D_word_len, D_word_len = min(A_word_len, B_word_len) if A,B != 0
 // D can alias A B
-size_t cc_bn_gcd_unsafe(cc_bn_t *D, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len)
+size_t cc_bn_gcd_unsafe(cc_bn_word_t *D, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
 {
     if (cc_bn_is_zero(A, A_word_len))
     {
@@ -305,8 +305,8 @@ size_t cc_bn_gcd_unsafe(cc_bn_t *D, const cc_bn_t *A, size_t A_word_len, const c
         return A_word_len;
     }
 
-    cc_bn_t AT[CC_BN_MAX_WORDS];
-    cc_bn_t BT[CC_BN_MAX_WORDS];
+    cc_bn_word_t AT[CC_BN_MAX_WORDS];
+    cc_bn_word_t BT[CC_BN_MAX_WORDS];
 
     size_t A_lsb = cc_bn_lsb(A, A_word_len);
     size_t B_lsb = cc_bn_lsb(B, B_word_len);
@@ -342,7 +342,7 @@ size_t cc_bn_gcd_unsafe(cc_bn_t *D, const cc_bn_t *A, size_t A_word_len, const c
 // D = gcd(A, B)
 // return D_word_len, D_word_len = min(A_word_len, B_word_len) if A,B != 0
 // D can alias A B
-size_t cc_bn_gcd(cc_bn_t *D, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len)
+size_t cc_bn_gcd(cc_bn_word_t *D, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
 {
     if (A_word_len >= B_word_len)
     {
@@ -358,7 +358,7 @@ size_t cc_bn_gcd(cc_bn_t *D, const cc_bn_t *A, size_t A_word_len, const cc_bn_t 
 // g = x*a - y*b
 // X Y word_len at least bn_word_len + 1
 // G X Y cannot alias A B
-cc_status_t cc_bn_core_binary_exgcd_unsafe(cc_bn_t *G, cc_bn_t *X, cc_bn_t *Y, const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len)
+cc_status_t cc_bn_core_binary_exgcd_unsafe(cc_bn_word_t *G, cc_bn_word_t *X, cc_bn_word_t *Y, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len)
 {
     // if A <= B, return error
     if (cc_bn_cmp_words(A, B, bn_word_len) <= 0)
@@ -372,9 +372,9 @@ cc_status_t cc_bn_core_binary_exgcd_unsafe(cc_bn_t *G, cc_bn_t *X, cc_bn_t *Y, c
         return CC_ERR_BN_INVALID_ARG;
     }
 
-    cc_bn_t TA[CC_BN_MAX_WORDS + 1];
-    cc_bn_t TB[CC_BN_MAX_WORDS + 1];
-    cc_bn_t TG[CC_BN_MAX_WORDS];
+    cc_bn_word_t TA[CC_BN_MAX_WORDS + 1];
+    cc_bn_word_t TB[CC_BN_MAX_WORDS + 1];
+    cc_bn_word_t TG[CC_BN_MAX_WORDS];
 
     // X=1
     cc_bn_set_one(X, bn_word_len + 1);
@@ -451,10 +451,10 @@ cc_status_t cc_bn_core_binary_exgcd_unsafe(cc_bn_t *G, cc_bn_t *X, cc_bn_t *Y, c
 // g = x*a - y*b
 // X Y word_len at least bn_word_len + 1
 // G X Y cannot alias A B
-cc_status_t cc_bn_binary_exgcd_unsafe(cc_bn_t *G, cc_bn_t *X, cc_bn_t *Y, const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len)
+cc_status_t cc_bn_binary_exgcd_unsafe(cc_bn_word_t *G, cc_bn_word_t *X, cc_bn_word_t *Y, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len)
 {
-    cc_bn_t TA[CC_BN_MAX_WORDS];
-    cc_bn_t TB[CC_BN_MAX_WORDS];
+    cc_bn_word_t TA[CC_BN_MAX_WORDS];
+    cc_bn_word_t TB[CC_BN_MAX_WORDS];
 
     size_t A_lsb = cc_bn_lsb(A, bn_word_len);
     size_t B_lsb = cc_bn_lsb(B, bn_word_len);
@@ -477,12 +477,12 @@ cc_status_t cc_bn_binary_exgcd_unsafe(cc_bn_t *G, cc_bn_t *X, cc_bn_t *Y, const 
 
 // R = A^-1 mod N, R_word_len = N_word_len
 // R can alias A N
-cc_status_t cc_bn_exgcd_mod_inv(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *N, size_t N_word_len)
+cc_status_t cc_bn_exgcd_mod_inv(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *N, size_t N_word_len)
 {
-    cc_bn_t G[CC_BN_MAX_WORDS];
-    cc_bn_t X[CC_BN_MAX_WORDS + 1];
-    cc_bn_t Y[CC_BN_MAX_WORDS + 1];
-    cc_bn_t T[CC_BN_MAX_WORDS];
+    cc_bn_word_t G[CC_BN_MAX_WORDS];
+    cc_bn_word_t X[CC_BN_MAX_WORDS + 1];
+    cc_bn_word_t Y[CC_BN_MAX_WORDS + 1];
+    cc_bn_word_t T[CC_BN_MAX_WORDS];
 
     // if N<=1 or A=0, return error
     if (cc_bn_cmp_word(N, N_word_len, 1) <= 0 || cc_bn_cmp_word(A, A_word_len, 0) == 0)

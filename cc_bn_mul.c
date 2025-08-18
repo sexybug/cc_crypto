@@ -5,10 +5,10 @@
 // note: R must be at least A_word_len + 1
 // R can alias A
 // return R_word_len = A_word_len + 1
-size_t cc_bn_mul_word(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, cc_bn_t d)
+size_t cc_bn_mul_word(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, cc_bn_word_t d)
 {
     size_t i;
-    cc_bn_t carry = 0;
+    cc_bn_word_t carry = 0;
     for (i = 0; i < A_word_len; i++)
     {
         cc_bn_dword_t t = (cc_bn_dword_t)A[i] * (cc_bn_dword_t)d + (cc_bn_dword_t)carry;
@@ -22,7 +22,7 @@ size_t cc_bn_mul_word(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, cc_bn_t d
 // R = R + A * d
 // R_word_len must >= A_word_len + 1
 // R can alias A
-cc_status_t cc_bn_mul_word_add(cc_bn_t *R, size_t R_word_len, const cc_bn_t *A, size_t A_word_len, cc_bn_t d)
+cc_status_t cc_bn_mul_word_add(cc_bn_word_t *R, size_t R_word_len, const cc_bn_word_t *A, size_t A_word_len, cc_bn_word_t d)
 {
     if (A_word_len == 0)
     {
@@ -34,7 +34,7 @@ cc_status_t cc_bn_mul_word_add(cc_bn_t *R, size_t R_word_len, const cc_bn_t *A, 
     }
 
     size_t i;
-    cc_bn_t carry = 0;
+    cc_bn_word_t carry = 0;
     for (i = 0; i < A_word_len; i++)
     {
         cc_bn_dword_t t = (cc_bn_dword_t)A[i] * (cc_bn_dword_t)d + (cc_bn_dword_t)carry + (cc_bn_dword_t)R[i];
@@ -52,7 +52,7 @@ cc_status_t cc_bn_mul_word_add(cc_bn_t *R, size_t R_word_len, const cc_bn_t *A, 
 // R = A * B, vertical multiplication
 // R_word_len = bn_word_len * 2
 // R cannot alias A or B
-void cc_bn_core_mul_words(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len)
+void cc_bn_core_mul_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len)
 {
     cc_bn_set_zero(R, bn_word_len * 2);
 
@@ -66,7 +66,7 @@ void cc_bn_core_mul_words(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, size_t
 // R = A * B, vertical multiplication
 // R_word_len = A_word_len + B_word_len
 // R cannot alias A or B
-void cc_bn_core_mul(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len)
+void cc_bn_core_mul(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
 {
     cc_bn_set_zero(R, A_word_len + B_word_len);
 
@@ -80,9 +80,9 @@ void cc_bn_core_mul(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn
 // R = A * B, vertical multiplication
 // R_word_len = bn_word_len * 2
 // R can alias A B
-void cc_bn_mul_words(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, size_t bn_word_len)
+void cc_bn_mul_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len)
 {
-    cc_bn_t T[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t T[CC_BN_MAX_WORDS * 2];
     cc_bn_core_mul_words(T, A, B, bn_word_len);
     cc_bn_copy(R, T, bn_word_len * 2);
 }
@@ -90,9 +90,9 @@ void cc_bn_mul_words(cc_bn_t *R, const cc_bn_t *A, const cc_bn_t *B, size_t bn_w
 // R = A * B, vertical multiplication
 // R_word_len = A_word_len + B_word_len
 // R can alias A B
-void cc_bn_mul(cc_bn_t *R, const cc_bn_t *A, size_t A_word_len, const cc_bn_t *B, size_t B_word_len)
+void cc_bn_mul(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
 {
-    cc_bn_t T[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t T[CC_BN_MAX_WORDS * 2];
     cc_bn_core_mul(T, A, A_word_len, B, B_word_len);
     cc_bn_copy(R, T, A_word_len + B_word_len);
 }

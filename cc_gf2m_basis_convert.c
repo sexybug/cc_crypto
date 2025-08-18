@@ -1300,7 +1300,7 @@ uint32_t BM_281[281 * BN_WORD_LEN] = {
 };
 
 // dst can alias src1 src2
-static void cc_bn_xor(cc_bn_t *dst, const cc_bn_t *src1, const cc_bn_t *src2, size_t bn_word_len)
+static void cc_bn_xor(cc_bn_word_t *dst, const cc_bn_word_t *src1, const cc_bn_word_t *src2, size_t bn_word_len)
 {
     size_t i;
     for (i = 0; i < bn_word_len; i++)
@@ -1310,7 +1310,7 @@ static void cc_bn_xor(cc_bn_t *dst, const cc_bn_t *src1, const cc_bn_t *src2, si
 }
 
 // dst cannot alias src
-void cc_basis_convert(cc_bn_t *dst, const cc_bn_t *src, size_t bn_word_len, const cc_bn_t *maps)
+void cc_basis_convert(cc_bn_word_t *dst, const cc_bn_word_t *src, size_t bn_word_len, const cc_bn_word_t *maps)
 {
     size_t i;
     cc_bn_set_zero(dst, bn_word_len);
@@ -1327,11 +1327,11 @@ void cc_basis_convert(cc_bn_t *dst, const cc_bn_t *src, size_t bn_word_len, cons
 
 int main(void)
 {
-    cc_bn_t bn1[12] = {0x01234567, 0x89abcdef, 0x01234567, 0x89abcdef,
+    cc_bn_word_t bn1[12] = {0x01234567, 0x89abcdef, 0x01234567, 0x89abcdef,
                        0x01234567, 0x89abcdef, 0x01234567, 0x89abcdef,
                        0x01234567, 0x89abcdef, 0x01234567, 0x0000000f};
-    cc_bn_t bn2[12];
-    cc_bn_t bn3[12];
+    cc_bn_word_t bn2[12];
+    cc_bn_word_t bn3[12];
     cc_basis_convert(bn2, bn1, 12, BM_359);
     cc_basis_convert(bn3, bn2, 12, MB_359);
 
