@@ -79,7 +79,6 @@ cc_status_t cc_bn_prime_miller_rabin(const cc_bn_word_t *W, size_t bn_word_len, 
             return CC_BN_IS_COMPOSITE;
         }
 
-        int found_w1 = 0;
         for (j = 1; j < a; j++)
         {
             /* (Step 4.5.1) z = z^2 mod w */
@@ -88,7 +87,6 @@ cc_status_t cc_bn_prime_miller_rabin(const cc_bn_word_t *W, size_t bn_word_len, 
             /* (Step 4.5.2) if z = w-1 then go to Step 4.7 */
             if (cc_bn_cmp_words(Z, W1, bn_word_len) == 0)
             {
-                found_w1 = 1; // 标记找到W-1，跳出循环
                 break;
             }
             /* (Step 4.5.3) if z = 1 then go to Step 4.6 */
@@ -98,7 +96,7 @@ cc_status_t cc_bn_prime_miller_rabin(const cc_bn_word_t *W, size_t bn_word_len, 
             }
         }
         // 内层循环结束未找到W-1 → 合数
-        if (found_w1 == 0)
+        if (cc_bn_cmp_words(Z, W1, bn_word_len) == 0)
         {
             return CC_BN_IS_COMPOSITE;
         }
