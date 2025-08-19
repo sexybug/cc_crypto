@@ -96,7 +96,7 @@ cc_status_t cc_bn_prime_miller_rabin(const cc_bn_word_t *W, size_t bn_word_len, 
             }
         }
         // 内层循环结束未找到W-1 → 合数
-        if (cc_bn_cmp_words(Z, W1, bn_word_len) == 0)
+        if (cc_bn_cmp_words(Z, W1, bn_word_len) != 0)
         {
             return CC_BN_IS_COMPOSITE;
         }
