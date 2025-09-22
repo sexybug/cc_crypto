@@ -1,10 +1,13 @@
 
 #include "cc_bn.h"
+#include "cc_bn_convert.h"
 #include <stdio.h>
 #include <string.h>
 #include "cc_test.h"
+#include <stdlib.h>
+#include "cc_mem_tools.h"
 
-void print_naf2k(const int *naf2k, int len)
+void print_naf2k(const int8_t *naf2k, int len)
 {
     printf("NAF2k: \n");
     for (int i = len - 1; i >= 0; i--)
@@ -18,14 +21,14 @@ void print_naf2k(const int *naf2k, int len)
     printf("\n");
 }
 
-void compute_naf2k(int *naf2k, const uint32_t K[8])
+void compute_naf2k(int8_t *naf2k, const uint32_t *K, int K_word_len)
 {
     int bit1, bit2, bit0;
     int b1 = 0, b2 = 0, e;
     int initial = 0; // initial PointC = PointA value,Previous defined
 
     int i;
-    int sNum = cc_bn_bit_len(K, 8) - 1; // 253
+    int sNum = cc_bn_bit_len(K, K_word_len) - 1; // 253
     for (i = sNum + 1; i >= 0; i -= 1)
     {
         // deal the first time
@@ -156,26 +159,86 @@ void compute_naf2k(int *naf2k, const uint32_t K[8])
     print_naf2k(naf2k, 257);
 }
 
+int array_len(const int8_t *array, int max_len)
+{
+    int i;
+    for (i = max_len - 1; i >= 0; i--)
+    {
+        if (array[i] != 0)
+        {
+            return i + 1;
+        }
+    }
+    return 0;
+}
+
+// new_naf_len must be multiple of 4
+void randomize_naf2k(int8_t *new_naf2k, int new_naf_len, const int8_t *naf2k, int len)
+{
+    cc_memset_u32(new_naf2k, 0, new_naf_len / 4);
+
+    srand(time(NULL));
+    int i, j = 0, index;
+    int rand_num = new_naf_len - len;
+    for (i = 0; i < rand_num; i++)
+    {
+        do
+        {
+            index = rand() % (new_naf_len-1);
+        } while (new_naf2k[index] != 0);
+        new_naf2k[index] = 0xFF;
+    }
+
+    for (i = 0; i < new_naf_len; i++)
+    {
+        if (new_naf2k[i] == 0)
+        {
+            new_naf2k[i] = naf2k[j++];
+        }
+    }
+}
+
+void test_random_naf2k()
+{
+    int8_t k1[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    int k1_len = 10;
+    int8_t k2[20];
+    int k2_len = 20;
+    randomize_naf2k(k2, k2_len, k1, k1_len);
+    print_naf2k(k2, k2_len);
+}
+
 int main(int argc, char *argv[])
 {
-    // char key_str[] = "3945208F7B2144B13F36E38AC6D39F95889393692860B51A42FB81EF4DF7C5B8";
+    char key_str[] = "3945208F7B2144B13F36E38AC6D39F95889393692860B51A42FB81EF4DF7C5B8";
     // char key_str[] = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
     // char key_str[] = "8000000000000000000000000000000000000000000000000000000000000000";
     // char key_str[] = "8000000000000000000000000000000000000000000000000000000000000003";
     // char key_str[] = "12AEEF5512D9E0BF357C07F6BEF68DD6CDFD114436B8FB9D9FB46863C02A0083";
-    char key_str[] = "83002AC06368B49F9DFBB8364411FDCDD68DF6BEF6077C35BFE0D91255EFAE12";
+    // char key_str[] = "83002AC06368B49F9DFBB8364411FDCDD68DF6BEF6077C35BFE0D91255EFAE12";
+    // char key_str[] = "000000000000000000000000000000000000000000000000000000000000000F";
+
     uint8_t key[32];
     uint32_t K[8];
+    int K_word_len = 8;
     HexString2Hex(key_str, 32, key);
-    print_binary(key, 32);
+    // print_binary(key, 32);
 
-    cc_bn_from_u8(key, 32, 8, K);
+    cc_bn_from_u8(K, 8, key, 32);
 
-    int naf2k[257] = {0};
-    compute_naf2k(naf2k, K);
+    test_random_naf2k();
 
-    for (int i = 256; i >= 0; i--)
+    int8_t naf2k[300] = {0};
+    compute_naf2k(naf2k, K, K_word_len);
+    int len = array_len(naf2k, 300);
+
+    int i;
+    printf("len = %d\n", len);
+    for (i = len - 1; i >= 0; i--)
     {
         printf("%d,", naf2k[i]);
     }
+    printf("\n");
+
+    return 0;
 }

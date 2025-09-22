@@ -37,6 +37,7 @@
                 "-g",
                 "${workspaceFolder}\\cc_test.c",
                 "${workspaceFolder}\\cc_bn.c",
+                "${workspaceFolder}\\cc_mem_tools.c",
                 "${workspaceFolder}\\cc_bn_mul.c",
                 "${workspaceFolder}\\cc_bn_mont.c",
                 "${workspaceFolder}\\cc_bn_mod.c",

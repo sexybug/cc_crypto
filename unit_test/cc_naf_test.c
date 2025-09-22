@@ -22,7 +22,7 @@ void print_naf(const int8_t *naf, size_t naf_len)
 }
 int main()
 {
-#if 1
+#if 0
     cc_bn_word_t K2[2] = {0x42E576F7, 0x00};
 
     int8_t naf2[64];
@@ -103,14 +103,41 @@ naf[7] = 0, naf[6] = 0, naf[5] = 0, naf[4] = 0, naf[3] = 0, naf[2] = 0, naf[1] =
     }
 #endif
 
+    // {
+    //     int K_word_len = 9;
+    //     cc_bn_word_t K[9] = {0xee102497, 0xa3ae4d96, 0x8573bb31, 0x55cf1cc6, 0xc2bed053, 0x3f36e38a, 0x7b2144b1, 0x31e9537a, 0x075bcd15};
+    //     int8_t nafk[CC_BN_WORD_BITS*9+1];
+    //     size_t nafk_len = naf(K, K_word_len, 2, nafk);
+    //     printf("nafk_len = %zu\n", nafk_len);
+    //     print_naf(nafk, nafk_len);
+    // }
+
+    // {
+    //     int K_word_len = 9;
+    //     cc_bn_word_t K[9] = {0x55EFAE12,0xBFE0D912,0xF6077C35,0xD68DF6BE,0x4411FDCD,0x9DFBB836,0x6368B49F,0x83002AC0};
+    //     int8_t nafk[CC_BN_WORD_BITS*9+1];
+    //     size_t nafk_len = naf(K, K_word_len, 2, nafk);
+    //     printf("nafk_len = %zu\n", nafk_len);
+    //     print_naf(nafk, nafk_len);
+    // }
+
     {
         int K_word_len = 9;
-        cc_bn_word_t K[9] = {0xee102497, 0xa3ae4d96, 0x8573bb31, 0x55cf1cc6, 0xc2bed053, 0x3f36e38a, 0x7b2144b1, 0x31e9537a, 0x075bcd15};
+        cc_bn_word_t K[9] = {0x4DF7C5B8,0x42FB81EF,0x2860B51A,0x88939369,0xC6D39F95,0x3F36E38A,0x7B2144B1,0x3945208F};
         int8_t nafk[CC_BN_WORD_BITS*9+1];
         size_t nafk_len = naf(K, K_word_len, 2, nafk);
         printf("nafk_len = %zu\n", nafk_len);
         print_naf(nafk, nafk_len);
     }
+
+    // {
+    //     int K_word_len = 1;
+    //     cc_bn_word_t K[9] = {0};
+    //     int8_t nafk[CC_BN_WORD_BITS*9+1];
+    //     size_t nafk_len = naf(K, K_word_len, 2, nafk);
+    //     printf("nafk_len = %zu\n", nafk_len);
+    //     print_naf(nafk, nafk_len);
+    // }
 
     return 0;
 }
