@@ -27,7 +27,7 @@ void extract_0x_hex(const char *str, int str_len, char *out, int *out_len)
     // 提取0x字符串中的16进制字符
     while(i < str_len)
     {
-        if (str[i] == '0' && str[i + 1] == 'x')
+        if ((str[i] == '0' && str[i + 1] == 'x') || (str[i] == '0' && str[i + 1] == 'X'))
         {
             k = 2;
             while (is_hex_char(str[i + k]))
@@ -54,9 +54,7 @@ void extract_any_hex(const char *str, int str_len, char *out, int *out_len)
     int n = 0;
     for (int i = 0; i < strlen(str); i++)
     {
-        if (((str[i] >= '0') && (str[i] <= '9')) ||
-            ((str[i] >= 'a') && (str[i] <= 'f')) ||
-            ((str[i] >= 'A') && (str[i] <= 'F')))
+        if (is_hex_char(str[i]))
         {
             out[n] = str[i];
             n++;
@@ -70,7 +68,7 @@ int contain_0x(const char *str, int str_len)
     int i = 0;
     while (i < str_len - 1)
     {
-        if (str[i] == '0' && str[i + 1] == 'x')
+        if ((str[i] == '0' && str[i + 1] == 'x') || (str[i] == '0' && str[i + 1] == 'X'))
         {
             return 1;
         }
