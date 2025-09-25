@@ -54,9 +54,6 @@ static inline uint64_t cc_swap_u64(uint64_t x)
 #define CC_W32_SWAP(addr, value) CC_W32(addr, cc_swap_u32(value))
 #define CC_W64_SWAP(addr, value) CC_W64(addr, cc_swap_u64(value))
 
-// Swap bytes in a 32-bit unsigned integer
-void cc_swap_u32_array(uint32_t *array, size_t word_size);
-
 void cc_memset_u32(uint32_t *dst, uint32_t value, size_t word_size);
 
 // dst cannot alias src
@@ -73,7 +70,22 @@ int cc_memcmp_u32(const uint32_t *src1, const uint32_t *src2, size_t word_size);
 // reverse bytes in an array of 8-bit unsigned integers
 void cc_reverse_u8_array(uint8_t *array, size_t len);
 
+// reverse words in an array of 16-bit unsigned integers
+void cc_reverse_u16_array(uint16_t *array, size_t word_size);
+
 // reverse words in an array of 32-bit unsigned integers
 void cc_reverse_u32_array(uint32_t *array, size_t word_size);
+
+// reverse words in an array of 64-bit unsigned integers
+void cc_reverse_u64_array(uint64_t *array, size_t word_size);
+
+// Swap bytes in a 16-bit unsigned integer
+void cc_swap_u16_array(uint16_t *array, size_t word_size);
+
+// Swap bytes in a 32-bit unsigned integer
+void cc_swap_u32_array(uint32_t *array, size_t word_size);
+
+// Swap bytes in a 64-bit unsigned integer
+void cc_swap_u64_array(uint64_t *array, size_t word_size);
 
 #endif // CC_MEM_TOOLS_H
