@@ -10,7 +10,10 @@ void srand32(uint32_t seed)
 }
 uint32_t rand32()
 {
-    seed32 = seed32 * 0xCCD22015 + 1013904223;
+    seed32 ^= seed32 << 13;
+    seed32 ^= seed32 >> 17;
+    seed32 ^= seed32 << 5;
+
     return seed32;
 }
 int cc_crypto_rng_ex(void *random, size_t len)
