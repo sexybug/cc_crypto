@@ -54,6 +54,13 @@ static inline uint64_t cc_swap_u64(uint64_t x)
 #define CC_W32_SWAP(addr, value) CC_W32(addr, cc_swap_u32(value))
 #define CC_W64_SWAP(addr, value) CC_W64(addr, cc_swap_u64(value))
 
+void cc_u16_to_u8(uint16_t n, uint8_t out[2]);
+void cc_u32_to_u8(uint32_t n, uint8_t out[4]);
+void cc_u64_to_u8(uint64_t n, uint8_t out[8]);
+uint16_t cc_u8_to_u16(const uint8_t in[2]);
+uint32_t cc_u8_to_u32(const uint8_t in[4]);
+uint64_t cc_u8_to_u64(const uint8_t in[8]);
+
 void cc_memset_u32(uint32_t *dst, uint32_t value, size_t word_size);
 
 // dst cannot alias src

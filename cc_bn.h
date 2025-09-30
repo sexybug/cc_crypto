@@ -95,6 +95,7 @@ cc_bn_word_t cc_bn_add(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len
 
 // R = A - d
 // R can alias A
+// return borrow
 cc_bn_word_t cc_bn_sub_word(cc_bn_word_t *R, const cc_bn_word_t *A, size_t bn_word_len, cc_bn_word_t d);
 
 // R = A - B

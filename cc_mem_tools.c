@@ -1,6 +1,48 @@
 
 #include "cc_mem_tools.h"
 
+void cc_u16_to_u8(uint16_t n, uint8_t out[2])
+{
+    out[0] = (n >> 8) & 0xFF;
+    out[1] = n & 0xFF;
+}
+
+void cc_u32_to_u8(uint32_t n, uint8_t out[4])
+{
+    out[0] = (n >> 24) & 0xFF;
+    out[1] = (n >> 16) & 0xFF;
+    out[2] = (n >> 8) & 0xFF;
+    out[3] = n & 0xFF;
+}
+
+void cc_u64_to_u8(uint64_t n, uint8_t out[8])
+{
+    out[0] = (n >> 56) & 0xFF;
+    out[1] = (n >> 48) & 0xFF;
+    out[2] = (n >> 40) & 0xFF;
+    out[3] = (n >> 32) & 0xFF;
+    out[4] = (n >> 24) & 0xFF;
+    out[5] = (n >> 16) & 0xFF;
+    out[6] = (n >> 8) & 0xFF;
+    out[7] = n & 0xFF;
+}
+
+uint16_t cc_u8_to_u16(const uint8_t in[2])
+{
+    return (in[0] << 8) | in[1];
+}
+
+uint32_t cc_u8_to_u32(const uint8_t in[4])
+{
+    return (in[0] << 24) | (in[1] << 16) | (in[2] << 8) | in[3];
+}
+
+uint64_t cc_u8_to_u64(const uint8_t in[8])
+{
+    return (uint64_t)in[0] << 56 | (uint64_t)in[1] << 48 | (uint64_t)in[2] << 40 | (uint64_t)in[3] << 32 |
+           (uint64_t)in[4] << 24 | (uint64_t)in[5] << 16 | (uint64_t)in[6] << 8 | in[7];
+}
+
 void cc_memset_u32(uint32_t *dst, uint32_t value, size_t word_size)
 {
     size_t i;
