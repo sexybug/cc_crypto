@@ -35,7 +35,7 @@ void cc_rsa_set_privkey(cc_rsa_privkey_st *privkey, const cc_bn_word_t *N, const
 
 void cc_rsa_set_privkey_crt(cc_rsa_privkey_st *privkey, const cc_bn_word_t *N, const cc_bn_word_t *D, const cc_bn_word_t *P, const cc_bn_word_t *Q, const cc_bn_word_t *DP, const cc_bn_word_t *DQ, const cc_bn_word_t *QP, size_t bits);
 
-// E>3, bits(E)<=bits, E is odd
+// E>=3, bits(E)<=bits, E is odd
 cc_status_t cc_rsa_core_gen_key(cc_rsa_pubkey_st *pubkey, cc_rsa_privkey_st *privkey,
                                 size_t bits, const cc_bn_word_t *E, size_t E_word_len, bool crt,
                                 cc_crypto_rng_f rng);
