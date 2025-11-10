@@ -4,17 +4,24 @@
 
 #include "cc_bn.h"
 
+// bn will be filled with 0 needed to fit the bn_word_len
+// src is in big-endian byte order
+// bn cannot alias src
 void cc_bn_from_u8(cc_bn_word_t *bn, size_t bn_word_len, const uint8_t *src, size_t byte_len);
 
+// dst is in big-endian byte order
 // return the number of bytes used in dst
+// dst cannot alias bn
 size_t cc_bn_to_u8(uint8_t *dst, const cc_bn_word_t *bn, size_t bn_word_len);
 
 // bn will be filled with the minimum number of words needed to fit the byte array
 // return the number of words used in bn
+// bn cannot alias src
 size_t cc_bn_from_u8_fit(cc_bn_word_t *bn, const uint8_t *src, size_t byte_len);
 
 // dst will be filled with the minimum number of bytes needed to fit the bn
 // return the number of bytes used in dst
+// dst cannot alias bn
 size_t cc_bn_to_u8_fit(uint8_t *dst, const cc_bn_word_t *bn, size_t bn_word_len);
 
 // hex string can be odd length

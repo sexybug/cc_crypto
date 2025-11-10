@@ -77,7 +77,7 @@ void cc_rsa_set_privkey_crt(cc_rsa_privkey_st *privkey, const cc_bn_word_t *N, c
     }
 }
 
-// E>=3, bits(E)<=bits, E is odd
+// 3<= E<= N-1, bits(E)<=bits, E is odd
 cc_status_t cc_rsa_core_gen_key(cc_rsa_pubkey_st *pubkey, cc_rsa_privkey_st *privkey,
                                 size_t bits, const cc_bn_word_t *E, size_t E_word_len, bool crt,
                                 cc_crypto_rng_f rng)
@@ -92,7 +92,7 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_pubkey_st *pubkey, cc_rsa_privkey_st *pri
     {
         return CC_ERR_BN_INVALID_ARG;
     }
-    // E>3, bits(E)<=bits, E is odd
+    // E>=3, bits(E)<=bits, E is odd
     if ((cc_bn_cmp_word(E, E_word_len, 3) < 0) || (cc_bn_bit_len(E, E_word_len) > bits) || CC_BN_IS_EVEN(E))
     {
         return CC_ERR_BN_INVALID_ARG;

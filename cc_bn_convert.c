@@ -52,12 +52,16 @@ void cc_bn_from_u8(cc_bn_word_t *bn, size_t bn_word_len, const uint8_t *src, siz
 // return the number of bytes used in dst
 size_t cc_bn_to_u8(uint8_t *dst, const cc_bn_word_t *bn, size_t bn_word_len)
 {
-    int i;
+    int i, j;
     int byte_len = bn_word_len * CC_BN_WORD_BYTES;
 
-    for (i = 0; i < byte_len; i++)
+    for (i = 0; i < bn_word_len; i++)
     {
-        dst[i] = (bn[bn_word_len - 1 - i / CC_BN_WORD_BYTES] >> (CC_BN_WORD_BITS - 8 - (i % CC_BN_WORD_BYTES) * 8)) & 0xFF;
+        cc_bn_word_t word = bn[bn_word_len - 1 - i];
+        for (j = 0; j < CC_BN_WORD_BYTES; j++)
+        {
+            dst[i * CC_BN_WORD_BYTES + j] = (word >> (CC_BN_WORD_BITS - 8 - j * 8)) & 0xFF;
+        }
     }
     return byte_len;
 }
