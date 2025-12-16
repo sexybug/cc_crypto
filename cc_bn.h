@@ -12,7 +12,7 @@ typedef uint64_t cc_bn_dword_t; // double word
 #define CC_BN_WORD_BITS (CC_BN_WORD_BYTES * 8)
 #define CC_BN_WORD_MAX (((cc_bn_dword_t)1 << CC_BN_WORD_BITS) - 1)
 
-#define CC_BN_IS_ODD(bn) ((bn[0]) & 1)
+#define CC_BN_IS_ODD(bn) (((bn)[0]) & 1)
 #define CC_BN_IS_EVEN(bn) (!CC_BN_IS_ODD(bn))
 
 static inline size_t cc_bn_word_len_from_bit_len(size_t bit_len)
