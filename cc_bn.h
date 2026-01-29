@@ -50,16 +50,16 @@ cc_bn_word_t cc_bn_get_bit(const cc_bn_word_t *bn, size_t bit_index);
 void cc_bn_set_bit(cc_bn_word_t *bn, size_t bit_index, cc_bn_word_t bit);
 
 /**
- * @brief 从大数中提取指定位窗口的值
+ * @brief get value in window
  *
- * 从大数bn中提取从start_bit_index开始的window_size个连续位，并将这些位组合成一个word返回。
+ * get the value in the specified bit window, starting from start_bit_index with size window_size.
  *
- * @param bn 指向大数的指针，该大数以word数组形式存储
- * @param start_bit_index 开始提取的位索引
- * @param window_size 要提取的窗口大小（位数）
- * @return cc_bn_word_t 返回提取的窗口值，其中低位对应start_bit_index位置的位
+ * @param bn pointer to the big number stored as an array of words
+ * @param start_bit_index starting bit index of the window, 0 is the least significant bit
+ * @param window_size size of the window (in bits)
+ * @return cc_bn_word_t value in the window
  *
- * @note 如果请求的窗口超出大数的实际位长度，超出的部分将被视为0.
+ * @note if the requested window exceeds the actual bit length of the big number, the excess part will be considered as 0.
  */
 cc_bn_word_t cc_bn_get_window(const cc_bn_word_t *bn, size_t bn_word_len, size_t start_bit_index, size_t window_size);
 
