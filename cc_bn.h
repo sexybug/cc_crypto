@@ -49,6 +49,20 @@ void cc_bn_swap(cc_bn_word_t *A, cc_bn_word_t *B, size_t bn_word_len);
 cc_bn_word_t cc_bn_get_bit(const cc_bn_word_t *bn, size_t bit_index);
 void cc_bn_set_bit(cc_bn_word_t *bn, size_t bit_index, cc_bn_word_t bit);
 
+/**
+ * @brief 从大数中提取指定位窗口的值
+ *
+ * 从大数bn中提取从start_bit_index开始的window_size个连续位，并将这些位组合成一个word返回。
+ *
+ * @param bn 指向大数的指针，该大数以word数组形式存储
+ * @param start_bit_index 开始提取的位索引
+ * @param window_size 要提取的窗口大小（位数）
+ * @return cc_bn_word_t 返回提取的窗口值，其中低位对应start_bit_index位置的位
+ *
+ * @note 如果请求的窗口超出大数的实际位长度，超出的部分将被视为0.
+ */
+cc_bn_word_t cc_bn_get_window(const cc_bn_word_t *bn, size_t bn_word_len, size_t start_bit_index, size_t window_size);
+
 // return least significant bit index
 // bn != 0
 // example: 0x01 -> 0, 0x02 -> 1, 0x04 -> 2
