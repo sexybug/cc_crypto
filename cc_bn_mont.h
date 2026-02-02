@@ -41,10 +41,6 @@ void cc_bn_mont_mul(cc_bn_word_t *D, const cc_bn_word_t *A, const cc_bn_word_t *
 void cc_bn_mont_square(cc_bn_word_t *D, const cc_bn_word_t *A, const cc_bn_word_t *N, size_t bn_word_len, cc_bn_word_t Ni);
 
 // R = mont_exp(A, E) = A^E mod N, A R is montgomery form
-// R cannot alias A E N
-void cc_bn_core_mod_exp_mont(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t bn_word_len, const cc_bn_word_t *RR, cc_bn_word_t Ni);
-
-// R = mont_exp(A, E) = A^E mod N, A R is montgomery form
 // R can alias A E N
 void cc_bn_mont_exp(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t bn_word_len, cc_bn_word_t Ni);
 
