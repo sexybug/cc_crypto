@@ -127,7 +127,6 @@ cc_status_t cc_bn_prime_check(const cc_bn_word_t *X, size_t bn_word_len, cc_cryp
 }
 
 // return CC_OK if generate success
-// return CC_ERR_BN_GEN_RAND if rng error
 cc_status_t cc_bn_gen_prime(cc_bn_word_t *X, size_t bits, cc_crypto_rng_f rng)
 {
     cc_status_t check_ret;

@@ -21,7 +21,7 @@ void cc_bn_mont_RR(cc_bn_word_t *RR, const cc_bn_word_t *N, size_t N_word_len)
         cc_bn_word_t carry = cc_bn_lshift_1(RR, RR, N_word_len);
         if ((cc_bn_cmp(RR, N_word_len, N, N_word_len) > 0) || carry)
         {
-            cc_bn_sub_small(RR, RR, N_word_len, N, N_word_len);
+            cc_bn_sub_words(RR, RR, N, N_word_len);
         }
     }
 }
