@@ -137,10 +137,6 @@ cc_status_t cc_bn_gen_prime(cc_bn_word_t *X, size_t bits, cc_crypto_rng_f rng)
         cc_bn_set_bit(X, bits - 1, 1); // make X is n bits
         X[0] |= 1;                     // set X odd
         check_ret = cc_bn_prime_check(X, cc_bn_word_len_from_bit_len(bits), rng);
-        if (check_ret == CC_ERR_BN_GEN_RAND)
-        {
-            return check_ret; // rng error
-        }
     } while (!((check_ret == CC_BN_IS_PRIME) || (check_ret == CC_BN_PROBABLY_PRIME)));
 
     return CC_OK;
