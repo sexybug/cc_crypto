@@ -2,6 +2,7 @@
 #include "cc_bn_mont.h"
 #include "cc_bn_config.h"
 #include "cc_bn_mod.h"
+#include "cc_bn_mul.h"
 
 // pre-compute montgomery multiplication RR
 // N must be odd
@@ -27,7 +28,8 @@ void cc_bn_mont_RR(cc_bn_word_t *RR, const cc_bn_word_t *N, size_t N_word_len)
 }
 
 // montgomery multiplication, N must be odd
-// Ni = -(N^-1) mod 2^r, r is bit length of every bn digit
+// Ni = -(N^-1) mod 2^k, k is bit length of every bn digit
+// optimized algorithm for k = 32
 cc_bn_word_t cc_bn_mont_Ni(const cc_bn_word_t *N)
 {
     cc_bn_word_t x = N[0];
@@ -40,6 +42,42 @@ cc_bn_word_t cc_bn_mont_Ni(const cc_bn_word_t *N)
     }
 
     return ~x + 1;
+}
+
+// montgomery multiplication, N must be odd
+// Ni = -(N^-1) mod R using Newton's method, R = 2^k
+// Ni word length = R word length
+// N word length must >= R word length
+void cc_bn_mont_Ni_R(cc_bn_word_t *Ni, const cc_bn_word_t *N, cc_bn_word_t k)
+{
+    cc_bn_word_t x[CC_BN_MAX_WORDS * 2] = {0};
+    cc_bn_word_t TWO[CC_BN_MAX_WORDS] = {0};
+    cc_bn_word_t nx[CC_BN_MAX_WORDS * 2];
+    cc_bn_word_t x2[CC_BN_MAX_WORDS];
+    x[0] = 1;
+    TWO[0] = 2;
+
+    uint32_t bn_word_len = cc_bn_word_len_from_bit_len(k);
+
+    // x = 2 - n mod R
+    cc_bn_sub_words(x, TWO, x, bn_word_len);
+
+    uint32_t t = k / 2;
+    while (t != 0)
+    {
+        t = t / 2;
+        // nx = n*x
+        cc_bn_core_mul_words(nx, N, x, bn_word_len);
+        // x2 = 2 - nx
+        cc_bn_sub_words(x2, TWO, nx, bn_word_len);
+        // x = x * x2
+        cc_bn_mul_words(x, x, x2, bn_word_len);
+    }
+    // Ni = -x mod R
+    cc_bn_set_zero(nx, bn_word_len + 1);
+    cc_bn_set_bit(nx, k, 1);                                  // R = 2^k
+    cc_bn_sub_small(nx, nx, bn_word_len + 1, x, bn_word_len); // Ni = -x mod R
+    cc_bn_copy(Ni, nx, bn_word_len);
 }
 
 // R = R + A * d

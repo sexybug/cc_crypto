@@ -15,6 +15,12 @@ void cc_bn_mont_RR(cc_bn_word_t *RR, const cc_bn_word_t *N, size_t N_word_len);
 // Ni = -(N^-1) mod 2^r, r is bit length of every bn digit
 cc_bn_word_t cc_bn_mont_Ni(const cc_bn_word_t *N);
 
+// montgomery multiplication, N must be odd
+// Ni = -(N^-1) mod R using Newton's method, R = 2^k
+// Ni word length = R word length
+// N word length must >= R word length
+void cc_bn_mont_Ni_R(cc_bn_word_t *Ni, const cc_bn_word_t *N, cc_bn_word_t k);
+
 // D = mont_mul(A, b) = A * b * R^(-1) mod N
 // A, b < N, N must be odd
 // D cannot alias A
