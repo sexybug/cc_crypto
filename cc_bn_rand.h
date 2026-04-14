@@ -14,7 +14,7 @@ cc_status_t cc_bn_rand_bits_gh0(cc_bn_word_t *R, size_t bits, cc_crypto_rng_f rn
 
 // generate a random number R in [A, B]
 // you must make sure A < B
-// R cannot alias A, can alias B
+// R can alias A, B
 cc_status_t cc_bn_core_rand_range(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len, cc_crypto_rng_f rng);
 
 /**

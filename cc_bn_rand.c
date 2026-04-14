@@ -35,15 +35,16 @@ cc_status_t cc_bn_rand_bits_gh0(cc_bn_word_t *R, size_t bits, cc_crypto_rng_f rn
 
 // generate a random number R in [A, B]
 // you must make sure A < B
-// R cannot alias A, can alias B
+// R can alias A, B
 cc_status_t cc_bn_core_rand_range(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len, cc_crypto_rng_f rng)
 {
     cc_bn_word_t RANGE[CC_BN_MAX_WORDS];
+    cc_bn_word_t rand[CC_BN_MAX_WORDS];
     int count = 0;
 
     cc_bn_sub_words(RANGE, B, A, bn_word_len);
     size_t RANGE_bits = cc_bn_bit_len(RANGE, bn_word_len);
-    size_t RANGE_Words = (RANGE_bits + CC_BN_WORD_BITS - 1) / CC_BN_WORD_BITS;
+    size_t RANGE_Words = cc_bn_word_len_from_bit_len(RANGE_bits);
     do
     {
         count += 1;
@@ -51,10 +52,10 @@ cc_status_t cc_bn_core_rand_range(cc_bn_word_t *R, const cc_bn_word_t *A, const 
         {
             return CC_ERR_BN_GEN_RAND;
         }
-        cc_bn_rand_bits(R, RANGE_bits, rng);
-    } while (cc_bn_cmp_words(R, RANGE, RANGE_Words) > 0);
+        cc_bn_rand_bits(rand, RANGE_bits, rng);
+    } while (cc_bn_cmp_words(rand, RANGE, RANGE_Words) > 0);
 
-    cc_bn_add(R, A, bn_word_len, R, RANGE_Words);
+    cc_bn_add(R, A, bn_word_len, rand, RANGE_Words);
     return CC_OK;
 }
 

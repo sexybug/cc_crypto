@@ -437,7 +437,7 @@ cc_bn_word_t cc_bn_add_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn
 
 // R = A + B
 // A_word_len must >= B_word_len
-// R can alias A B
+// R can alias A, R cannot alias B
 cc_bn_word_t cc_bn_add_small(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
 {
     size_t i;
@@ -459,7 +459,8 @@ cc_bn_word_t cc_bn_add_small(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_wo
 }
 
 // R = A + B
-// R can alias A B
+// R_word_len = max(A_word_len, B_word_len)
+// R can alias A if A_word_len >= B_word_len, R can alias B if B_word_len >= A_word_len
 cc_bn_word_t cc_bn_add(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
 {
     if (A_word_len < B_word_len)
