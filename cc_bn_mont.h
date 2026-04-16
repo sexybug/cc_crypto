@@ -16,6 +16,7 @@ void cc_bn_mont_RR(cc_bn_word_t *RR, const cc_bn_word_t *N, size_t N_word_len);
 cc_bn_word_t cc_bn_mont_Ni(const cc_bn_word_t *N);
 
 // montgomery multiplication, N must be odd
+// return Ni = -N(-1) mod r using Newton's method
 // Ni = -(N^-1) mod R using Newton's method, R = 2^k
 // Ni word length = R word length
 // N word length must >= R word length
