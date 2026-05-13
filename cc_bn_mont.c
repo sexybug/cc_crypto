@@ -51,12 +51,10 @@ cc_bn_word_t cc_bn_mont_Ni(const cc_bn_word_t *N)
 // N word length must >= R word length
 void cc_bn_mont_Ni_R(cc_bn_word_t *Ni, const cc_bn_word_t *N, cc_bn_word_t k)
 {
-    cc_bn_word_t x[CC_BN_MAX_WORDS * 2] = {0};
-    cc_bn_word_t TWO[CC_BN_MAX_WORDS] = {0};
+    cc_bn_word_t x[CC_BN_MAX_WORDS * 2] = {1};
+    cc_bn_word_t TWO[CC_BN_MAX_WORDS] = {2};
     cc_bn_word_t nx[CC_BN_MAX_WORDS * 2];
     cc_bn_word_t x2[CC_BN_MAX_WORDS];
-    x[0] = 1;
-    TWO[0] = 2;
 
     uint32_t bn_word_len = cc_bn_word_len_from_bit_len(k);
 
