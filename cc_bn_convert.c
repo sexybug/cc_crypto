@@ -18,13 +18,13 @@ void cc_bn_from_u8(cc_bn_word_t *bn, size_t bn_word_len, const uint8_t *src, siz
     int i;
     int bn_index = bn_word_len - 1;
 
-    // 检查是否有足够空间存储数据
+    // check if there is enough space to store the data
     if (byte_len > bn_word_len * CC_BN_WORD_BYTES)
     {
         return;
     }
 
-    // 前方需要补多少字节的0
+    // how many leading zero bytes to pad
     int zero_pad_len = bn_word_len * CC_BN_WORD_BYTES - byte_len;
 
     for (i = 0; i < zero_pad_len / CC_BN_WORD_BYTES; i++)
@@ -32,7 +32,8 @@ void cc_bn_from_u8(cc_bn_word_t *bn, size_t bn_word_len, const uint8_t *src, siz
         bn[bn_index] = 0;
         bn_index -= 1;
     }
-    // 最高的word需要从src中读取多少字节
+
+    // the highest word needs to read how many bytes from src
     int left_u8_len = byte_len % CC_BN_WORD_BYTES;
     if (left_u8_len != 0)
     {
@@ -195,7 +196,7 @@ size_t cc_bn_to_hex(char *hex, const cc_bn_word_t *bn, size_t bn_word_len)
     cc_bn_word_t tmp;
     for (i = 0; i < bn_word_len; i++)
     {
-        tmp = bn[bn_word_len - 1 - i]; // 从高位开始处理
+        tmp = bn[bn_word_len - 1 - i]; // from significant word
         for (j = 0; j < CC_BN_WORD_BYTES * 2; j++)
         {
             hex[i * CC_BN_WORD_BYTES * 2 + j] = u8_to_hex_char((tmp >> (CC_BN_WORD_BITS - 4 - j * 4)) & 0x0F);

@@ -179,6 +179,31 @@ void cc_bn_set_bit(cc_bn_word_t *bn, size_t bit_index, cc_bn_word_t bit)
     bn[digit_index] = (bn[digit_index] & (~(((cc_bn_word_t)1) << bit_index_in_digit))) | (bit << bit_index_in_digit);
 }
 
+/**
+ * @brief get value in window
+ *
+ * get the value in the specified bit window, starting from start_bit_index with size window_size.
+ *
+ * @param bn pointer to the big number stored as an array of words
+ * @param start_bit_index starting bit index of the window, 0 is the least significant bit
+ * @param window_size size of the window (in bits)
+ * @return cc_bn_word_t value in the window
+ *
+ * @note if the requested window exceeds the actual bit length of the big number, the excess part will be considered as 0.
+ */
+cc_bn_word_t cc_bn_get_window(const cc_bn_word_t *bn, size_t bn_word_len, size_t start_bit_index, size_t window_size)
+{
+    cc_bn_word_t result = 0;
+    size_t i;
+    for (i = start_bit_index; i < (start_bit_index + window_size) && i < bn_word_len * CC_BN_WORD_BITS; i++)
+    {
+        int digit_index = i / CC_BN_WORD_BITS;
+        int bit_index_in_digit = i % CC_BN_WORD_BITS;
+        result |= ((bn[digit_index] >> bit_index_in_digit) & 0x01) << (i - start_bit_index);
+    }
+    return result;
+}
+
 // return least significant bit index
 // bn != 0
 // example: 0x01 -> 0, 0x02 -> 1, 0x04 -> 2
@@ -412,7 +437,7 @@ cc_bn_word_t cc_bn_add_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn
 
 // R = A + B
 // A_word_len must >= B_word_len
-// R can alias A B
+// R can alias A, R cannot alias B
 cc_bn_word_t cc_bn_add_small(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
 {
     size_t i;
@@ -434,7 +459,8 @@ cc_bn_word_t cc_bn_add_small(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_wo
 }
 
 // R = A + B
-// R can alias A B
+// R_word_len = max(A_word_len, B_word_len)
+// R can alias A if A_word_len >= B_word_len, R can alias B if B_word_len >= A_word_len
 cc_bn_word_t cc_bn_add(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
 {
     if (A_word_len < B_word_len)
