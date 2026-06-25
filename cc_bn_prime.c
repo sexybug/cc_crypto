@@ -115,6 +115,11 @@ cc_status_t cc_bn_prime_check(const cc_bn_word_t *X, size_t bn_word_len, cc_cryp
     {
         return CC_ERR_BN_INVALID_ARG;
     }
+    // if X is even, it is composite
+    if (CC_BN_IS_EVEN(X))
+    {
+        return CC_BN_IS_COMPOSITE;
+    }
 
     cc_status_t trial_div_ret = cc_bn_prime_trial_division(X, bn_word_len);
     if (trial_div_ret != CC_BN_PROBABLY_PRIME)
