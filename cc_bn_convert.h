@@ -14,6 +14,10 @@ void cc_bn_from_u8(cc_bn_word_t *bn, size_t bn_word_len, const uint8_t *src, siz
 // dst cannot alias bn
 size_t cc_bn_to_u8(uint8_t *dst, const cc_bn_word_t *bn, size_t bn_word_len);
 
+// truncate lower bytes of bn to fit into dst_len, if dst_len is larger than bn, fill with 0
+// dst cannot alias bn
+void cc_bn_to_u8_truncate(uint8_t *dst, size_t dst_len, const cc_bn_word_t *bn, size_t bn_word_len);
+
 // bn will be filled with the minimum number of words needed to fit the byte array
 // return the number of words used in bn
 // bn cannot alias src

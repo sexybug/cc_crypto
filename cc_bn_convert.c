@@ -67,6 +67,31 @@ size_t cc_bn_to_u8(uint8_t *dst, const cc_bn_word_t *bn, size_t bn_word_len)
     return byte_len;
 }
 
+// truncate lower bytes of bn to fit into dst_len, if dst_len is larger than bn, fill with 0
+void cc_bn_to_u8_truncate(uint8_t *dst, size_t dst_len, const cc_bn_word_t *bn, size_t bn_word_len)
+{
+    int i;
+    size_t bn_byte_len = bn_word_len * CC_BN_WORD_BYTES;
+    if (dst_len >= bn_byte_len)
+    {
+        int pad_len = dst_len - bn_byte_len;
+        for (i = 0; i < pad_len; i++)
+        {
+            dst[i] = 0;
+        }
+        cc_bn_to_u8(dst + pad_len, bn, bn_word_len);
+    }
+    else
+    {
+        for (i = 0; i < dst_len; i++)
+        {
+            size_t word_index = (dst_len - 1 - i) / CC_BN_WORD_BYTES;
+            size_t byte_index = (dst_len - 1 - i) % CC_BN_WORD_BYTES;
+            dst[i] = (bn[word_index] >> (byte_index * 8)) & 0xFF;
+        }
+    }
+}
+
 // bn will be filled with the minimum number of words needed to fit the byte array
 // return the number of words used in bn
 size_t cc_bn_from_u8_fit(cc_bn_word_t *bn, const uint8_t *src, size_t byte_len)

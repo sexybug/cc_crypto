@@ -5,6 +5,7 @@
 #include <assert.h>
 
 #include "cc_bn_convert.h"
+#include "cc_test.h"
 
 // 测试用例1：正常情况 - 字节数组完全填充大数
 void test_normal_case_exact_fit() {
@@ -165,6 +166,29 @@ void test_all_zero_bytes() {
     printf("通过\n");
 }
 
+void test_bn_to_u8_truncate() {
+    printf("测试11：cc_bn_to_u8_truncate函数\n");
+    
+    cc_bn_word_t bn[2] = {0x12345678, 0x9ABCDEF0};
+    size_t bn_word_len = 2;
+    
+    uint8_t dst[6];
+    size_t dst_len = 6; // 小于bn的字节长度(8字节)
+    
+    cc_bn_to_u8_truncate(dst, dst_len, bn, bn_word_len);
+    // print_u8("dst", dst, dst_len);
+    
+    // 预期结果：dst应包含bn的高6个字节
+    assert(dst[0] == 0xDE);
+    assert(dst[1] == 0xF0);
+    assert(dst[2] == 0x12);
+    assert(dst[3] == 0x34);
+    assert(dst[4] == 0x56);
+    assert(dst[5] == 0x78);
+    
+    printf("通过\n");
+}
+
 int main() {
     printf("开始cc_u8_to_bn函数单元测试\n\n");
     
@@ -178,7 +202,7 @@ int main() {
     test_large_array();
     test_single_word_bn();
     test_all_zero_bytes();
-    
+    test_bn_to_u8_truncate();
     printf("\n所有测试用例通过！\n");
     return 0;
 }
