@@ -37,6 +37,7 @@ bool cc_bn_is_one(const cc_bn_word_t *bn, size_t bn_word_len);
 
 // compare A and {B, 0, 0, ...}, return 1 if A > {B, 0, 0, ...}
 int cc_bn_cmp_word(const cc_bn_word_t *A, size_t bn_word_len, cc_bn_word_t B);
+// compare A and B, return 1 if A > B, return 0 if A == B, return -1 if A < B
 int cc_bn_cmp_words(const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len);
 int cc_bn_cmp(const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len);
 

@@ -21,6 +21,8 @@ typedef enum
 
     CC_ERR_RSA_GEN_KEY = 0x200,      // ERROR: RSA key generation failed
     CC_ERR_RSA_VALIDATE_KEY = 0x201, // ERROR: RSA key validation failed
+
+    CC_ERR_EC_INVALID_POINT = 0x300, // ERROR: invalid point
 } cc_status_t;
 
 #define CC_ERR(cc_bn_status) ((cc_bn_status) != CC_SUCCESS)

@@ -47,6 +47,8 @@
                 "${workspaceFolder}\\cc_bn_rand.c",
                 "${workspaceFolder}\\cc_bn_convert.c",
                 "${workspaceFolder}\\cc_naf.c",
+                "${workspaceFolder}\\cc_ec_curves.c",
+                "${workspaceFolder}\\cc_ec_fp.c",
                 "${workspaceFolder}\\rsa\\cc_rsa_core.c",
                 "${file}",
                 "-o",

@@ -251,14 +251,14 @@ cc_status_t cc_bn_mont_square(cc_bn_word_t *D, const cc_bn_word_t *A, const cc_b
 
 // R = mont_exp(A, E) = A^E mod N, A R is montgomery form
 // R cannot alias A E N
-void cc_bn_core_mont_exp(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t bn_word_len, cc_bn_word_t Ni)
+cc_status_t cc_bn_core_mont_exp(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t bn_word_len, cc_bn_word_t Ni)
 {
     int i;
     size_t E_bit_len = cc_bn_bit_len(E, E_word_len);
     if (E_bit_len == 0)
     {
         cc_bn_set_one(R, bn_word_len);
-        return;
+        return CC_SUCCESS;
     }
 
     // R = A
@@ -274,6 +274,7 @@ void cc_bn_core_mont_exp(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_wor
             CC_CHK(cc_bn_mont_mul(R, R, A, N, bn_word_len, Ni));
         }
     }
+    return CC_SUCCESS;
 }
 
 // R = mont_exp(A, E) = A^E mod N, A R is montgomery form
@@ -355,13 +356,9 @@ cc_status_t cc_bn_core_mod_mul_mont(cc_bn_word_t *R, const cc_bn_word_t *A, cons
     }
 
     cc_bn_word_t montA[CC_BN_MAX_WORDS];
-    cc_bn_word_t montB[CC_BN_MAX_WORDS];
-    cc_bn_word_t montR[CC_BN_MAX_WORDS];
 
     cc_bn_core_mont_mul(montA, A, RR, N, bn_word_len, Ni);
-    cc_bn_core_mont_mul(montB, B, RR, N, bn_word_len, Ni);
-    cc_bn_core_mont_mul(montR, montA, montB, N, bn_word_len, Ni);
-    cc_bn_core_mont_mul_word(R, montR, 1, N, bn_word_len, Ni);
+    cc_bn_core_mont_mul(R, montA, B, N, bn_word_len, Ni);
 
     return CC_SUCCESS;
 }
@@ -376,11 +373,10 @@ cc_status_t cc_bn_core_mod_square_mont(cc_bn_word_t *R, const cc_bn_word_t *A, c
     }
 
     cc_bn_word_t montA[CC_BN_MAX_WORDS];
-    cc_bn_word_t montR[CC_BN_MAX_WORDS];
 
     cc_bn_core_mont_mul(montA, A, RR, N, bn_word_len, Ni);
-    cc_bn_core_mont_mul(montR, montA, montA, N, bn_word_len, Ni);
-    cc_bn_core_mont_mul_word(R, montR, 1, N, bn_word_len, Ni);
+    cc_bn_core_mont_mul(R, montA, A, N, bn_word_len, Ni);
+
     return CC_SUCCESS;
 }
 

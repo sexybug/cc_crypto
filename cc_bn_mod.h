@@ -16,7 +16,7 @@ int cc_bn_cmp_carry(cc_bn_word_t carry, const cc_bn_word_t *A, const cc_bn_word_
 void cc_bn_mod_add_word(cc_bn_word_t *R, const cc_bn_word_t *A, cc_bn_word_t d, const cc_bn_word_t *N, size_t bn_word_len);
 
 // R = A + B mod N. A < N, B < N
-// R can alias A, R can not alias N
+// R can alias A B, R can not alias N
 void cc_bn_mod_add(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len);
 
 // R = 2A mod N, A < N
