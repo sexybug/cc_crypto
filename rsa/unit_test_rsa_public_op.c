@@ -30,7 +30,7 @@ int main()
         cc_rsa_set_pubkey(&pubkey, N, E, bits);
 
         cc_status_t ret = cc_rsa_core_public_op(&pubkey, M, C);
-        assert(ret == CC_OK);
+        assert(ret == CC_SUCCESS);
         print_bn("C", C, N_words);
         assert(cc_bn_cmp_words(C, C_expect, N_words) == 0);
     }
@@ -54,7 +54,7 @@ int main()
         cc_rsa_set_pubkey(&pubkey, N, E, bits);
 
         cc_status_t ret = cc_rsa_core_public_op(&pubkey, M, C);
-        assert(ret == CC_OK);
+        assert(ret == CC_SUCCESS);
         print_bn("C", C, N_words);
         assert(cc_bn_cmp_words(C, C_expect, N_words) == 0);
     }

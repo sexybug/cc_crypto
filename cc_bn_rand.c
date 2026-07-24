@@ -30,7 +30,7 @@ cc_status_t cc_bn_rand_bits_gh0(cc_bn_word_t *R, size_t bits, cc_crypto_rng_f rn
         cc_bn_rand_bits(R, bits, rng);
     } while (cc_bn_is_zero(R, cc_bn_word_len_from_bit_len(bits)));
 
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
 // generate a random number R in [A, B]
@@ -56,7 +56,7 @@ cc_status_t cc_bn_core_rand_range(cc_bn_word_t *R, const cc_bn_word_t *A, const 
     } while (cc_bn_cmp_words(rand, RANGE, RANGE_Words) > 0);
 
     cc_bn_add(R, A, bn_word_len, rand, RANGE_Words);
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
 /**
@@ -96,5 +96,5 @@ cc_status_t cc_bn_core_rand_rangeN(cc_bn_word_t *R, cc_bn_word_t a, const cc_bn_
     } while (cc_bn_cmp_words(R, RANGE, RANGE_Words) > 0);
 
     cc_bn_add_word(R, R, bn_word_len, a);
-    return CC_OK;
+    return CC_SUCCESS;
 }

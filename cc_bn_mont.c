@@ -302,7 +302,7 @@ cc_status_t cc_bn_mont_sqrt_p3(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_
     }
 
     cc_bn_copy(R, R1, bn_word_len);
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
 // R = A*B mod N, using montgomery, A,B,R isn't montgomery form, A B < N

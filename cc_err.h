@@ -4,7 +4,7 @@
 
 typedef enum
 {
-    CC_OK = 0,
+    CC_SUCCESS = 0,
 
     CC_BN_IS_PRIME = 1,       // 100% certainty that the number is prime
     CC_BN_PROBABLY_PRIME = 2, // miller-rabin prime test passed, but not 100% certain
@@ -23,7 +23,7 @@ typedef enum
     CC_ERR_RSA_VALIDATE_KEY = 0x201, // ERROR: RSA key validation failed
 } cc_status_t;
 
-#define CC_ERR(cc_bn_status) ((cc_bn_status) != CC_OK)
+#define CC_ERR(cc_bn_status) ((cc_bn_status) != CC_SUCCESS)
 #define CC_CHK(f)              \
     {                          \
         cc_status_t ret = (f); \

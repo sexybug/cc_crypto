@@ -22,7 +22,7 @@ int main()
         size_t E_word_len = 1;
         bool crt = true;
         cc_status_t ret = cc_rsa_core_gen_key(&pubkey, &privkey, bits, E, E_word_len, crt, cc_crypto_rng_ex);
-        assert(ret == CC_OK);
+        assert(ret == CC_SUCCESS);
         print_bn("N", privkey.N, words);
         print_bn("D", privkey.D, words);
         print_bn("E", pubkey.E, words);
@@ -32,8 +32,8 @@ int main()
         print_bn("DQ", privkey.DQ, PQ_words);
         print_bn("QP", privkey.QP, PQ_words);
 
-        assert(cc_rsa_validate_params(privkey.bits, privkey.N, pubkey.E, privkey.D, privkey.P, privkey.Q, cc_crypto_rng_ex) == CC_OK);
-        assert(cc_rsa_validate_crt(privkey.bits, privkey.D, privkey.P, privkey.Q, privkey.DP, privkey.DQ, privkey.QP) == CC_OK);
+        assert(cc_rsa_validate_params(privkey.bits, privkey.N, pubkey.E, privkey.D, privkey.P, privkey.Q, cc_crypto_rng_ex) == CC_SUCCESS);
+        assert(cc_rsa_validate_crt(privkey.bits, privkey.D, privkey.P, privkey.Q, privkey.DP, privkey.DQ, privkey.QP) == CC_SUCCESS);
     }
 
     {
@@ -46,7 +46,7 @@ int main()
         size_t E_word_len = 2;
         bool crt = true;
         cc_status_t ret = cc_rsa_core_gen_key(&pubkey, &privkey, bits, E, E_word_len, crt, cc_crypto_rng_ex);
-        assert(ret == CC_OK);
+        assert(ret == CC_SUCCESS);
         print_bn("N", privkey.N, words);
         print_bn("D", privkey.D, words);
         print_bn("E", pubkey.E, words);
@@ -56,8 +56,8 @@ int main()
         print_bn("DQ", privkey.DQ, PQ_words);
         print_bn("QP", privkey.QP, PQ_words);
 
-        assert(cc_rsa_validate_params(privkey.bits, privkey.N, pubkey.E, privkey.D, privkey.P, privkey.Q, cc_crypto_rng_ex) == CC_OK);
-        assert(cc_rsa_validate_crt(privkey.bits, privkey.D, privkey.P, privkey.Q, privkey.DP, privkey.DQ, privkey.QP) == CC_OK);
+        assert(cc_rsa_validate_params(privkey.bits, privkey.N, pubkey.E, privkey.D, privkey.P, privkey.Q, cc_crypto_rng_ex) == CC_SUCCESS);
+        assert(cc_rsa_validate_crt(privkey.bits, privkey.D, privkey.P, privkey.Q, privkey.DP, privkey.DQ, privkey.QP) == CC_SUCCESS);
     }
 
     {
@@ -70,7 +70,7 @@ int main()
         size_t E_word_len = 2;
         bool crt = true;
         cc_status_t ret = cc_rsa_core_gen_key(&pubkey, &privkey, bits, E, E_word_len, crt, cc_crypto_rng_ex);
-        assert(ret == CC_OK);
+        assert(ret == CC_SUCCESS);
         print_bn("N", privkey.N, words);
         print_bn("D", privkey.D, words);
         print_bn("E", pubkey.E, words);
@@ -80,8 +80,8 @@ int main()
         print_bn("DQ", privkey.DQ, PQ_words);
         print_bn("QP", privkey.QP, PQ_words);
 
-        assert(cc_rsa_validate_params(privkey.bits, privkey.N, pubkey.E, privkey.D, privkey.P, privkey.Q, cc_crypto_rng_ex) == CC_OK);
-        assert(cc_rsa_validate_crt(privkey.bits, privkey.D, privkey.P, privkey.Q, privkey.DP, privkey.DQ, privkey.QP) == CC_OK);
+        assert(cc_rsa_validate_params(privkey.bits, privkey.N, pubkey.E, privkey.D, privkey.P, privkey.Q, cc_crypto_rng_ex) == CC_SUCCESS);
+        assert(cc_rsa_validate_crt(privkey.bits, privkey.D, privkey.P, privkey.Q, privkey.DP, privkey.DQ, privkey.QP) == CC_SUCCESS);
     }
 
     {
@@ -94,7 +94,7 @@ int main()
         size_t E_word_len = 1;
         bool crt = true;
         cc_status_t ret = cc_rsa_core_gen_key(&pubkey, &privkey, bits, E, E_word_len, crt, cc_crypto_rng_ex);
-        assert(ret == CC_OK);
+        assert(ret == CC_SUCCESS);
         print_bn("N", privkey.N, words);
         print_bn("D", privkey.D, words);
         print_bn("E", pubkey.E, words);
@@ -104,8 +104,8 @@ int main()
         print_bn("DQ", privkey.DQ, PQ_words);
         print_bn("QP", privkey.QP, PQ_words);
 
-        assert(cc_rsa_validate_params(privkey.bits, privkey.N, pubkey.E, privkey.D, privkey.P, privkey.Q, cc_crypto_rng_ex) == CC_OK);
-        assert(cc_rsa_validate_crt(privkey.bits, privkey.D, privkey.P, privkey.Q, privkey.DP, privkey.DQ, privkey.QP) == CC_OK);
+        assert(cc_rsa_validate_params(privkey.bits, privkey.N, pubkey.E, privkey.D, privkey.P, privkey.Q, cc_crypto_rng_ex) == CC_SUCCESS);
+        assert(cc_rsa_validate_crt(privkey.bits, privkey.D, privkey.P, privkey.Q, privkey.DP, privkey.DQ, privkey.QP) == CC_SUCCESS);
     }
 
     printf("all tests pass\n");

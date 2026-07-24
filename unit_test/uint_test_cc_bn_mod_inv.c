@@ -17,7 +17,7 @@ int main()
 
         // 测试1: A<N 的情况
         status = cc_bn_exgcd_mod_inv(R, A, A_word_len, N, N_word_len);
-        assert(status == CC_OK);
+        assert(status == CC_SUCCESS);
         assert(memcmp(R, expect, N_word_len * CC_BN_WORD_BYTES) == 0);
     }
 
@@ -44,7 +44,7 @@ int main()
 
         // 测试1: N <= 1 的情况
         status = cc_bn_exgcd_mod_inv(R, A, A_word_len, N, N_word_len);
-        assert(status == CC_OK);
+        assert(status == CC_SUCCESS);
         assert(memcmp(R, expect, N_word_len * CC_BN_WORD_BYTES) == 0);
     }
     {
@@ -58,7 +58,7 @@ int main()
 
         // 测试1: N <= 1 的情况
         status = cc_bn_exgcd_mod_inv(R, A, A_word_len, N, N_word_len);
-        assert(status == CC_OK);
+        assert(status == CC_SUCCESS);
         assert(memcmp(R, expect, N_word_len * CC_BN_WORD_BYTES) == 0);
     }
     {
@@ -72,7 +72,7 @@ int main()
 
         // 测试1: A>N 的情况
         status = cc_bn_exgcd_mod_inv(R, A, A_word_len, N, N_word_len);
-        assert(status == CC_OK);
+        assert(status == CC_SUCCESS);
         assert(memcmp(R, expect, N_word_len * CC_BN_WORD_BYTES) == 0);
     }
     {
@@ -100,7 +100,7 @@ int main()
 
         // 测试1: A<N 的情况
         status = cc_bn_exgcd_mod_inv(R, A, A_word_len, N, N_word_len);
-        assert(status == CC_OK);
+        assert(status == CC_SUCCESS);
         assert(memcmp(R, expect, N_word_len * CC_BN_WORD_BYTES) == 0);
     }
 

@@ -16,7 +16,7 @@ int main()
         size_t len = cc_bn_word_len_from_bit_len(bits);
         cc_status_t ret = cc_bn_gen_prime(R, bits, cc_crypto_rng_ex);
         print_bn("R", R, len);
-        assert(ret == CC_OK);
+        assert(ret == CC_SUCCESS);
     }
     {
         cc_bn_word_t R[2] = {0xFFFFFFFF, 0xFFFFFFFF};
@@ -24,7 +24,7 @@ int main()
         size_t len = cc_bn_word_len_from_bit_len(bits);
         cc_status_t ret = cc_bn_gen_prime(R, bits, cc_crypto_rng_ex);
         print_bn("R", R, len);
-        assert(ret == CC_OK);
+        assert(ret == CC_SUCCESS);
     }
 
     {
@@ -33,7 +33,7 @@ int main()
         size_t len = cc_bn_word_len_from_bit_len(bits);
         cc_status_t ret = cc_bn_gen_prime(R, bits, cc_crypto_rng_ex);
         print_bn("R", R, len);
-        assert(ret == CC_OK);
+        assert(ret == CC_SUCCESS);
     }
 
     {
@@ -42,7 +42,7 @@ int main()
         size_t len = cc_bn_word_len_from_bit_len(bits);
         cc_status_t ret = cc_bn_gen_prime(R, bits, cc_crypto_rng_ex);
         print_bn("R", R, len);
-        assert(ret == CC_OK);
+        assert(ret == CC_SUCCESS);
     }
 
     printf("all test pass\n");

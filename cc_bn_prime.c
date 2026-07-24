@@ -131,7 +131,7 @@ cc_status_t cc_bn_prime_check(const cc_bn_word_t *X, size_t bn_word_len, cc_cryp
     return cc_bn_prime_miller_rabin(X, bn_word_len, iterations, rng);
 }
 
-// return CC_OK if generate success
+// return CC_SUCCESS if generate success
 cc_status_t cc_bn_gen_prime(cc_bn_word_t *X, size_t bits, cc_crypto_rng_f rng)
 {
     cc_status_t check_ret;
@@ -143,5 +143,5 @@ cc_status_t cc_bn_gen_prime(cc_bn_word_t *X, size_t bits, cc_crypto_rng_f rng)
         check_ret = cc_bn_prime_check(X, cc_bn_word_len_from_bit_len(bits), rng);
     } while (!((check_ret == CC_BN_IS_PRIME) || (check_ret == CC_BN_PROBABLY_PRIME)));
 
-    return CC_OK;
+    return CC_SUCCESS;
 }

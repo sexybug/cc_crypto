@@ -23,7 +23,7 @@ cc_status_t cc_bn_prime_miller_rabin(const cc_bn_word_t *W, size_t bn_word_len, 
 // return CC_BN_IS_COMPOSITE if X is composite
 cc_status_t cc_bn_prime_check(const cc_bn_word_t *X, size_t bn_word_len, cc_crypto_rng_f rng);
 
-// return CC_OK if generate success
+// return CC_SUCCESS if generate success
 // return CC_ERR_BN_GEN_RAND if rng error
 cc_status_t cc_bn_gen_prime(cc_bn_word_t *X, size_t bits, cc_crypto_rng_f rng);
 

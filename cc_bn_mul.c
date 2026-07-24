@@ -26,7 +26,7 @@ cc_status_t cc_bn_mul_word_add(cc_bn_word_t *R, size_t R_word_len, const cc_bn_w
 {
     if (A_word_len == 0)
     {
-        return CC_OK;
+        return CC_SUCCESS;
     }
     if (R_word_len < A_word_len + 1)
     {
@@ -46,7 +46,7 @@ cc_status_t cc_bn_mul_word_add(cc_bn_word_t *R, size_t R_word_len, const cc_bn_w
         R[i] += carry;
         carry = R[i] < carry;
     }
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
 // R = A * B, vertical multiplication

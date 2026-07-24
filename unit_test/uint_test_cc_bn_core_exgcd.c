@@ -16,7 +16,7 @@ int main()
         cc_bn_word_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
         size_t bn_word_len = 1;
         cc_status_t status = cc_bn_core_binary_exgcd_unsafe(G, X, Y, A, B, bn_word_len);
-        assert(status == CC_OK);
+        assert(status == CC_SUCCESS);
         assert(memcmp(G, G1, bn_word_len * CC_BN_WORD_BYTES) == 0);
         assert(memcmp(X, X1, bn_word_len * CC_BN_WORD_BYTES) == 0);
         assert(memcmp(Y, Y1, bn_word_len * CC_BN_WORD_BYTES) == 0);
@@ -32,7 +32,7 @@ int main()
         cc_bn_word_t G[CC_BN_MAX_WORDS], X[CC_BN_MAX_WORDS + 1], Y[CC_BN_MAX_WORDS + 1];
         size_t bn_word_len = 2;
         cc_status_t status = cc_bn_core_binary_exgcd_unsafe(G, X, Y, A, B, bn_word_len);
-        assert(status == CC_OK);
+        assert(status == CC_SUCCESS);
         assert(memcmp(G, G1, bn_word_len * CC_BN_WORD_BYTES) == 0);
         assert(memcmp(X, X1, bn_word_len * CC_BN_WORD_BYTES) == 0);
         assert(memcmp(Y, Y1, bn_word_len * CC_BN_WORD_BYTES) == 0);

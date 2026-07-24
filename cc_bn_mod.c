@@ -150,7 +150,7 @@ cc_status_t cc_bn_core_div(cc_bn_word_t *Q, cc_bn_word_t *R, cc_bn_word_t *A, si
     {
         cc_bn_copy(R, A, N_word_len);
         cc_bn_set_zero(Q, A_word_len);
-        return CC_OK;
+        return CC_SUCCESS;
     }
 
     // A >= N, A_real_word_len >= N_real_word_len
@@ -182,7 +182,7 @@ cc_status_t cc_bn_core_div(cc_bn_word_t *Q, cc_bn_word_t *R, cc_bn_word_t *A, si
     }
     // R = A
     cc_bn_from_words(R, N_word_len, A, N_real_word_len);
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
 // R = A mod N, R length = N length
@@ -201,14 +201,19 @@ cc_status_t cc_bn_mod(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len,
     cc_bn_copy(A_tmp, A, A_word_len);
     cc_bn_copy(N_tmp, N, N_word_len);
     CC_CHK(cc_bn_core_div(Q_tmp, R, A_tmp, A_word_len, N_tmp, N_word_len));
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
 // R = A * B mod N
 // R_word_len = bn_word_len
 // R can alias A B N
-void cc_bn_mod_mul_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len)
+cc_status_t cc_bn_mod_mul_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len)
 {
+    if(bn_word_len> CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     cc_bn_word_t P[CC_BN_MAX_WORDS * 2];
     cc_bn_word_t Q[CC_BN_MAX_WORDS * 2];
     cc_bn_word_t N_tmp[CC_BN_MAX_WORDS * 2];
@@ -443,7 +448,7 @@ cc_status_t cc_bn_core_binary_exgcd_unsafe(cc_bn_word_t *G, cc_bn_word_t *X, cc_
         cc_bn_sub_small(Y, Y, bn_word_len + 1, A, bn_word_len);
     }
 
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
 // assume: a > b
@@ -472,7 +477,7 @@ cc_status_t cc_bn_binary_exgcd_unsafe(cc_bn_word_t *G, cc_bn_word_t *X, cc_bn_wo
     cc_bn_lshift(Y, Y, bn_word_len, k);
     cc_bn_lshift(G, G, bn_word_len, k);
 
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
 // R = A^-1 mod N, R_word_len = N_word_len
@@ -513,5 +518,5 @@ cc_status_t cc_bn_exgcd_mod_inv(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A
     // now Y = -(A^-1) mod N, -Y is (A^-1) mod N
     cc_bn_mod_neg(R, Y, N, N_word_len);
 
-    return CC_OK;
+    return CC_SUCCESS;
 }

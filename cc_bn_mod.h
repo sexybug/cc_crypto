@@ -55,7 +55,7 @@ cc_status_t cc_bn_mod(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len,
 // R = A * B mod N
 // R_word_len = bn_word_len
 // R can alias A B N
-void cc_bn_mod_mul_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len);
+cc_status_t cc_bn_mod_mul_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len);
 
 // R = A * B mod N
 // R_word_len = N_word_len

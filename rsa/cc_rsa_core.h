@@ -40,7 +40,7 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_pubkey_st *pubkey, cc_rsa_privkey_st *pri
                                 size_t bits, const cc_bn_word_t *E, size_t E_word_len, bool crt,
                                 cc_crypto_rng_f rng);
 
-// if validate pass, return CC_OK
+// if validate pass, return CC_SUCCESS
 // if validate fail, return CC_ERR_RSA_VALIDATE_KEY
 cc_status_t cc_rsa_validate_params(size_t bits, const cc_bn_word_t *N, const cc_bn_word_t *E, const cc_bn_word_t *D, const cc_bn_word_t *P, const cc_bn_word_t *Q, cc_crypto_rng_f rng);
 

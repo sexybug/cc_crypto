@@ -187,10 +187,10 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_pubkey_st *pubkey, cc_rsa_privkey_st *pri
     cc_bn_copy(pubkey->N, privkey->N, N_words);
     pubkey->bits = bits;
 
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
-// if validate pass, return CC_OK
+// if validate pass, return CC_SUCCESS
 // if validate fail, return CC_ERR_RSA_VALIDATE_KEY
 cc_status_t cc_rsa_validate_params(size_t bits, const cc_bn_word_t *N, const cc_bn_word_t *E, const cc_bn_word_t *D, const cc_bn_word_t *P, const cc_bn_word_t *Q, cc_crypto_rng_f rng)
 {
@@ -271,7 +271,7 @@ cc_status_t cc_rsa_validate_params(size_t bits, const cc_bn_word_t *N, const cc_
         }
     }
 
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
 cc_status_t cc_rsa_validate_crt(size_t bits, const cc_bn_word_t *D, const cc_bn_word_t *P, const cc_bn_word_t *Q, const cc_bn_word_t *DP, const cc_bn_word_t *DQ, const cc_bn_word_t *QP)
@@ -325,7 +325,7 @@ cc_status_t cc_rsa_validate_crt(size_t bits, const cc_bn_word_t *D, const cc_bn_
         }
     }
 
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
 // C = M^E mod N
@@ -344,7 +344,7 @@ cc_status_t cc_rsa_core_public_op(cc_rsa_pubkey_st *pubkey, const cc_bn_word_t *
     // C = M^E mod N
     cc_bn_mod_exp_mont(C, M, N_words, pubkey->E, N_words, pubkey->N, N_words);
 
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
 // M = C^D mod N
@@ -363,7 +363,7 @@ cc_status_t cc_rsa_core_private_op(cc_rsa_privkey_st *privkey, const cc_bn_word_
     // M = C^D mod N
     cc_bn_mod_exp_mont(M, C, N_words, privkey->D, N_words, privkey->N, N_words);
 
-    return CC_OK;
+    return CC_SUCCESS;
 }
 
 // M = C^D mod N
@@ -391,5 +391,5 @@ cc_status_t cc_rsa_core_private_op_crt(cc_rsa_privkey_st *privkey, const cc_bn_w
     // M = M2 + MT
     cc_bn_add(M, M2, PQ_words, MT, N_words);
 
-    return CC_OK;
+    return CC_SUCCESS;
 }

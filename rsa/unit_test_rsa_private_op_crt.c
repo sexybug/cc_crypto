@@ -39,7 +39,7 @@ int main()
         cc_rsa_set_privkey_crt(&privkey, NULL, NULL, P, Q, DP, DQ, QP, bits);
 
         cc_status_t ret = cc_rsa_core_private_op_crt(&privkey, C, M);
-        assert(ret == CC_OK);
+        assert(ret == CC_SUCCESS);
         print_bn("M", M, N_words);
         assert(cc_bn_cmp_words(M, M_expect, N_words) == 0);
     }
@@ -71,7 +71,7 @@ int main()
         cc_rsa_set_privkey_crt(&privkey, NULL, NULL, P, Q, DP, DQ, QP, bits);
 
         cc_status_t ret = cc_rsa_core_private_op_crt(&privkey, C, M);
-        assert(ret == CC_OK);
+        assert(ret == CC_SUCCESS);
         print_bn("M", M, N_words);
         assert(cc_bn_cmp_words(M, M_expect, N_words) == 0);
     }
