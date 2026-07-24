@@ -15,7 +15,8 @@ int main(int argc, char **argv)
         size_t A_word_len = 1;
         size_t B_word_len = 1;
 
-        size_t D_word_len = cc_bn_gcd(D, A, A_word_len, B, B_word_len);
+        size_t D_word_len;
+        cc_bn_gcd(D, &D_word_len, A, A_word_len, B, B_word_len);
 
         assert(D_word_len == sizeof(G) / sizeof(G[0]));
         assert(cc_bn_cmp_words(D, G, sizeof(G) / sizeof(G[0])) == 0);
@@ -30,7 +31,8 @@ int main(int argc, char **argv)
         size_t A_word_len = 1;
         size_t B_word_len = 1;
 
-        size_t D_word_len = cc_bn_gcd(D, A, A_word_len, B, B_word_len);
+        size_t D_word_len;
+        cc_bn_gcd(D, &D_word_len, A, A_word_len, B, B_word_len);
 
         assert(D_word_len == sizeof(G) / sizeof(G[0]));
         assert(cc_bn_cmp_words(D, G, sizeof(G) / sizeof(G[0])) == 0);
@@ -44,7 +46,8 @@ int main(int argc, char **argv)
         size_t A_word_len = 1;
         size_t B_word_len = 1;
 
-        size_t D_word_len = cc_bn_gcd(D, A, A_word_len, B, B_word_len);
+        size_t D_word_len;
+        cc_bn_gcd(D, &D_word_len, A, A_word_len, B, B_word_len);
 
         assert(D_word_len == sizeof(G) / sizeof(G[0]));
         assert(cc_bn_cmp_words(D, G, sizeof(G) / sizeof(G[0])) == 0);
@@ -59,7 +62,8 @@ int main(int argc, char **argv)
         size_t A_word_len = 1;
         size_t B_word_len = 1;
 
-        size_t D_word_len = cc_bn_gcd(D, A, A_word_len, B, B_word_len);
+        size_t D_word_len;
+        cc_bn_gcd(D, &D_word_len, A, A_word_len, B, B_word_len);
 
         assert(D_word_len == sizeof(G) / sizeof(G[0]));
         assert(cc_bn_cmp_words(D, G, sizeof(G) / sizeof(G[0])) == 0);
@@ -74,7 +78,8 @@ int main(int argc, char **argv)
         size_t A_word_len = 2;
         size_t B_word_len = 2;
 
-        size_t D_word_len = cc_bn_gcd(D, A, A_word_len, B, B_word_len);
+        size_t D_word_len;
+        cc_bn_gcd(D, &D_word_len, A, A_word_len, B, B_word_len);
 
         assert(D_word_len == sizeof(G) / sizeof(G[0]));
         assert(cc_bn_cmp_words(D, G, sizeof(G) / sizeof(G[0])) == 0);
@@ -89,7 +94,8 @@ int main(int argc, char **argv)
         size_t A_word_len = 2;
         size_t B_word_len = 1;
 
-        size_t D_word_len = cc_bn_gcd(D, A, A_word_len, B, B_word_len);
+        size_t D_word_len;
+        cc_bn_gcd(D, &D_word_len, A, A_word_len, B, B_word_len);
 
         assert(D_word_len == sizeof(G) / sizeof(G[0]));
         assert(cc_bn_cmp_words(D, G, sizeof(G) / sizeof(G[0])) == 0);
@@ -104,7 +110,8 @@ int main(int argc, char **argv)
         size_t A_word_len = 2;
         size_t B_word_len = 3;
 
-        size_t D_word_len = cc_bn_gcd(D, A, A_word_len, B, B_word_len);
+        size_t D_word_len;
+        cc_bn_gcd(D, &D_word_len, A, A_word_len, B, B_word_len);
 
         assert(D_word_len == sizeof(G) / sizeof(G[0]));
         assert(cc_bn_cmp_words(D, G, sizeof(G) / sizeof(G[0])) == 0);

@@ -38,6 +38,11 @@ cc_status_t cc_bn_rand_bits_gh0(cc_bn_word_t *R, size_t bits, cc_crypto_rng_f rn
 // R can alias A, B
 cc_status_t cc_bn_core_rand_range(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len, cc_crypto_rng_f rng)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     cc_bn_word_t RANGE[CC_BN_MAX_WORDS];
     cc_bn_word_t rand[CC_BN_MAX_WORDS];
     int count = 0;
@@ -65,6 +70,11 @@ cc_status_t cc_bn_core_rand_range(cc_bn_word_t *R, const cc_bn_word_t *A, const 
  */
 cc_status_t cc_bn_core_rand_rangeN(cc_bn_word_t *R, cc_bn_word_t a, const cc_bn_word_t *N, size_t bn_word_len, cc_crypto_rng_f rng)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     cc_bn_word_t RANGE[CC_BN_MAX_WORDS];
     int count = 0;
 

@@ -209,7 +209,7 @@ cc_status_t cc_bn_mod(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len,
 // R can alias A B N
 cc_status_t cc_bn_mod_mul_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len)
 {
-    if(bn_word_len> CC_BN_MAX_WORDS)
+    if (bn_word_len > CC_BN_MAX_WORDS)
     {
         return CC_ERR_BN_LEN_TOO_LONG;
     }
@@ -224,14 +224,21 @@ cc_status_t cc_bn_mod_mul_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc
     cc_bn_core_mul_words(P, A, B, bn_word_len);
 
     // Q = P / N, R = P % N
-    cc_bn_core_div(Q, R, P, bn_word_len * 2, N_tmp, bn_word_len);
+    CC_CHK(cc_bn_core_div(Q, R, P, bn_word_len * 2, N_tmp, bn_word_len));
+
+    return CC_SUCCESS;
 }
 
 // R = A * B mod N
 // R_word_len = N_word_len
 // R can alias A B N
-void cc_bn_mod_mul(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len, const cc_bn_word_t *N, size_t N_word_len)
+cc_status_t cc_bn_mod_mul(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len, const cc_bn_word_t *N, size_t N_word_len)
 {
+    if ((A_word_len + B_word_len) > CC_BN_MAX_WORDS * 2 || N_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     cc_bn_word_t P[CC_BN_MAX_WORDS * 2];
     cc_bn_word_t Q[CC_BN_MAX_WORDS * 2];
     cc_bn_word_t N_tmp[CC_BN_MAX_WORDS * 2];
@@ -242,27 +249,34 @@ void cc_bn_mod_mul(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, co
     cc_bn_core_mul(P, A, A_word_len, B, B_word_len);
 
     // Q = P / N, R = P % N
-    cc_bn_core_div(Q, R, P, A_word_len + B_word_len, N_tmp, N_word_len);
+    CC_CHK(cc_bn_core_div(Q, R, P, A_word_len + B_word_len, N_tmp, N_word_len));
+
+    return CC_SUCCESS;
 }
 
 // R = A^E mod N
 // R can alias A, cannot alias E N
-void cc_bn_core_mod_exp(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t N_word_len)
+cc_status_t cc_bn_core_mod_exp(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t N_word_len)
 {
+    if (A_word_len > CC_BN_MAX_WORDS || N_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     int i;
     cc_bn_word_t A_tmp[CC_BN_MAX_WORDS];
     size_t E_bit_len = cc_bn_bit_len(E, E_word_len);
 
-    // if E=0, R=1
+    // if E=0, then R=1
     if (E_bit_len == 0)
     {
         cc_bn_set_one(R, N_word_len);
-        return;
+        return CC_SUCCESS;
     }
     // if A >= N, A' = A mod N
     if (cc_bn_cmp(A, A_word_len, N, N_word_len) >= 0)
     {
-        cc_bn_mod(A_tmp, A, A_word_len, N, N_word_len);
+        CC_CHK(cc_bn_mod(A_tmp, A, A_word_len, N, N_word_len));
     }
     else
     {
@@ -274,40 +288,51 @@ void cc_bn_core_mod_exp(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_le
     for (i = E_bit_len - 2; i >= 0; i -= 1)
     {
         // T = T^2 mod N
-        cc_bn_mod_mul_words(R, R, R, N, N_word_len);
+        CC_CHK(cc_bn_mod_mul_words(R, R, R, N, N_word_len));
         if (cc_bn_get_bit(E, i))
         {
             // T = T * A mod N
-            cc_bn_mod_mul_words(R, R, A_tmp, N, N_word_len);
+            CC_CHK(cc_bn_mod_mul_words(R, R, A_tmp, N, N_word_len));
         }
     }
+
+    return CC_SUCCESS;
 }
 
 // R = A^E mod N
 // R can alias A E N
-void cc_bn_mod_exp(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t N_word_len)
+cc_status_t cc_bn_mod_exp(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t N_word_len)
 {
+    if (A_word_len > CC_BN_MAX_WORDS || N_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     cc_bn_word_t T[CC_BN_MAX_WORDS];
-    cc_bn_core_mod_exp(T, A, A_word_len, E, E_word_len, N, N_word_len);
+    CC_CHK(cc_bn_core_mod_exp(T, A, A_word_len, E, E_word_len, N, N_word_len));
     cc_bn_copy(R, T, N_word_len);
+
+    return CC_SUCCESS;
 }
 
 // D = gcd(A, B), refer to mbedtls
 // A_word_len must >= B_word_len
-// return D_word_len, D_word_len = min(A_word_len, B_word_len) if A,B != 0
+// D_word_len = min(A_word_len, B_word_len) if A,B != 0
 // D can alias A B
-size_t cc_bn_gcd_unsafe(cc_bn_word_t *D, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
+cc_status_t cc_bn_gcd_unsafe(cc_bn_word_t *D, size_t *D_word_len, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
 {
     if (cc_bn_is_zero(A, A_word_len))
     {
         cc_bn_copy(D, B, B_word_len);
-        return B_word_len;
+        *D_word_len = B_word_len;
+        return CC_SUCCESS;
     }
 
     if (cc_bn_is_zero(B, B_word_len))
     {
         cc_bn_copy(D, A, A_word_len);
-        return A_word_len;
+        *D_word_len = A_word_len;
+        return CC_SUCCESS;
     }
 
     cc_bn_word_t AT[CC_BN_MAX_WORDS];
@@ -341,21 +366,23 @@ size_t cc_bn_gcd_unsafe(cc_bn_word_t *D, const cc_bn_word_t *A, size_t A_word_le
     }
 
     cc_bn_lshift(D, BT, B_word_len, shift);
-    return B_word_len;
+    *D_word_len = B_word_len;
+
+    return CC_SUCCESS;
 }
 
 // D = gcd(A, B)
-// return D_word_len, D_word_len = min(A_word_len, B_word_len) if A,B != 0
+// D_word_len = min(A_word_len, B_word_len) if A,B != 0
 // D can alias A B
-size_t cc_bn_gcd(cc_bn_word_t *D, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
+cc_status_t cc_bn_gcd(cc_bn_word_t *D, size_t *D_word_len, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
 {
     if (A_word_len >= B_word_len)
     {
-        return cc_bn_gcd_unsafe(D, A, A_word_len, B, B_word_len);
+        return cc_bn_gcd_unsafe(D, D_word_len, A, A_word_len, B, B_word_len);
     }
     else
     {
-        return cc_bn_gcd_unsafe(D, B, B_word_len, A, A_word_len);
+        return cc_bn_gcd_unsafe(D, D_word_len, B, B_word_len, A, A_word_len);
     }
 }
 
@@ -365,6 +392,10 @@ size_t cc_bn_gcd(cc_bn_word_t *D, const cc_bn_word_t *A, size_t A_word_len, cons
 // G X Y cannot alias A B
 cc_status_t cc_bn_core_binary_exgcd_unsafe(cc_bn_word_t *G, cc_bn_word_t *X, cc_bn_word_t *Y, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
     // if A <= B, return error
     if (cc_bn_cmp_words(A, B, bn_word_len) <= 0)
     {
@@ -458,6 +489,11 @@ cc_status_t cc_bn_core_binary_exgcd_unsafe(cc_bn_word_t *G, cc_bn_word_t *X, cc_
 // G X Y cannot alias A B
 cc_status_t cc_bn_binary_exgcd_unsafe(cc_bn_word_t *G, cc_bn_word_t *X, cc_bn_word_t *Y, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     cc_bn_word_t TA[CC_BN_MAX_WORDS];
     cc_bn_word_t TB[CC_BN_MAX_WORDS];
 
@@ -484,6 +520,11 @@ cc_status_t cc_bn_binary_exgcd_unsafe(cc_bn_word_t *G, cc_bn_word_t *X, cc_bn_wo
 // R can alias A N
 cc_status_t cc_bn_exgcd_mod_inv(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *N, size_t N_word_len)
 {
+    if (N_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     cc_bn_word_t G[CC_BN_MAX_WORDS];
     cc_bn_word_t X[CC_BN_MAX_WORDS + 1];
     cc_bn_word_t Y[CC_BN_MAX_WORDS + 1];

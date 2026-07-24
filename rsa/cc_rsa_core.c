@@ -141,15 +141,16 @@ cc_status_t cc_rsa_core_gen_key(cc_rsa_pubkey_st *pubkey, cc_rsa_privkey_st *pri
         cc_bn_core_mul_words(H, privkey->P, privkey->Q, PQ_words);
 
         /* check GCD(E, (P-1)*(Q-1)) == 1 (FIPS 186-4 §B.3.1 criterion 2(a)) */
-        cc_bn_gcd(G, pubkey->E, N_words, H, N_words);
-        if (!cc_bn_is_one(G, N_words))
+        size_t G_words = 0;
+        CC_CHK(cc_bn_gcd(G, &G_words, pubkey->E, N_words, H, N_words));
+        if (!cc_bn_is_one(G, G_words))
         {
             continue;
         }
 
         /* compute smallest possible D = E^-1 mod LCM(P-1, Q-1) (FIPS 186-5 A.1.1) */
         // G = GCD(P-1, Q-1)
-        cc_bn_gcd(G, privkey->P, PQ_words, privkey->Q, PQ_words);
+        CC_CHK(cc_bn_gcd(G, &G_words, privkey->P, PQ_words, privkey->Q, PQ_words));
         // L = LCM(P-1, Q-1) = (P-1)*(Q-1) / GCD(P-1, Q-1) = H/G
         CC_CHK(cc_bn_core_div(L, H, H, N_words, G, PQ_words));
         // D = E^-1 mod LCM(P-1, Q-1)
@@ -227,7 +228,7 @@ cc_status_t cc_rsa_validate_params(size_t bits, const cc_bn_word_t *N, const cc_
         {
             return CC_ERR_RSA_VALIDATE_KEY;
         }
-        cc_bn_mul_words(T, P, Q, PQ_words);
+        CC_CHK(cc_bn_mul_words(T, P, Q, PQ_words));
         if (cc_bn_cmp_words(N, T, N_words) != 0)
         {
             return CC_ERR_RSA_VALIDATE_KEY;
@@ -253,7 +254,7 @@ cc_status_t cc_rsa_validate_params(size_t bits, const cc_bn_word_t *N, const cc_
 
         /* Compute D*E mod P-1 = 1 */
         // T = D*E
-        cc_bn_mul_words(T, D, E, N_words);
+        CC_CHK(cc_bn_mul_words(T, D, E, N_words));
 
         cc_bn_sub_word(TP, P, PQ_words, 1);
         CC_CHK(cc_bn_mod(TP, T, N_words * 2, TP, PQ_words));
@@ -316,7 +317,7 @@ cc_status_t cc_rsa_validate_crt(size_t bits, const cc_bn_word_t *D, const cc_bn_
     if (P != NULL && Q != NULL && QP != NULL)
     {
         // T = QP * Q
-        cc_bn_mul_words(T, QP, Q, PQ_words);
+        CC_CHK(cc_bn_mul_words(T, QP, Q, PQ_words));
         // TP = T mod P
         CC_CHK(cc_bn_mod(TP, T, PQ_words * 2, P, PQ_words));
         if (!cc_bn_is_one(TP, PQ_words))
@@ -342,7 +343,7 @@ cc_status_t cc_rsa_core_public_op(cc_rsa_pubkey_st *pubkey, const cc_bn_word_t *
     }
 
     // C = M^E mod N
-    cc_bn_mod_exp_mont(C, M, N_words, pubkey->E, N_words, pubkey->N, N_words);
+    CC_CHK(cc_bn_mod_exp_mont(C, M, N_words, pubkey->E, N_words, pubkey->N, N_words));
 
     return CC_SUCCESS;
 }
@@ -361,7 +362,7 @@ cc_status_t cc_rsa_core_private_op(cc_rsa_privkey_st *privkey, const cc_bn_word_
     }
 
     // M = C^D mod N
-    cc_bn_mod_exp_mont(M, C, N_words, privkey->D, N_words, privkey->N, N_words);
+    CC_CHK(cc_bn_mod_exp_mont(M, C, N_words, privkey->D, N_words, privkey->N, N_words));
 
     return CC_SUCCESS;
 }
@@ -379,9 +380,9 @@ cc_status_t cc_rsa_core_private_op_crt(cc_rsa_privkey_st *privkey, const cc_bn_w
     cc_bn_word_t MT[CC_RSA_PQ_MAX_WORDS * 2];
 
     // M1 = C^DP mod P
-    cc_bn_mod_exp_mont(M1, C, N_words, privkey->DP, PQ_words, privkey->P, PQ_words);
+    CC_CHK(cc_bn_mod_exp_mont(M1, C, N_words, privkey->DP, PQ_words, privkey->P, PQ_words));
     // M2 = C^DQ mod Q
-    cc_bn_mod_exp_mont(M2, C, N_words, privkey->DQ, PQ_words, privkey->Q, PQ_words);
+    CC_CHK(cc_bn_mod_exp_mont(M2, C, N_words, privkey->DQ, PQ_words, privkey->Q, PQ_words));
     // H = (M1 - M2) mod P
     cc_bn_mod_sub(M1, M1, M2, privkey->P, PQ_words);
     // H = (M1 - M2) * QP mod P

@@ -29,7 +29,7 @@ void cc_bn_mont_RR(cc_bn_word_t *RR, const cc_bn_word_t *N, size_t N_word_len)
 
 // montgomery multiplication, N must be odd
 // Ni = -(N^-1) mod 2^k, k is bit length of every bn digit
-// optimized algorithm for k = 32
+// optimized algorithm for k = CC_BN_WORD_BITS
 cc_bn_word_t cc_bn_mont_Ni(const cc_bn_word_t *N)
 {
     cc_bn_word_t x = N[0];
@@ -49,8 +49,13 @@ cc_bn_word_t cc_bn_mont_Ni(const cc_bn_word_t *N)
 // Ni = -(N^-1) mod R using Newton's method, R = 2^k
 // Ni word length = R word length
 // N word length must >= R word length
-void cc_bn_mont_Ni_R(cc_bn_word_t *Ni, const cc_bn_word_t *N, cc_bn_word_t k)
+cc_status_t cc_bn_mont_Ni_R(cc_bn_word_t *Ni, const cc_bn_word_t *N, cc_bn_word_t k)
 {
+    if ((k % CC_BN_WORD_BITS) != 0 || k > CC_BN_MAX_BITS)
+    {
+        return CC_ERR_BN_INVALID_ARG;
+    }
+
     cc_bn_word_t x[CC_BN_MAX_WORDS * 2] = {1};
     cc_bn_word_t TWO[CC_BN_MAX_WORDS] = {2};
     cc_bn_word_t nx[CC_BN_MAX_WORDS * 2];
@@ -77,6 +82,8 @@ void cc_bn_mont_Ni_R(cc_bn_word_t *Ni, const cc_bn_word_t *N, cc_bn_word_t k)
     cc_bn_set_bit(nx, k, 1);                                  // R = 2^k
     cc_bn_sub_small(nx, nx, bn_word_len + 1, x, bn_word_len); // Ni = -x mod R
     cc_bn_copy(Ni, nx, bn_word_len);
+
+    return CC_SUCCESS;
 }
 
 // R = R + A * d
@@ -198,31 +205,48 @@ void cc_bn_core_mont_mul(cc_bn_word_t *D, const cc_bn_word_t *A, const cc_bn_wor
 // D = mont_mul(A, b) = A * b * R^(-1) mod N
 // A, b < N, N must be odd
 // D can alias A
-void cc_bn_mont_mul_word(cc_bn_word_t *D, const cc_bn_word_t *A, const cc_bn_word_t b, const cc_bn_word_t *N, size_t bn_word_len, cc_bn_word_t Ni)
+cc_status_t cc_bn_mont_mul_word(cc_bn_word_t *D, const cc_bn_word_t *A, const cc_bn_word_t b, const cc_bn_word_t *N, size_t bn_word_len, cc_bn_word_t Ni)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     cc_bn_word_t T[CC_BN_MAX_WORDS];
     cc_bn_core_mont_mul_word(T, A, b, N, bn_word_len, Ni);
     cc_bn_copy(D, T, bn_word_len);
+
+    return CC_SUCCESS;
 }
 
 // D = mont_mul(A, B) = A * B * R^(-1) mod N
 // A, B < N, N must be odd
 // D can alias A B
-void cc_bn_mont_mul(cc_bn_word_t *D, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len, cc_bn_word_t Ni)
+cc_status_t cc_bn_mont_mul(cc_bn_word_t *D, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len, cc_bn_word_t Ni)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
     cc_bn_word_t T[CC_BN_MAX_WORDS];
     cc_bn_core_mont_mul(T, A, B, N, bn_word_len, Ni);
     cc_bn_copy(D, T, bn_word_len);
+    return CC_SUCCESS;
 }
 
 // D = mont_mul(A, A) = A^2 * R^(-1) mod N
 // A < N, N must be odd
 // D can alias A
-void cc_bn_mont_square(cc_bn_word_t *D, const cc_bn_word_t *A, const cc_bn_word_t *N, size_t bn_word_len, cc_bn_word_t Ni)
+cc_status_t cc_bn_mont_square(cc_bn_word_t *D, const cc_bn_word_t *A, const cc_bn_word_t *N, size_t bn_word_len, cc_bn_word_t Ni)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
     cc_bn_word_t T[CC_BN_MAX_WORDS];
     cc_bn_core_mont_mul(T, A, A, N, bn_word_len, Ni);
     cc_bn_copy(D, T, bn_word_len);
+    return CC_SUCCESS;
 }
 
 // R = mont_exp(A, E) = A^E mod N, A R is montgomery form
@@ -243,28 +267,38 @@ void cc_bn_core_mont_exp(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_wor
     for (i = E_bit_len - 2; i >= 0; i -= 1)
     {
         // R = R^2
-        cc_bn_mont_square(R, R, N, bn_word_len, Ni);
+        CC_CHK(cc_bn_mont_square(R, R, N, bn_word_len, Ni));
         if (cc_bn_get_bit(E, i))
         {
             // R = R * A
-            cc_bn_mont_mul(R, R, A, N, bn_word_len, Ni);
+            CC_CHK(cc_bn_mont_mul(R, R, A, N, bn_word_len, Ni));
         }
     }
 }
 
 // R = mont_exp(A, E) = A^E mod N, A R is montgomery form
 // R can alias A E N
-void cc_bn_mont_exp(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t bn_word_len, cc_bn_word_t Ni)
+cc_status_t cc_bn_mont_exp(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t bn_word_len, cc_bn_word_t Ni)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
     cc_bn_word_t T[CC_BN_MAX_WORDS];
     cc_bn_core_mont_exp(T, A, E, E_word_len, N, bn_word_len, Ni);
     cc_bn_copy(R, T, bn_word_len);
+    return CC_SUCCESS;
 }
 
 // R = A^(-1) mod P,  P is prim, A is montgomery form
 // R can alias A P
-void cc_bn_mont_inv(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *P, size_t bn_word_len, cc_bn_word_t Ni)
+cc_status_t cc_bn_mont_inv(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *P, size_t bn_word_len, cc_bn_word_t Ni)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     // R = A^(P - 2) when P is prim
 
     // E = P - 2
@@ -272,7 +306,8 @@ void cc_bn_mont_inv(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *
     cc_bn_sub_word(E, P, bn_word_len, 2);
 
     // R = A^(P - 2)
-    cc_bn_mont_exp(R, A, E, bn_word_len, P, bn_word_len, Ni);
+    CC_CHK(cc_bn_mont_exp(R, A, E, bn_word_len, P, bn_word_len, Ni));
+    return CC_SUCCESS;
 }
 
 // r = A^(1/2) mod P,  P is prim and P = 3 (mod 4), A is montgomery form
@@ -281,6 +316,11 @@ void cc_bn_mont_inv(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *
 // R can alias A P
 cc_status_t cc_bn_mont_sqrt_p3(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *P, size_t bn_word_len, cc_bn_word_t Ni)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     // R = A^((P + 1)/4) when P = 3 (mod 4)
 
     cc_bn_word_t T[CC_BN_MAX_WORDS];
@@ -291,10 +331,10 @@ cc_status_t cc_bn_mont_sqrt_p3(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_
     cc_bn_rshift(T, T, bn_word_len, 2);
 
     // R = A^((P + 1)/4)
-    cc_bn_mont_exp(R1, A, T, bn_word_len, P, bn_word_len, Ni);
+    CC_CHK(cc_bn_mont_exp(R1, A, T, bn_word_len, P, bn_word_len, Ni));
 
     // T = R^2
-    cc_bn_mont_square(T, R1, P, bn_word_len, Ni);
+    CC_CHK(cc_bn_mont_square(T, R1, P, bn_word_len, Ni));
     // check R^2 = A
     if (cc_bn_cmp_words(T, A, bn_word_len) != 0)
     {
@@ -307,8 +347,13 @@ cc_status_t cc_bn_mont_sqrt_p3(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_
 
 // R = A*B mod N, using montgomery, A,B,R isn't montgomery form, A B < N
 // R can alias A B N
-void cc_bn_core_mod_mul_mont(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len, const cc_bn_word_t *RR, cc_bn_word_t Ni)
+cc_status_t cc_bn_core_mod_mul_mont(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, const cc_bn_word_t *N, size_t bn_word_len, const cc_bn_word_t *RR, cc_bn_word_t Ni)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     cc_bn_word_t montA[CC_BN_MAX_WORDS];
     cc_bn_word_t montB[CC_BN_MAX_WORDS];
     cc_bn_word_t montR[CC_BN_MAX_WORDS];
@@ -317,24 +362,36 @@ void cc_bn_core_mod_mul_mont(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn
     cc_bn_core_mont_mul(montB, B, RR, N, bn_word_len, Ni);
     cc_bn_core_mont_mul(montR, montA, montB, N, bn_word_len, Ni);
     cc_bn_core_mont_mul_word(R, montR, 1, N, bn_word_len, Ni);
+
+    return CC_SUCCESS;
 }
 
 // R = A^2 mod N, using montgomery, A R isn't montgomery form, A < N
 // R can alias A N
-void cc_bn_core_mod_square_mont(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *N, size_t bn_word_len, const cc_bn_word_t *RR, cc_bn_word_t Ni)
+cc_status_t cc_bn_core_mod_square_mont(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *N, size_t bn_word_len, const cc_bn_word_t *RR, cc_bn_word_t Ni)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     cc_bn_word_t montA[CC_BN_MAX_WORDS];
     cc_bn_word_t montR[CC_BN_MAX_WORDS];
 
     cc_bn_core_mont_mul(montA, A, RR, N, bn_word_len, Ni);
     cc_bn_core_mont_mul(montR, montA, montA, N, bn_word_len, Ni);
     cc_bn_core_mont_mul_word(R, montR, 1, N, bn_word_len, Ni);
+    return CC_SUCCESS;
 }
 
 // R = A^E mod N, using montgomery, A R isn't montgomery form, A < N
 // R can alias A E N
-void cc_bn_core_mod_exp_mont(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t bn_word_len, const cc_bn_word_t *RR, cc_bn_word_t Ni)
+cc_status_t cc_bn_core_mod_exp_mont(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t bn_word_len, const cc_bn_word_t *RR, cc_bn_word_t Ni)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
     cc_bn_word_t montA[CC_BN_MAX_WORDS];
     cc_bn_word_t montR[CC_BN_MAX_WORDS];
 
@@ -344,12 +401,18 @@ void cc_bn_core_mod_exp_mont(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn
     cc_bn_core_mont_exp(montR, montA, E, E_word_len, N, bn_word_len, Ni);
     // R = mont(montR, 1)
     cc_bn_core_mont_mul_word(R, montR, 1, N, bn_word_len, Ni);
+    return CC_SUCCESS;
 }
 
 // R = A^E mod N, using montgomery, A R isn't montgomery form, A < N
 // R can alias A E N
-void cc_bn_mod_exp_mont(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t N_word_len)
+cc_status_t cc_bn_mod_exp_mont(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t N_word_len)
 {
+    if (A_word_len > CC_BN_MAX_WORDS || N_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     cc_bn_word_t RR[CC_BN_MAX_WORDS];
     cc_bn_word_t TA[CC_BN_MAX_WORDS];
 
@@ -364,5 +427,7 @@ void cc_bn_mod_exp_mont(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_le
     {
         cc_bn_from_words(TA, N_word_len, A, A_word_len);
     }
-    cc_bn_core_mod_exp_mont(R, TA, E, E_word_len, N, N_word_len, RR, Ni);
+    CC_CHK(cc_bn_core_mod_exp_mont(R, TA, E, E_word_len, N, N_word_len, RR, Ni));
+
+    return CC_SUCCESS;
 }

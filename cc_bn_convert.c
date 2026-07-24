@@ -13,7 +13,7 @@ static cc_bn_word_t cc_bn_word_from_u8(const uint8_t *src, size_t byte_len)
     return word;
 }
 
-//byte_len must be <= bn_word_len * CC_BN_WORD_BYTES
+// byte_len must be <= bn_word_len * CC_BN_WORD_BYTES
 void cc_bn_from_u8(cc_bn_word_t *bn, size_t bn_word_len, const uint8_t *src, size_t byte_len)
 {
     int i;

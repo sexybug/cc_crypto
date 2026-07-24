@@ -80,19 +80,29 @@ void cc_bn_core_mul(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, c
 // R = A * B, vertical multiplication
 // R_word_len = bn_word_len * 2
 // R can alias A B
-void cc_bn_mul_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len)
+cc_status_t cc_bn_mul_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc_bn_word_t *B, size_t bn_word_len)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
     cc_bn_word_t T[CC_BN_MAX_WORDS * 2];
     cc_bn_core_mul_words(T, A, B, bn_word_len);
     cc_bn_copy(R, T, bn_word_len * 2);
+    return CC_SUCCESS;
 }
 
 // R = A * B, vertical multiplication
 // R_word_len = A_word_len + B_word_len
 // R can alias A B
-void cc_bn_mul(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
+cc_status_t cc_bn_mul(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len)
 {
+    if (A_word_len + B_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
     cc_bn_word_t T[CC_BN_MAX_WORDS * 2];
     cc_bn_core_mul(T, A, A_word_len, B, B_word_len);
     cc_bn_copy(R, T, A_word_len + B_word_len);
+    return CC_SUCCESS;
 }

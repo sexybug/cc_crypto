@@ -60,20 +60,20 @@ cc_status_t cc_bn_mod_mul_words(cc_bn_word_t *R, const cc_bn_word_t *A, const cc
 // R = A * B mod N
 // R_word_len = N_word_len
 // R can alias A B N
-void cc_bn_mod_mul(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len, const cc_bn_word_t *N, size_t N_word_len);
+cc_status_t cc_bn_mod_mul(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len, const cc_bn_word_t *N, size_t N_word_len);
 
 // R = A^E mod N
 // R can alias A, cannot alias E N
-void cc_bn_core_mod_exp(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t N_word_len);
+cc_status_t cc_bn_core_mod_exp(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t N_word_len);
 
 // R = A^E mod N
 // R can alias A E N
-void cc_bn_mod_exp(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t N_word_len);
+cc_status_t cc_bn_mod_exp(cc_bn_word_t *R, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *E, size_t E_word_len, const cc_bn_word_t *N, size_t N_word_len);
 
 // D = gcd(A, B)
-// return D_word_len, D_word_len = min(A_word_len, B_word_len) if A,B != 0
+// D_word_len = min(A_word_len, B_word_len) if A,B != 0
 // D can alias A B
-size_t cc_bn_gcd(cc_bn_word_t *D, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len);
+cc_status_t cc_bn_gcd(cc_bn_word_t *D, size_t *D_word_len, const cc_bn_word_t *A, size_t A_word_len, const cc_bn_word_t *B, size_t B_word_len);
 
 // assume: a > b and a,b not all even
 // g = x*a - y*b

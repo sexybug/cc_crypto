@@ -19,7 +19,7 @@ typedef enum
     CC_ERR_BN_GEN_RAND = 0x106,      // ERROR: random number generation failed
     CC_ERR_BN_INVALID_ARG = 0x107,   // ERROR: invalid argument
 
-    CC_ERR_RSA_GEN_KEY = 0x200, // ERROR: RSA key generation failed
+    CC_ERR_RSA_GEN_KEY = 0x200,      // ERROR: RSA key generation failed
     CC_ERR_RSA_VALIDATE_KEY = 0x201, // ERROR: RSA key validation failed
 } cc_status_t;
 

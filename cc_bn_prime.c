@@ -28,6 +28,11 @@ int cc_bn_prime_calc_miller_rabin_iterations(int bits)
 // W > 2
 cc_status_t cc_bn_prime_miller_rabin(const cc_bn_word_t *W, size_t bn_word_len, int iterations, cc_crypto_rng_f rng)
 {
+    if (bn_word_len > CC_BN_MAX_WORDS)
+    {
+        return CC_ERR_BN_LEN_TOO_LONG;
+    }
+
     int a, i, j;
     cc_bn_word_t W1[CC_BN_MAX_WORDS];
     cc_bn_word_t M[CC_BN_MAX_WORDS];
@@ -66,7 +71,7 @@ cc_status_t cc_bn_prime_miller_rabin(const cc_bn_word_t *W, size_t bn_word_len, 
         CC_CHK(cc_bn_core_rand_rangeN(B, 2, W1, bn_word_len, rng));
 
         /* (Step 4.3) z = b^m mod w */
-        cc_bn_core_mod_exp_mont(Z, B, M, bn_word_len, W, bn_word_len, RR, Ni);
+        CC_CHK(cc_bn_core_mod_exp_mont(Z, B, M, bn_word_len, W, bn_word_len, RR, Ni));
 
         /* (Step 4.4) if z = 1 or z = w-1 then go to Step 4.7 */
         if (cc_bn_cmp_word(Z, bn_word_len, 1) == 0 || cc_bn_cmp_words(Z, W1, bn_word_len) == 0)
@@ -82,7 +87,7 @@ cc_status_t cc_bn_prime_miller_rabin(const cc_bn_word_t *W, size_t bn_word_len, 
         for (j = 1; j < a; j++)
         {
             /* (Step 4.5.1) z = z^2 mod w */
-            cc_bn_core_mod_square_mont(Z, Z, W, bn_word_len, RR, Ni);
+            CC_CHK(cc_bn_core_mod_square_mont(Z, Z, W, bn_word_len, RR, Ni));
 
             /* (Step 4.5.2) if z = w-1 then go to Step 4.7 */
             if (cc_bn_cmp_words(Z, W1, bn_word_len) == 0)
